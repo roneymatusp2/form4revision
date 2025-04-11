@@ -4,6 +4,7 @@ import { motion, useAnimation, useInView, Variants } from 'framer-motion';
 import TopicCard from '../components/TopicCard';
 import topics from '../data/topics';
 import { Topic, Subtopic } from '../data/topics';
+import { unitColors } from '../data/externalResources-new';
 
 // Animated Mathematical Features
 // Enhanced Mathematical Hero with interactive animations
@@ -526,12 +527,12 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
   
   // Topic-specific components with interactive animations
   const MathIcons: Record<string, React.ReactElement | null> = {
-    'number-systems': null,
-    'algebraic-manipulation': null,
-    'mensuration': null,
-    'linear-patterns': null,
-    'angles': null,
-    'trigonometry': null
+    'unit-1': null,
+    'unit-2': null,
+    'unit-3': null,
+    'unit-4': null,
+    'unit-5': null,
+    'unit-8': null
   };
   
   const cardVariants: Variants = {
@@ -554,53 +555,40 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
       }}
     >
       <div className={`h-4 ${
-        topic.$id === 'number-systems' ? 'bg-blue-500' : 
-        topic.$id === 'algebraic-manipulation' ? 'bg-green-500' :
-        topic.$id === 'mensuration' ? 'bg-emerald-500' :
-        topic.$id === 'linear-patterns' ? 'bg-indigo-500' :
-        topic.$id === 'angles' ? 'bg-amber-500' :
-        'bg-purple-500'
+        topic.$id === 'unit-1' ? 'bg-blue-500' : 
+        topic.$id === 'unit-2' ? 'bg-green-500' :
+        topic.$id === 'unit-3' ? 'bg-green-500' :
+        topic.$id === 'unit-4' ? 'bg-blue-500' :
+        topic.$id === 'unit-5' ? 'bg-orange-500' :
+        topic.$id === 'unit-8' ? 'bg-purple-500' :
+        'bg-gray-500'
       }`}></div>
       
       <div className="p-6 relative z-10">
         <h2 className={`text-2xl font-bold mb-4 ${
-          topic.$id === 'number-algebra' ? 'text-blue-800' : 
-          topic.$id === 'geometry-measurement' ? 'text-green-800' : 
-          'text-purple-800'
+          topic.$id === 'unit-1' ? 'text-blue-800' : 
+          topic.$id === 'unit-2' ? 'text-green-800' :
+          topic.$id === 'unit-3' ? 'text-green-800' :
+          topic.$id === 'unit-4' ? 'text-blue-800' :
+          topic.$id === 'unit-5' ? 'text-orange-800' :
+          topic.$id === 'unit-8' ? 'text-purple-800' :
+          'text-gray-800'
         }`}>
           {topic.name}
         </h2>
         
         <p className="text-gray-700 mb-4">Explore all subtopics and resources.</p>
         
-        <div className="flex flex-col gap-1 mb-6 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
-          {(topic.subtopics || []).map((subtopic: Subtopic, i: number) => (
-            <Link 
-              key={i} 
-              to={`/subtopic/${subtopic.$id}`}
-              className={`text-sm px-3 py-1.5 rounded-md ${
-                topic.$id === 'number-systems' ? 'bg-blue-50 text-blue-800 hover:bg-blue-100' : 
-                topic.$id === 'algebraic-manipulation' ? 'bg-green-50 text-green-800 hover:bg-green-100' :
-                topic.$id === 'mensuration' ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100' :
-                topic.$id === 'linear-patterns' ? 'bg-indigo-50 text-indigo-800 hover:bg-indigo-100' :
-                topic.$id === 'angles' ? 'bg-amber-50 text-amber-800 hover:bg-amber-100' :
-                'bg-purple-50 text-purple-800 hover:bg-purple-100'
-              } transition-colors duration-200`}
-            >
-              {subtopic.name}
-            </Link>
-          ))}
-        </div>
-        
         <Link
           to={`/topic/${topic.$id}`}
           className={`inline-flex items-center px-6 py-2 rounded-lg text-white font-medium transition-colors ${
-            topic.$id === 'number-systems' ? 'bg-blue-600 hover:bg-blue-700' : 
-            topic.$id === 'algebraic-manipulation' ? 'bg-green-600 hover:bg-green-700' :
-            topic.$id === 'mensuration' ? 'bg-emerald-600 hover:bg-emerald-700' :
-            topic.$id === 'linear-patterns' ? 'bg-indigo-600 hover:bg-indigo-700' :
-            topic.$id === 'angles' ? 'bg-amber-600 hover:bg-amber-700' :
-            'bg-purple-600 hover:bg-purple-700'
+            topic.$id === 'unit-1' ? 'bg-blue-600 hover:bg-blue-700' : 
+            topic.$id === 'unit-2' ? 'bg-green-600 hover:bg-green-700' :
+            topic.$id === 'unit-3' ? 'bg-green-600 hover:bg-green-700' :
+            topic.$id === 'unit-4' ? 'bg-blue-600 hover:bg-blue-700' :
+            topic.$id === 'unit-5' ? 'bg-orange-600 hover:bg-orange-700' :
+            topic.$id === 'unit-8' ? 'bg-purple-600 hover:bg-purple-700' :
+            'bg-gray-600 hover:bg-gray-700'
           }`}
         >
           Explore Topic
@@ -612,12 +600,13 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
       
       {/* Topic-specific mathematical visual */}
       <div className={`absolute inset-0 pointer-events-none ${
-        topic.$id === 'number-systems' ? 'text-blue-800' : 
-        topic.$id === 'algebraic-manipulation' ? 'text-green-800' :
-        topic.$id === 'mensuration' ? 'text-emerald-800' :
-        topic.$id === 'linear-patterns' ? 'text-indigo-800' :
-        topic.$id === 'angles' ? 'text-amber-800' :
-        'text-purple-800'
+        topic.$id === 'unit-1' ? 'text-blue-800' : 
+        topic.$id === 'unit-2' ? 'text-green-800' :
+        topic.$id === 'unit-3' ? 'text-green-800' :
+        topic.$id === 'unit-4' ? 'text-blue-800' :
+        topic.$id === 'unit-5' ? 'text-orange-800' :
+        topic.$id === 'unit-8' ? 'text-purple-800' :
+        'text-gray-800'
       }`}>
         {MathIcons[topic.$id] || null}
       </div>
@@ -830,7 +819,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, del
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
     >
-      <div className="rounded-full w-12 h-12 flex items-center justify-center bg-indigo-100 text-indigo-600 mb-4">
+      <div className="rounded-full w-12 h-12 flex items-center justify-center bg-blue-100 text-blue-600 mb-4">
         {icon}
       </div>
       <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
@@ -874,7 +863,7 @@ const HomePage: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {topics.map((topic, index) => (
-              <TopicCardComponent key={topic.id} topic={topic} index={index} />
+              <TopicCard key={topic.$id} topic={topic} index={index} />
             ))}
           </div>
         </motion.div>

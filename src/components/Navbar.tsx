@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import topics from '../data/topics';
+import AdminAccessButton from './AdminAccessButton';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,33 +74,37 @@ const Navbar: React.FC = () => {
               Home
             </NavLink>
             
-            <NavLink to="/topic/number-systems" scrolled={scrolled} color="blue">
+            <NavLink to="/topic/unit-1" scrolled={scrolled} color="blue">
               Number Systems
             </NavLink>
             
-            <NavLink to="/topic/algebraic-manipulation" scrolled={scrolled} color="green">
+            <NavLink to="/topic/unit-2" scrolled={scrolled} color="green">
               Algebraic Manipulation
             </NavLink>
             
-            <NavLink to="/topic/mensuration" scrolled={scrolled} color="emerald">
+            <NavLink to="/topic/unit-3" scrolled={scrolled} color="emerald">
               Mensuration
             </NavLink>
             
-            <NavLink to="/topic/linear-patterns" scrolled={scrolled} color="indigo">
+            <NavLink to="/topic/unit-4" scrolled={scrolled} color="indigo">
               Linear Patterns
             </NavLink>
             
-            <NavLink to="/topic/angles" scrolled={scrolled} color="amber">
+            <NavLink to="/topic/unit-5" scrolled={scrolled} color="amber">
               Angles
             </NavLink>
             
-            <NavLink to="/topic/trigonometry" scrolled={scrolled} color="purple">
+            <NavLink to="/topic/unit-8" scrolled={scrolled} color="purple">
               Trigonometry
             </NavLink>
             
             <NavLink to="/resources" scrolled={scrolled}>
               Resources
             </NavLink>
+
+            <div className="ml-2">
+              <AdminAccessButton />
+            </div>
           </div>
           
           {/* Mobile menu button */}
@@ -137,13 +142,16 @@ const Navbar: React.FC = () => {
           >
             <div className="py-2 space-y-1">
               <MobileNavLink to="/" scrolled={scrolled}>Home</MobileNavLink>
-              <MobileNavLink to="/topic/number-systems" scrolled={scrolled}>Number Systems</MobileNavLink>
-              <MobileNavLink to="/topic/algebraic-manipulation" scrolled={scrolled}>Algebraic Manipulation</MobileNavLink>
-              <MobileNavLink to="/topic/mensuration" scrolled={scrolled}>Mensuration</MobileNavLink>
-              <MobileNavLink to="/topic/linear-patterns" scrolled={scrolled}>Linear Patterns</MobileNavLink>
-              <MobileNavLink to="/topic/angles" scrolled={scrolled}>Angles</MobileNavLink>
-              <MobileNavLink to="/topic/trigonometry" scrolled={scrolled}>Trigonometry</MobileNavLink>
+              <MobileNavLink to="/topic/unit-1" scrolled={scrolled}>Number Systems</MobileNavLink>
+              <MobileNavLink to="/topic/unit-2" scrolled={scrolled}>Algebraic Manipulation</MobileNavLink>
+              <MobileNavLink to="/topic/unit-3" scrolled={scrolled}>Mensuration</MobileNavLink>
+              <MobileNavLink to="/topic/unit-4" scrolled={scrolled}>Linear Patterns</MobileNavLink>
+              <MobileNavLink to="/topic/unit-5" scrolled={scrolled}>Angles</MobileNavLink>
+              <MobileNavLink to="/topic/unit-8" scrolled={scrolled}>Trigonometry</MobileNavLink>
               <MobileNavLink to="/resources" scrolled={scrolled}>Resources</MobileNavLink>
+              <div className="px-4 py-2">
+                <AdminAccessButton />
+              </div>
             </div>
           </motion.div>
         )}

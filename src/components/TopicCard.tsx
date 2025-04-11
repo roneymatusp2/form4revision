@@ -26,7 +26,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
   
   const getTopicColor = (id: string) => {
     switch(id) {
-      case 'number-systems': return {
+      case 'unit-1': return {
         header: 'bg-blue-500',
         title: 'text-blue-800',
         bg: 'bg-blue-50',
@@ -35,7 +35,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
         dot: 'bg-blue-400',
         button: 'bg-blue-600 hover:bg-blue-700'
       };
-      case 'algebraic-manipulation': return {
+      case 'unit-2': return {
         header: 'bg-green-500',
         title: 'text-green-800',
         bg: 'bg-green-50',
@@ -44,34 +44,34 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
         dot: 'bg-green-400',
         button: 'bg-green-600 hover:bg-green-700'
       };
-      case 'mensuration': return {
-        header: 'bg-emerald-500',
-        title: 'text-emerald-800',
-        bg: 'bg-emerald-50',
-        hover: 'hover:bg-emerald-100',
-        text: 'text-emerald-800',
-        dot: 'bg-emerald-400',
-        button: 'bg-emerald-600 hover:bg-emerald-700'
+      case 'unit-3': return {
+        header: 'bg-green-500',
+        title: 'text-green-800',
+        bg: 'bg-green-50',
+        hover: 'hover:bg-green-100',
+        text: 'text-green-800',
+        dot: 'bg-green-400',
+        button: 'bg-green-600 hover:bg-green-700'
       };
-      case 'linear-patterns': return {
-        header: 'bg-indigo-500',
-        title: 'text-indigo-800',
-        bg: 'bg-indigo-50',
-        hover: 'hover:bg-indigo-100',
-        text: 'text-indigo-800',
-        dot: 'bg-indigo-400',
-        button: 'bg-indigo-600 hover:bg-indigo-700'
+      case 'unit-4': return {
+        header: 'bg-blue-500',
+        title: 'text-blue-800',
+        bg: 'bg-blue-50',
+        hover: 'hover:bg-blue-100',
+        text: 'text-blue-800',
+        dot: 'bg-blue-400',
+        button: 'bg-blue-600 hover:bg-blue-700'
       };
-      case 'angles': return {
-        header: 'bg-amber-500',
-        title: 'text-amber-800',
-        bg: 'bg-amber-50',
-        hover: 'hover:bg-amber-100',
-        text: 'text-amber-800',
-        dot: 'bg-amber-400',
-        button: 'bg-amber-600 hover:bg-amber-700'
+      case 'unit-5': return {
+        header: 'bg-orange-500',
+        title: 'text-orange-800',
+        bg: 'bg-orange-50',
+        hover: 'hover:bg-orange-100',
+        text: 'text-orange-800',
+        dot: 'bg-orange-400',
+        button: 'bg-orange-600 hover:bg-orange-700'
       };
-      default: return {
+      case 'unit-8': return {
         header: 'bg-purple-500',
         title: 'text-purple-800',
         bg: 'bg-purple-50',
@@ -79,6 +79,15 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
         text: 'text-purple-800',
         dot: 'bg-purple-400',
         button: 'bg-purple-600 hover:bg-purple-700'
+      };
+      default: return {
+        header: 'bg-gray-500',
+        title: 'text-gray-800',
+        bg: 'bg-gray-50',
+        hover: 'hover:bg-gray-100',
+        text: 'text-gray-800',
+        dot: 'bg-gray-400',
+        button: 'bg-gray-600 hover:bg-gray-700'
       };
     }
   };
@@ -92,14 +101,14 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
       initial="hidden"
       animate={controls}
       transition={{ duration: 0.5, delay: 0.1 * index }}
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative h-auto"
+      className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative h-auto border-t-4 ${colors.header}`}
       whileHover={{
         scale: 1.05,
         transition: { duration: 0.3 },
         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
       }}
     >
-      <div className={`h-4 ${colors.header}`}></div>
+      {/* Removed header bar */}
       
       <div className="p-6 relative z-10">
         <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>
@@ -107,19 +116,6 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
         </h2>
         
         <p className="text-gray-700 mb-4">Explore all subtopics and resources.</p>
-        
-        <div className="flex flex-col gap-1 mb-6 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-          {(topic.subtopics || []).map((subtopic: Subtopic, i: number) => (
-            <Link 
-              key={i} 
-              to={`/subtopic/${subtopic.$id}`}
-              className={`text-sm px-3 py-2 rounded-md flex items-center ${colors.bg} ${colors.text} ${colors.hover} transition-colors duration-200`}
-            >
-              <div className={`w-2 h-2 rounded-full mr-2 ${colors.dot}`}></div>
-              {subtopic.name}
-            </Link>
-          ))}
-        </div>
         
         <Link
           to={`/topic/${topic.$id}`}

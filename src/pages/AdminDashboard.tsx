@@ -1,292 +1,203 @@
 import React, { useEffect, useState } from 'react';
-import { Models } from 'appwrite';
-import { AppwriteService } from '../services/appwriteService';
-import { MigrationResult } from '../utils/appwriteMigration';
+import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { motion } from 'framer-motion';
 
-interface Topic extends Models.Document {
-    name: string;
-    slug: string;
-}
+const AdminDashboard: React.FC = () => {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-interface Subtopic extends Models.Document {
-    name: string;
-    slug: string;
-    topicId: string;
-}
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        // Redirect to home if not logged in
+        navigate('/');
+      }
+      setLoading(false);
+    });
 
-export const AdminDashboard: React.FC = () => {
-    const [topics, setTopics] = useState<Topic[]>([]);
-    const [selectedTopic, setSelectedTopic] = useState<string>('');
-    const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
-    const [newTopic, setNewTopic] = useState('');
-    const [newSubtopic, setNewSubtopic] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [migrationStatus, setMigrationStatus] = useState<MigrationResult | null>(null);
+    return () => unsubscribe();
+  }, [navigate]);
 
-    useEffect(() => {
-        fetchTopics();
-    }, []);
-
-    useEffect(() => {
-        if (selectedTopic) {
-            fetchSubtopics(selectedTopic);
-        } else {
-            setSubtopics([]);
-        }
-    }, [selectedTopic]);
-
-    const fetchTopics = async () => {
-        try {
-            setLoading(true);
-            const fetchedTopics = await AppwriteService.getTopics();
-            setTopics(fetchedTopics);
-            setError(null);
-        } catch (err) {
-            console.error('Error fetching topics:', err);
-            setError('Failed to load topics. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchSubtopics = async (topicId: string) => {
-        try {
-            const fetchedSubtopics = await AppwriteService.getSubtopicsByTopic(topicId);
-            setSubtopics(fetchedSubtopics);
-            setError(null);
-        } catch (err) {
-            console.error('Error fetching subtopics:', err);
-            setError('Failed to load subtopics. Please try again later.');
-        }
-    };
-
-    const generateSlug = (name: string): string => {
-        return name
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)/g, '');
-    };
-
-    const handleCreateTopic = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newTopic.trim()) return;
-
-        try {
-            setLoading(true);
-            await AppwriteService.createTopic({
-                name: newTopic.trim(),
-                slug: generateSlug(newTopic)
-            });
-            setNewTopic('');
-            await fetchTopics();
-            setError(null);
-        } catch (err) {
-            console.error('Error creating topic:', err);
-            setError('Failed to create topic. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleCreateSubtopic = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newSubtopic.trim() || !selectedTopic) return;
-
-        try {
-            setLoading(true);
-            await AppwriteService.createSubtopic({
-                name: newSubtopic.trim(),
-                slug: generateSlug(newSubtopic),
-                topicId: selectedTopic
-            });
-            setNewSubtopic('');
-            await fetchSubtopics(selectedTopic);
-            setError(null);
-        } catch (err) {
-            console.error('Error creating subtopic:', err);
-            setError('Failed to create subtopic. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleMigration = async () => {
-        try {
-            setLoading(true);
-            const result = await AppwriteService.migrateContent();
-            setMigrationStatus(result);
-        } catch (error) {
-            console.error('Migration failed:', error);
-            setMigrationStatus({
-                success: false,
-                message: error instanceof Error ? error.message : 'Migration failed',
-                stats: {
-                    topics: 0,
-                    subtopics: 0,
-                    resources: 0,
-                    failed: 1
-                }
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading && topics.length === 0) {
-        return (
-            <div className="flex justify-center items-center h-48">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-        );
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
+  };
 
+  if (loading) {
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
-                {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-6">
-                        {error}
-                    </div>
-                )}
-            </div>
-
-            <div className="grid gap-8 md:grid-cols-2">
-                <section className="space-y-6">
-                    <h2 className="text-xl font-semibold text-gray-900">Create New Topic</h2>
-                    <form onSubmit={handleCreateTopic} className="space-y-4">
-                        <div>
-                            <label htmlFor="topicName" className="block text-sm font-medium text-gray-700">
-                                Topic Name
-                            </label>
-                            <input
-                                type="text"
-                                id="topicName"
-                                value={newTopic}
-                                onChange={(e) => setNewTopic(e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                placeholder="Enter topic name"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-                        >
-                            {loading ? 'Creating...' : 'Create Topic'}
-                        </button>
-                    </form>
-                </section>
-
-                <section className="space-y-6">
-                    <h2 className="text-xl font-semibold text-gray-900">Create New Subtopic</h2>
-                    <form onSubmit={handleCreateSubtopic} className="space-y-4">
-                        <div>
-                            <label htmlFor="topicSelect" className="block text-sm font-medium text-gray-700">
-                                Select Topic
-                            </label>
-                            <select
-                                id="topicSelect"
-                                value={selectedTopic}
-                                onChange={(e) => setSelectedTopic(e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                required
-                            >
-                                <option value="">Select a topic</option>
-                                {topics.map(topic => (
-                                    <option key={topic.$id} value={topic.$id}>
-                                        {topic.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div>
-                            <label htmlFor="subtopicName" className="block text-sm font-medium text-gray-700">
-                                Subtopic Name
-                            </label>
-                            <input
-                                type="text"
-                                id="subtopicName"
-                                value={newSubtopic}
-                                onChange={(e) => setNewSubtopic(e.target.value)}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                placeholder="Enter subtopic name"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={loading || !selectedTopic}
-                            className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-                        >
-                            {loading ? 'Creating...' : 'Create Subtopic'}
-                        </button>
-                    </form>
-                </section>
-            </div>
-
-            {selectedTopic && (
-                <section className="space-y-4">
-                    <h2 className="text-xl font-semibold text-gray-900">Current Subtopics</h2>
-                    {subtopics.length === 0 ? (
-                        <p className="text-gray-600">No subtopics available for this topic yet.</p>
-                    ) : (
-                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {subtopics.map(subtopic => (
-                                <div
-                                    key={subtopic.$id}
-                                    className="p-4 bg-white rounded-lg shadow border border-gray-200"
-                                >
-                                    <h3 className="font-medium text-gray-900">{subtopic.name}</h3>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </section>
-            )}
-
-            <div className="bg-white rounded-lg shadow p-6 mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Content Migration</h2>
-                <button
-                    onClick={handleMigration}
-                    disabled={loading}
-                    className={`px-4 py-2 rounded ${
-                        loading
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-blue-500 hover:bg-blue-600'
-                    } text-white font-medium transition-colors`}
-                >
-                    {loading ? 'Migrating...' : 'Start Migration'}
-                </button>
-
-                {migrationStatus && (
-                    <div className={`mt-4 p-4 rounded ${
-                        migrationStatus.success ? 'bg-green-50' : 'bg-red-50'
-                    }`}>
-                        <p className={`font-medium ${
-                            migrationStatus.success ? 'text-green-800' : 'text-red-800'
-                        }`}>
-                            {migrationStatus.success ? 'Success!' : 'Error'}
-                        </p>
-                        <p className="text-gray-600 mt-1">{migrationStatus.message}</p>
-                        {migrationStatus.stats && (
-                            <div className="mt-2">
-                                <p className="text-sm text-gray-600">Migration Stats:</p>
-                                <ul className="list-disc list-inside mt-1 text-sm text-gray-600">
-                                    <li>Topics: {migrationStatus.stats.topics}</li>
-                                    <li>Subtopics: {migrationStatus.stats.subtopics}</li>
-                                    <li>Resources: {migrationStatus.stats.resources}</li>
-                                    <li>Failed: {migrationStatus.stats.failed}</li>
-                                </ul>
-                            </div>
-                        )}
-                    </div>
-                )}
-            </div>
-        </div>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
     );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-20">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white rounded-lg shadow-xl overflow-hidden max-w-4xl mx-auto"
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Teacher Administration</h1>
+              <p className="mt-1 text-purple-100">Manage educational content and resources</p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="font-medium">{user?.displayName}</p>
+                <p className="text-xs text-purple-200">{user?.email}</p>
+              </div>
+              <div className="h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center">
+                {user?.photoURL ? (
+                  <img 
+                    src={user.photoURL} 
+                    alt={user.displayName} 
+                    className="h-10 w-10 rounded-full" 
+                  />
+                ) : (
+                  <span className="text-white font-medium">
+                    {user?.displayName?.charAt(0) || user?.email?.charAt(0) || '?'}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Dashboard Content */}
+        <div className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-purple-50 rounded-lg p-6 border border-purple-100">
+              <h2 className="text-xl font-semibold text-purple-800 mb-4">Content Management</h2>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5z" />
+                      <path d="M11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-purple-700 hover:underline">Manage Topics & Subtopics</a>
+                </li>
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-purple-700 hover:underline">Upload Video Resources</a>
+                </li>
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-purple-700 hover:underline">Manage PDF Resources</a>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="bg-indigo-50 rounded-lg p-6 border border-indigo-100">
+              <h2 className="text-xl font-semibold text-indigo-800 mb-4">Analytics & Reports</h2>
+              <ul className="space-y-3">
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-indigo-700 hover:underline">View Resource Usage Statistics</a>
+                </li>
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 101.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-indigo-700 hover:underline">Student Progress Reports</a>
+                </li>
+                <li className="flex items-center">
+                  <span className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  <a href="#" className="text-indigo-700 hover:underline">Resource Gap Analysis</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          {/* Recent Activity */}
+          <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Activity</h2>
+            <div className="space-y-4">
+              <div className="flex items-start">
+                <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center mr-3 text-blue-600 flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center">
+                    <p className="font-medium text-gray-800">Resource Structure Updated</p>
+                    <span className="text-xs text-gray-500">Today, 11:43 AM</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Topic structure reorganized to match F3 End of Year Exam units
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center mr-3 text-green-600 flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center">
+                    <p className="font-medium text-gray-800">Firebase Integration Complete</p>
+                    <span className="text-xs text-gray-500">Yesterday, 3:20 PM</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Authentication services configured for teacher access
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Logout Button */}
+          <div className="mt-8 flex justify-end">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition-colors flex items-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm5 4a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 4a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm-3 1a1 1 0 100-2H4a1 1 0 100 2h1zm0-4a1 1 0 100-2H4a1 1 0 100 2h1zm8 5a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2zm-5 6a1 1 0 001 1h2a1 1 0 100-2H9a1 1 0 00-1 1z" clipRule="evenodd" />
+              </svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
 };
 
-export default AdminDashboard; 
+export default AdminDashboard;

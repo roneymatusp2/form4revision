@@ -171,6 +171,18 @@ const Footer: React.FC = () => {
             </a>
           </div>
         </div>
+        
+        {/* Made by Mr. NASCIMENTO */}
+        <div className="text-center mt-6">
+          <motion.p 
+            className="text-lg font-serif tracking-wide text-indigo-200 font-semibold"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5 }}
+          >
+            Made by Mr. NASCIMENTO
+          </motion.p>
+        </div>
       </div>
       
       {/* Bottom Wave */}

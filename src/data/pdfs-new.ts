@@ -1,6 +1,6 @@
 import { resourceLinks } from './externalResources';
 
-// Updated data structure to include resources from SaveMyExams, Corbett Maths, and other resources with direct links
+// Updated data structure to match the F3 End of Year Exams structure
 const pdfs = {
   'unit-1': {
     'natural-numbers': [
@@ -10,14 +10,6 @@ const pdfs = {
       { id: 'pdf4', title: 'Natural Numbers Worksheet', url: 'https://corbettmaths.com/wp-content/uploads/2019/01/Types-of-Numbers.pdf', type: 'questions' },
       { id: 'pdf5', title: 'Natural Numbers Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2019/01/Types-of-Numbers-Answers.pdf', type: 'answers' }
     ],
-    'common-factors': [
-      { id: 'pdf6', title: 'Multiples, Factors and Primes – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2013/02/multiples-factors-primes-pdf.pdf', type: 'questions' },
-      { id: 'pdf7', title: 'Common Multiples and LCM – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Common-multiples-and-LCM-pdf.pdf', type: 'questions' },
-      { id: 'pdf8', title: 'Factors, Multiples and Primes – Dr Austin Maths', url: 'https://www.draustinmaths.com/factors-multiples-and-primes', type: 'reference' },
-      { id: 'pdf9', title: 'HCF and LCM Practice', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/HCF-and-LCM-pdf.pdf', type: 'questions' },
-      { id: 'pdf10', title: 'HCF and LCM Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/HCF-and-LCM-Answers.pdf', type: 'answers' },
-      { id: 'pdf11', title: 'Prime Factorization Guide', url: resourceLinks.numberAlgebra.primeFactorsHCFLCM, type: 'reference' }
-    ],
     'standard-form': [
       { id: 'pdf12', title: 'Standard Form – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2013/02/standard-form-pdf.pdf', type: 'questions' },
       { id: 'pdf13', title: 'Standard Form – Maths4Everyone', url: 'https://www.maths4everyone.com/resources/downloads/standard-form-gcse-9-1-practice-questions-30210.pdf', type: 'questions' },
@@ -26,11 +18,22 @@ const pdfs = {
       { id: 'pdf16', title: 'Standard Form Exercises', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Standard-Form.pdf', type: 'questions' },
       { id: 'pdf17', title: 'Standard Form Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Standard-Form-Answers.pdf', type: 'answers' }
     ],
+    'common-factors': [
+      { id: 'pdf6', title: 'Multiples, Factors and Primes – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2013/02/multiples-factors-primes-pdf.pdf', type: 'questions' },
+      { id: 'pdf7', title: 'Common Multiples and LCM – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Common-multiples-and-LCM-pdf.pdf', type: 'questions' },
+      { id: 'pdf8', title: 'Factors, Multiples and Primes – Dr Austin Maths', url: 'https://www.draustinmaths.com/factors-multiples-and-primes', type: 'reference' },
+      { id: 'pdf9', title: 'HCF and LCM Practice', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/HCF-and-LCM-pdf.pdf', type: 'questions' },
+      { id: 'pdf10', title: 'HCF and LCM Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/HCF-and-LCM-Answers.pdf', type: 'answers' },
+      { id: 'pdf11', title: 'Prime Factorization Guide', url: resourceLinks.numberAlgebra.primeFactorsHCFLCM, type: 'reference' }
+    ],
     'four-operations': [
       { id: 'pdf18', title: 'Expressions, Formulae and Proof – Dr Austin Maths', url: 'https://www.draustinmaths.com/expressions-formulae-and-proof', type: 'reference' },
       { id: 'pdf19', title: 'Four Operations with Solutions – Physics & Maths Tutor', url: 'https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Worksheets/Number/Solutions/a.%20Four%20Operations.pdf', type: 'answers' },
       { id: 'pdf20', title: 'Order of Operations', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Order-of-Operations-pdf.pdf', type: 'questions' },
-      { id: 'pdf21', title: 'Order of Operations Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Order-of-Operations-Answers.pdf', type: 'answers' }
+      { id: 'pdf21', title: 'Order of Operations Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Order-of-Operations-Answers.pdf', type: 'answers' },
+      { id: 'pdf22', title: 'Fractions Worksheet', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Fractions-of-an-Amount-pdf.pdf', type: 'questions' },
+      { id: 'pdf23', title: 'Fractions Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Fractions-of-an-Amount-Answers.pdf', type: 'answers' },
+      { id: 'pdf24', title: 'Types of Fractions Guide', url: 'https://corbettmaths.com/wp-content/uploads/2018/11/Fractions-Textbook.pdf', type: 'reference' }
     ],
     'surds': [
       { id: 'pdf34', title: 'Powers & Roots (Indices) – Maths4Everyone', url: 'https://www.maths4everyone.com/resources/downloads/powers-and-roots-gcse-9-1-practice-questions-30206.pdf', type: 'questions' },
@@ -89,15 +92,13 @@ const pdfs = {
     'circle-vocabulary': [
       { id: 'pdf105', title: 'Circle Terminology Practice', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Circle-Theorems.pdf', type: 'questions' },
       { id: 'pdf106', title: 'Circle Terminology Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Circle-Theorems-Answers.pdf', type: 'answers' },
-      { id: 'pdf107', title: 'Circle Theorems Revision – Dr Austin Maths', url: 'https://www.draustinmaths.com/geometry', type: 'reference' },
-      { id: 'pdf108', title: 'Circle Theorems Exam Questions – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/90_circle-theorems.pdf', type: 'questions' },
-      { id: 'pdf109', title: 'Circle Theorems Answers – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2023/09/Circle-Theorems-Answers-1.pdf', type: 'answers' }
+      { id: 'pdf107', title: 'Circle Theorems Revision – Dr Austin Maths', url: 'https://www.draustinmaths.com/geometry', type: 'reference' }
     ],
     'circle-calculations': [
-      { id: 'pdf110', title: 'Arc Length and Sector Area', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Arc-Length-and-Sector-Area.pdf', type: 'questions' },
-      { id: 'pdf111', title: 'Arc Length and Sector Area Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Arc-Length-and-Sector-Area-Answers.pdf', type: 'answers' },
       { id: 'pdf112', title: 'Circle Area and Circumference', url: 'https://corbettmaths.com/wp-content/uploads/2018/09/Area-and-Circumference-of-a-Circle-pdf.pdf', type: 'questions' },
-      { id: 'pdf113', title: 'Circle Area and Circumference Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/09/Area-and-Circumference-of-a-Circle-Answers.pdf', type: 'answers' }
+      { id: 'pdf113', title: 'Circle Area and Circumference Solutions', url: 'https://corbettmaths.com/wp-content/uploads/2018/09/Area-and-Circumference-of-a-Circle-Answers.pdf', type: 'answers' },
+      { id: 'pdf108', title: 'Circle Theorems Exam Questions – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/90_circle-theorems.pdf', type: 'questions' },
+      { id: 'pdf109', title: 'Circle Theorems Answers – Corbettmaths', url: 'https://corbettmaths.com/wp-content/uploads/2023/09/Circle-Theorems-Answers-1.pdf', type: 'answers' }
     ],
     'arc-sector': [
       { id: 'pdf110', title: 'Arc Length and Sector Area', url: 'https://corbettmaths.com/wp-content/uploads/2019/02/Arc-Length-and-Sector-Area.pdf', type: 'questions' },
@@ -115,10 +116,10 @@ const pdfs = {
     'inequalities-interpretation': [
       { id: 'pdf57', title: 'Linear Inequalities Worksheet – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/4-inequalities.pdf', type: 'questions' },
       { id: 'pdf58', title: 'Linear Inequalities Answers – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/4-inequalitiesans.pdf', type: 'answers' },
-      { id: 'pdf59', title: 'Inequalities – Save My Exams', url: 'https://www.savemyexams.com/igcse/maths/cie/25/extended/topic-questions/', type: 'reference' },
-      { id: 'pdf60', title: 'Inequalities – Dr Austin Maths', url: 'https://www.draustinmaths.com/equations-and-inequalities', type: 'reference' }
+      { id: 'pdf59', title: 'Inequalities – Save My Exams', url: 'https://www.savemyexams.com/igcse/maths/cie/25/extended/topic-questions/', type: 'reference' }
     ],
     'inequalities-solution': [
+      { id: 'pdf60', title: 'Inequalities – Dr Austin Maths', url: 'https://www.draustinmaths.com/equations-and-inequalities', type: 'reference' },
       { id: 'pdf57', title: 'Linear Inequalities Worksheet – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/4-inequalities.pdf', type: 'questions' },
       { id: 'pdf58', title: 'Linear Inequalities Answers – Maths Genie', url: 'https://www.mathsgenie.co.uk/resources/4-inequalitiesans.pdf', type: 'answers' }
     ],
