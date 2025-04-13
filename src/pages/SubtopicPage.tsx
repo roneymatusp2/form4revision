@@ -1,47 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import topics, { Subtopic, Topic } from '../data/topics';
-import videos from '../data/videos';
-import pdfs from '../data/pdfs';
 import { motion } from 'framer-motion';
 import { 
   curriculumResources, 
   officialResources, 
-  ExternalResource as ExternalResourceType 
+  ExternalResource as ExternalResourceType,
+  SubtopicResourceSet
 } from '../data/externalResources-new';
-
-// Define proper typing for videos data structure
-interface VideoResource {
-  id: string;
-  title: string;
-  url: string;
-}
-
-// Define proper typing for PDF resources
-interface PdfResource {
-  id: string;
-  title: string;
-  url: string;
-  type: 'questions' | 'answers' | 'reference' | 'papers';
-}
-
-// Define type for the videos data structure
-type VideoResourceMap = {
-  [topicId: string]: {
-    [subtopicSlug: string]: VideoResource[];
-  };
-};
-
-// Define type for the PDFs data structure
-type PdfResourceMap = {
-  [topicId: string]: {
-    [subtopicSlug: string]: PdfResource[];
-  };
-};
-
-// Type assertion for our existing data
-const typedVideos = videos as VideoResourceMap;
-const typedPdfs = pdfs as PdfResourceMap;
 
 // Define color scheme interface for better type safety
 interface ColorScheme {
@@ -59,10 +25,7 @@ const SubtopicPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'videos' | 'exercises' | 'answers' | 'external'>('videos');
   const [subtopic, setSubtopic] = useState<Subtopic | null>(null);
   const [parentTopic, setParentTopic] = useState<Topic | null>(null);
-  const [subtopicVideos, setSubtopicVideos] = useState<VideoResource[]>([]);
-  const [exercisePdfs, setExercisePdfs] = useState<PdfResource[]>([]);
-  const [answerPdfs, setAnswerPdfs] = useState<PdfResource[]>([]);
-  const [externalResources, setExternalResources] = useState<ExternalResourceType[]>([]);
+  const [loadedResources, setLoadedResources] = useState<SubtopicResourceSet | null>(null);
   
   useEffect(() => {
     if (!subtopicId) return;
@@ -84,29 +47,18 @@ const SubtopicPage: React.FC = () => {
       setSubtopic(foundSubtopic);
       setParentTopic(foundTopic);
 
-      // Load videos for this subtopic
-      if (typedVideos[foundTopic.$id] && typedVideos[foundTopic.$id][foundSubtopic.slug]) {
-        setSubtopicVideos(typedVideos[foundTopic.$id][foundSubtopic.slug]);
-      } else {
-        setSubtopicVideos([]);
-      }
-
-      // Load PDFs for this subtopic
-      if (typedPdfs[foundTopic.$id] && typedPdfs[foundTopic.$id][foundSubtopic.slug]) {
-        const allPdfs = typedPdfs[foundTopic.$id][foundSubtopic.slug];
-        setExercisePdfs(allPdfs.filter(pdf => pdf.type === 'questions' || pdf.type === 'reference'));
-        setAnswerPdfs(allPdfs.filter(pdf => pdf.type === 'answers'));
-      } else {
-        setExercisePdfs([]);
-        setAnswerPdfs([]);
-      }
-      
-      // Load external resources for this subtopic
+      // Load ALL resources for this subtopic from curriculumResources
       const topicResources = curriculumResources[foundTopic.$id];
       if (topicResources && topicResources[foundSubtopic.slug]) {
-        setExternalResources(topicResources[foundSubtopic.slug]);
+        setLoadedResources(topicResources[foundSubtopic.slug] as SubtopicResourceSet);
       } else {
-        setExternalResources([]);
+        // Set empty resources if none found
+        setLoadedResources({
+          videos: [],
+          exercises: [],
+          solutions: [],
+          otherResources: []
+        });
       }
     }
   }, [subtopicId]);
@@ -194,10 +146,10 @@ const SubtopicPage: React.FC = () => {
 
   const colors = getColorScheme();
 
-  if (!subtopic || !parentTopic) {
+  if (!subtopic || !parentTopic || !loadedResources) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-red-600">Subtopic not found</h1>
+        <h1 className="text-3xl font-bold text-red-600">Loading or Subtopic not found</h1>
         <p className="mt-4">
           The subtopic you're looking for doesn't exist. Please return to the{' '}
           <Link to="/" className="text-blue-600 hover:underline">
@@ -287,10 +239,10 @@ const SubtopicPage: React.FC = () => {
         {activeTab === 'videos' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-4">Video Tutorials</h2>
-            {subtopicVideos.length > 0 ? (
+            {loadedResources.videos.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {subtopicVideos.map((video, index) => (
-                  <div key={video.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                {loadedResources.videos.map((video: ExternalResourceType, index: number) => (
+                  <div key={`video-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
                     <div className="aspect-w-16 aspect-h-9">
                       <iframe
                         src={video.url}
@@ -328,11 +280,11 @@ const SubtopicPage: React.FC = () => {
         {activeTab === 'exercises' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-4">Exercises & References</h2>
-            {exercisePdfs.length > 0 ? (
+            {loadedResources.exercises.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {exercisePdfs.map((pdf, index) => (
+                {loadedResources.exercises.map((pdf: ExternalResourceType, index: number) => (
                   <a 
-                    key={pdf.id} 
+                    key={`exercise-${index}`} 
                     href={pdf.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -345,11 +297,9 @@ const SubtopicPage: React.FC = () => {
                     </div>
                     <div>
                       <h3 className={`text-lg font-semibold ${colors.text}`}>{pdf.title}</h3>
-                      <p className="text-gray-600 text-sm mt-1">
-                        {pdf.type === 'questions' ? 'Practice exercises' : 'Reference material'}
-                      </p>
+                      <p className="text-gray-600 text-sm mt-1">Source: {pdf.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
-                        PDF Document
+                        PDF Exercise
                       </div>
                     </div>
                   </a>
@@ -377,11 +327,11 @@ const SubtopicPage: React.FC = () => {
         {activeTab === 'answers' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-4">Answers & Solutions</h2>
-            {answerPdfs.length > 0 ? (
+            {loadedResources.solutions.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {answerPdfs.map((pdf, index) => (
+                {loadedResources.solutions.map((pdf: ExternalResourceType, index: number) => (
                   <a 
-                    key={pdf.id} 
+                    key={`solution-${index}`} 
                     href={pdf.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -394,9 +344,9 @@ const SubtopicPage: React.FC = () => {
                     </div>
                     <div>
                       <h3 className={`text-lg font-semibold ${colors.text}`}>{pdf.title}</h3>
-                      <p className="text-gray-600 text-sm mt-1">Answer key & solutions</p>
+                      <p className="text-gray-600 text-sm mt-1">Source: {pdf.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
-                        PDF Document
+                        PDF Solution/Answers
                       </div>
                     </div>
                   </a>
@@ -424,11 +374,12 @@ const SubtopicPage: React.FC = () => {
         {activeTab === 'external' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold mb-4">External Resources</h2>
-            {externalResources.length > 0 ? (
+            
+            {loadedResources.otherResources.length > 0 ? (
               <div className="space-y-4">
-                {externalResources.map((resource, index) => (
+                {loadedResources.otherResources.map((resource: ExternalResourceType, index: number) => (
                   <a 
-                    key={index} 
+                    key={`other-${index}`} 
                     href={resource.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
@@ -443,7 +394,7 @@ const SubtopicPage: React.FC = () => {
                       <h3 className={`text-lg font-semibold ${colors.text}`}>{resource.title}</h3>
                       <p className="text-gray-600 text-sm mt-1">Source: {resource.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
-                        External Link
+                        {resource.type === 'pdf' ? 'Reference PDF' : 'External Link'}
                       </div>
                     </div>
                   </a>

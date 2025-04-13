@@ -1,4 +1,4 @@
-# Form 3 Mathematics Revision Website - Todo List
+# Form 4 Mathematics Revision Website - Todo List
 
 ## Setup and Structure
 - [x] Create project directory

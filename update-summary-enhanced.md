@@ -2,7 +2,7 @@
 
 ## Summary of Improvements
 
-We've significantly enhanced the Form 3 Mathematics application with interactive animations and an improved UI, making the learning experience more engaging for students. All content is now in English to ensure better accessibility.
+We've significantly enhanced the Form 4 Mathematics application with interactive animations and an improved UI, making the learning experience more engaging for students. All content is now in English to ensure better accessibility.
 
 ### 1. Topic-Specific Mathematical Animations
 - Added specialized animations for each mathematical topic:
@@ -30,7 +30,7 @@ We've significantly enhanced the Form 3 Mathematics application with interactive
 ### 4. Content Structure
 - All content is now in English
 - Organized according to the Cambridge IGCSE™ International Mathematics syllabus
-- Curriculum structure follows the "LIST OF TOPICS - F3 - END OF YEAR EXAMS" document
+- Curriculum structure follows the "LIST OF TOPICS - F4 - END OF YEAR EXAMS" document
 
 ### 5. Performance Optimization
 - Lazy loading of components for better application performance

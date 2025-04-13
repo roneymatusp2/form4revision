@@ -20,8 +20,8 @@ export interface Subtopic extends Models.Document {
 const topics: Topic[] = [
     {
         $id: 'unit-1',
-        name: 'Unit 1: Number Systems, Different Representations and Use of Numbers',
-        slug: 'number-systems',
+        name: 'Linear Patterns and Coordinate Geometry',
+        slug: 'linear-patterns-geometry',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -29,9 +29,9 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'ns-1',
-                name: 'Natural numbers, integers, primes, squares, cubes, triangles, rational/irrational numbers, real numbers, reciprocals',
-                slug: 'natural-numbers',
+                $id: 'lp-1',
+                name: 'Linear functions y=mx+c',
+                slug: 'linear-functions',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -40,9 +40,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-2',
-                name: 'Standard Form and four operations with it',
-                slug: 'standard-form',
+                $id: 'lp-2',
+                name: 'Gradient',
+                slug: 'gradient',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -51,9 +51,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-3',
-                name: 'Common factors, common multiples, prime factors, HCF, LCM',
-                slug: 'common-factors',
+                $id: 'lp-3',
+                name: 'Parallel and perpendicular lines',
+                slug: 'parallel-perpendicular',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -62,9 +62,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-4',
-                name: 'Operations, brackets, powers, roots, fractions (proper/improper/mixed)',
-                slug: 'four-operations',
+                $id: 'lp-4',
+                name: 'Perpendicular bisector',
+                slug: 'perpendicular-bisector',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -73,9 +73,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-5',
-                name: 'Surds, simplification and rationalising the denominator',
-                slug: 'surds',
+                $id: 'lp-5',
+                name: 'Midpoints and distance between two points',
+                slug: 'midpoints-distance',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -84,9 +84,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-6',
-                name: 'Equivalences between decimals, fractions and percentages',
-                slug: 'decimals-fractions',
+                $id: 'lp-6',
+                name: 'Length of a line',
+                slug: 'line-length',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -95,9 +95,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ns-7',
-                name: 'Ratio and Proportion',
-                slug: 'ratio-proportion',
+                $id: 'lp-7',
+                name: 'Simultaneous equations',
+                slug: 'simultaneous-equations',
                 topicId: 'unit-1',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -109,8 +109,8 @@ const topics: Topic[] = [
     },
     {
         $id: 'unit-2',
-        name: 'Unit 2: Algebraic Manipulation',
-        slug: 'algebraic-manipulation',
+        name: 'Plane Geometry',
+        slug: 'plane-geometry',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -118,9 +118,9 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'am-1',
-                name: 'Rules for exponents/indices (including negative and fractional powers)',
-                slug: 'exponents-indices',
+                $id: 'pg-1',
+                name: 'Angles at a point, on straight lines, vertically opposite angles',
+                slug: 'basic-angle-relationships',
                 topicId: 'unit-2',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -129,9 +129,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'am-2',
-                name: 'Expansion of brackets (including square of binomial)',
-                slug: 'expansion-brackets',
+                $id: 'pg-2',
+                name: 'Alternate, corresponding and co-interior angles on parallel lines',
+                slug: 'parallel-line-angles',
                 topicId: 'unit-2',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -140,9 +140,31 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'am-3',
-                name: 'Factorisation: common factor, grouping, difference of squares, trinomials',
-                slug: 'factorisation',
+                $id: 'pg-3',
+                name: 'Angle sum of triangles, quadrilaterals and polygons',
+                slug: 'angle-sums',
+                topicId: 'unit-2',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            },
+            {
+                $id: 'pg-4',
+                name: 'Interior and exterior angles of a polygon, angles of regular polygons',
+                slug: 'polygon-angles',
+                topicId: 'unit-2',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            },
+            {
+                $id: 'pg-5',
+                name: 'Angle vocabulary',
+                slug: 'angle-vocabulary',
                 topicId: 'unit-2',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -154,8 +176,8 @@ const topics: Topic[] = [
     },
     {
         $id: 'unit-3',
-        name: 'Unit 3: Mensuration',
-        slug: 'mensuration',
+        name: 'Trigonometry, Pythagoras and Circle Geometry',
+        slug: 'trig-pythagoras-circles',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -163,9 +185,9 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'mns-1',
-                name: 'Units: mm, cm, m, km, mm², cm², m², km², mm³, cm³, m³, ml, g, kg',
-                slug: 'units-measurement',
+                $id: 'tpc-1',
+                name: 'Bearings',
+                slug: 'bearings',
                 topicId: 'unit-3',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -174,9 +196,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'mns-2',
-                name: 'Perimeter and area of rectangle, triangle, parallelogram, trapezium, compound shapes',
-                slug: 'perimeter-area',
+                $id: 'tpc-2',
+                name: 'Pythagoras theorem',
+                slug: 'pythagoras-theorem',
                 topicId: 'unit-3',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -185,9 +207,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'mns-3',
-                name: 'Circle vocabulary and terminology',
-                slug: 'circle-vocabulary',
+                $id: 'tpc-3',
+                name: 'Chord length and distance of chord to centre',
+                slug: 'chord-properties',
                 topicId: 'unit-3',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -196,20 +218,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'mns-4',
-                name: 'Circumference and area of a circle',
-                slug: 'circle-calculations',
-                topicId: 'unit-3',
-                $collectionId: 'subtopics',
-                $databaseId: 'database',
-                $createdAt: new Date().toISOString(),
-                $updatedAt: new Date().toISOString(),
-                $permissions: []
-            },
-            {
-                $id: 'mns-5',
-                name: 'Arc length and area of sector',
-                slug: 'arc-sector',
+                $id: 'tpc-4',
+                name: 'Distance between two points in circle geometry',
+                slug: 'circle-distances',
                 topicId: 'unit-3',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -221,8 +232,8 @@ const topics: Topic[] = [
     },
     {
         $id: 'unit-4',
-        name: 'Unit 4: Linear Patterns, Models, and Representations',
-        slug: 'linear-patterns',
+        name: 'Algebraic Fractions',
+        slug: 'algebraic-fractions',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -230,9 +241,9 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'lpm-1',
-                name: 'Solution of linear equations (including those with fractional expressions)',
-                slug: 'linear-equations',
+                $id: 'af-1',
+                name: 'Simplification of algebraic fractions using factorisation',
+                slug: 'algebraic-fractions-simplification',
                 topicId: 'unit-4',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -241,9 +252,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'lpm-2',
-                name: 'Writing, showing and interpretation of inequalities (including number line)',
-                slug: 'inequalities-interpretation',
+                $id: 'af-2',
+                name: 'Addition or subtraction of fractions with linear denominators or single term',
+                slug: 'algebraic-fractions-addition',
                 topicId: 'unit-4',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -252,31 +263,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'lpm-3',
-                name: 'Solution of linear inequalities',
-                slug: 'inequalities-solution',
-                topicId: 'unit-4',
-                $collectionId: 'subtopics',
-                $databaseId: 'database',
-                $createdAt: new Date().toISOString(),
-                $updatedAt: new Date().toISOString(),
-                $permissions: []
-            },
-            {
-                $id: 'lpm-4',
-                name: 'Linear functions (y = mx + c, ax + by = d): writing, graphing, function notation',
-                slug: 'linear-functions',
-                topicId: 'unit-4',
-                $collectionId: 'subtopics',
-                $databaseId: 'database',
-                $createdAt: new Date().toISOString(),
-                $updatedAt: new Date().toISOString(),
-                $permissions: []
-            },
-            {
-                $id: 'lpm-5',
-                name: 'Simultaneous equations',
-                slug: 'simultaneous-equations',
+                $id: 'af-3',
+                name: 'Multiplication or division and simplification of algebraic fractions',
+                slug: 'algebraic-fractions-multiplication',
                 topicId: 'unit-4',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -288,8 +277,8 @@ const topics: Topic[] = [
     },
     {
         $id: 'unit-5',
-        name: 'Unit 5: Angles',
-        slug: 'angles',
+        name: 'Quadratic Equations and Functions',
+        slug: 'quadratic-patterns-functions',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -297,9 +286,9 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'ang-1',
-                name: 'Geometric terms: point, vertex, line, plane, parallel, perpendicular, angles, interior, exterior',
-                slug: 'geometric-terms',
+                $id: 'qpf-1',
+                name: 'Quadratic expressions, equations and functions',
+                slug: 'quadratic-fundamentals',
                 topicId: 'unit-5',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -308,9 +297,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ang-2',
-                name: 'Shape vocabulary (triangles, quadrilaterals, polygons, solid figures)',
-                slug: 'shape-vocabulary',
+                $id: 'qpf-2',
+                name: 'Solving quadratic equations by factorisation',
+                slug: 'factorisation-method',
                 topicId: 'unit-5',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -319,9 +308,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ang-3',
-                name: 'Measuring angles and three-figure bearings',
-                slug: 'measuring-angles',
+                $id: 'qpf-3',
+                name: 'Quadratic formula, sum and product of roots',
+                slug: 'quadratic-formula',
                 topicId: 'unit-5',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -330,9 +319,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ang-4',
-                name: 'Angle relationships (on straight lines, at points, parallel lines)',
-                slug: 'angle-relationships',
+                $id: 'qpf-4',
+                name: 'Using GDC to solve quadratic equations',
+                slug: 'gdc-quadratics',
                 topicId: 'unit-5',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -341,20 +330,9 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'ang-5',
-                name: 'Polygon angles (sum of angles, interior/exterior angles)',
-                slug: 'polygon-angles',
-                topicId: 'unit-5',
-                $collectionId: 'subtopics',
-                $databaseId: 'database',
-                $createdAt: new Date().toISOString(),
-                $updatedAt: new Date().toISOString(),
-                $permissions: []
-            },
-            {
-                $id: 'ang-6',
-                name: 'Pythagoras\' Theorem and applications',
-                slug: 'pythagoras-theorem',
+                $id: 'qpf-5',
+                name: 'Finding key points of a parabola (vertex, intercepts)',
+                slug: 'parabola-properties',
                 topicId: 'unit-5',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
@@ -365,9 +343,9 @@ const topics: Topic[] = [
         ]
     },
     {
-        $id: 'unit-8',
-        name: 'Unit 8: Trigonometry of Triangles and Periodic Functions',
-        slug: 'trigonometry',
+        $id: 'unit-6',
+        name: 'Sequences',
+        slug: 'sequences',
         $collectionId: 'topics',
         $databaseId: 'database',
         $createdAt: new Date().toISOString(),
@@ -375,10 +353,10 @@ const topics: Topic[] = [
         $permissions: [],
         subtopics: [
             {
-                $id: 'trig-1',
-                name: 'Right-angled triangle trigonometry (SOHCAHTOA)',
-                slug: 'right-angled-trigonometry',
-                topicId: 'unit-8',
+                $id: 'seq-1',
+                name: 'Linear sequences',
+                slug: 'linear-sequences',
+                topicId: 'unit-6',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
                 $createdAt: new Date().toISOString(),
@@ -386,10 +364,10 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'trig-2',
-                name: 'Solving problems using Pythagoras\' theorem and trigonometry',
-                slug: 'pythagoras-trigonometry',
-                topicId: 'unit-8',
+                $id: 'seq-2',
+                name: 'Quadratic sequences',
+                slug: 'quadratic-sequences',
+                topicId: 'unit-6',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
                 $createdAt: new Date().toISOString(),
@@ -397,10 +375,10 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'trig-3',
-                name: 'Angles of elevation and depression',
-                slug: 'angles-elevation-depression',
-                topicId: 'unit-8',
+                $id: 'seq-3',
+                name: 'Cubic sequences',
+                slug: 'cubic-sequences',
+                topicId: 'unit-6',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
                 $createdAt: new Date().toISOString(),
@@ -408,10 +386,66 @@ const topics: Topic[] = [
                 $permissions: []
             },
             {
-                $id: 'trig-4',
-                name: 'Perpendicular distance from a point to a line',
-                slug: 'perpendicular-distance',
-                topicId: 'unit-8',
+                $id: 'seq-4',
+                name: 'Geometric sequences',
+                slug: 'geometric-sequences',
+                topicId: 'unit-6',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            }
+        ]
+    },
+    {
+        $id: 'unit-7',
+        name: 'Functions and Variation',
+        slug: 'functions-variation',
+        $collectionId: 'topics',
+        $databaseId: 'database',
+        $createdAt: new Date().toISOString(),
+        $updatedAt: new Date().toISOString(),
+        $permissions: [],
+        subtopics: [
+            {
+                $id: 'fv-1',
+                name: 'Function notation',
+                slug: 'function-notation',
+                topicId: 'unit-7',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            },
+            {
+                $id: 'fv-2',
+                name: 'Composite functions',
+                slug: 'composite-functions',
+                topicId: 'unit-7',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            },
+            {
+                $id: 'fv-3',
+                name: 'Inverse functions',
+                slug: 'inverse-functions',
+                topicId: 'unit-7',
+                $collectionId: 'subtopics',
+                $databaseId: 'database',
+                $createdAt: new Date().toISOString(),
+                $updatedAt: new Date().toISOString(),
+                $permissions: []
+            },
+            {
+                $id: 'fv-4',
+                name: 'Direct, inverse and best variation using GDC',
+                slug: 'variation',
+                topicId: 'unit-7',
                 $collectionId: 'subtopics',
                 $databaseId: 'database',
                 $createdAt: new Date().toISOString(),

@@ -1,376 +1,267 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import topics from '../data/topics';
-import { 
-  getResources, 
-  getFilePreview, 
-  getFileView,
-  RESOURCE_TYPES
-} from '../lib/appwrite';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { mathCurriculum } from '../data/curriculum';
+import { curriculumResources, officialResources, unitTitles, unitColors, ExternalResource } from '../data/externalResources-new';
+import { Topic } from '../data/topics';
+import topicsData from '../data/topics';
 
-interface Resource {
-  id?: string;
-  $id?: string;
-  topic: string;
-  subtopic: string;
-  title: string;
-  url?: string;
-  resourceType?: string;
-  fileId?: string;
-  bucketId?: string;
-  description?: string;
-}
-
-interface ResourceTab {
-    id: string;
-    title: string;
-    icon: string;
-}
-
-export const ResourcesPage: React.FC = () => {
-  const [resources, setResources] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
-  const [selectedSubtopic, setSelectedSubtopic] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('practice');
-
-  useEffect(() => {
-    loadResources();
-  }, []);
-
-  const loadResources = async () => {
-    setLoading(true);
-    try {
-      const result = await getResources();
-      if (result.success) {
-        // Convert Appwrite documents to Resource type
-        const mappedResources = result.resources.map((doc: any) => ({
-          $id: doc.$id,
-          id: doc.$id,
-          topic: doc.topic,
-          subtopic: doc.subtopic,
-          title: doc.title,
-          url: doc.url,
-          resourceType: doc.resourceType || RESOURCE_TYPES.EXTERNAL_LINK, // Default for backward compatibility
-          fileId: doc.fileId,
-          bucketId: doc.bucketId,
-          description: doc.description
-        }));
-        setResources(mappedResources);
-      } else {
-        setError('Failed to load resources');
-      }
-    } catch (error) {
-      setError('An error occurred while loading resources');
-      console.error('Error loading resources:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Get all topics that have resources
-  const getTopicsWithResources = () => {
-    if (!resources || !topics) {
-      return [];
-    }
-    
-    const topicsWithResources = new Set<string>();
-    resources.forEach(resource => {
-      if (resource && resource.topic) {
-        topicsWithResources.add(resource.topic);
-      }
-    });
-    
-    return topics.filter(topic => topic && topic.id && topicsWithResources.has(topic.id));
-  };
-
-  // Get subtopics for a specific topic that have resources
-  const getSubtopicsWithResources = (topicId: string) => {
-    if (!topicId) return [];
-    
-    const subtopicsWithResources = new Set<string>();
-    resources.forEach(resource => {
-      if (resource && resource.topic === topicId && resource.subtopic) {
-        subtopicsWithResources.add(resource.subtopic);
-      }
-    });
-    
-    const topic = topics.find(t => t.id === topicId);
-    if (!topic || !topic.subtopics) return [];
-    
-    return topic.subtopics.filter(subtopic => 
-      subtopic && subtopic.id && subtopicsWithResources.has(subtopic.id)
-    ) || [];
-  };
-
-  // Filter resources by topic and subtopic
-  const getFilteredResources = () => {
-    if (!resources || resources.length === 0) {
-      return [];
-    }
-    
-    return resources.filter(resource => {
-      // Make sure resource has required properties
-      if (!resource || !resource.topic || !resource.subtopic) {
-        return false;
-      }
-      
-      if (selectedTopic && resource.topic !== selectedTopic) {
-        return false;
-      }
-      if (selectedSubtopic && resource.subtopic !== selectedSubtopic) {
-        return false;
-      }
-      return true;
-    });
-  };
-
-  // Reset filters
-  const resetFilters = () => {
-    setSelectedTopic(null);
-    setSelectedSubtopic(null);
-  };
-
-  // Display resource content based on type
-  const renderResourceContent = (resource: Resource) => {
-    if (!resource) {
-      return <span className="text-gray-500">Invalid resource</span>;
-    }
-    
-    // For external links and YouTube videos
-    if (resource.url) {
-      if (resource.resourceType === RESOURCE_TYPES.YOUTUBE) {
-        // Extract video ID for embedding
-        let videoId;
-        try {
-          const url = new URL(resource.url);
-          if (url.hostname.includes('youtube.com')) {
-            videoId = url.searchParams.get('v');
-          } else if (url.hostname.includes('youtu.be')) {
-            videoId = url.pathname.substring(1);
-          }
-          
-          if (videoId) {
-            return (
-              <div className="aspect-w-16 aspect-h-9 mb-4">
-                <iframe 
-                  src={`https://www.youtube.com/embed/${videoId}`} 
-                  title="Math Video Resource"
-                  frameBorder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowFullScreen 
-                  className="w-full h-64"
-                ></iframe>
-              </div>
-            );
-          }
-        } catch (error) {
-          console.error('Error parsing YouTube URL:', error);
-          // Fall back to regular link display
-        }
-      }
-      
-      return (
-        <a 
-          href={resource.url} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-blue-600 hover:underline flex items-center"
-        >
-          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
-            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
+// Componente para cada recurso individual
+const ResourceItem: React.FC<{ resource: ExternalResource }> = ({ resource }) => {
+  const getIcon = () => {
+    switch (resource.type) {
+      case 'video':
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
           </svg>
-          Open External Resource
-        </a>
-      );
-    }
-    
-    // For uploaded files
-    if (resource.fileId && resource.bucketId) {
-      try {
-        const previewUrl = getFilePreview(resource.bucketId, resource.fileId);
-        const viewUrl = getFileView(resource.bucketId, resource.fileId);
-        
-        if (!previewUrl || !viewUrl) {
-          return <span className="text-gray-500">File preview not available</span>;
-        }
-        
-        if (resource.resourceType === RESOURCE_TYPES.PDF_EXERCISE || resource.resourceType === RESOURCE_TYPES.PDF_ANSWERS) {
-          return (
-            <div>
-              <a 
-                href={viewUrl.toString()} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-blue-600 hover:underline flex items-center mb-2"
-              >
-                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd"></path>
-                </svg>
-                View PDF {resource.resourceType === RESOURCE_TYPES.PDF_EXERCISE ? 'Exercise' : 'Answers'}
-              </a>
-            </div>
-          );
-        } else if (resource.resourceType === RESOURCE_TYPES.VIDEO) {
-          return (
-            <div>
-              <video 
-                controls 
-                className="w-full max-h-64 rounded mb-2"
-                src={viewUrl.toString()}
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          );
-        }
-      } catch (error) {
-        console.error('Error generating file URLs:', error);
-        return <span className="text-gray-500">Error loading file</span>;
-      }
-    }
-    
-    return <span className="text-gray-500">No preview available</span>;
-  };
-
-  const tabs: ResourceTab[] = [
-    { id: 'practice', title: 'Practice Questions', icon: '📝' },
-    { id: 'videos', title: 'Video Lessons', icon: '🎥' },
-    { id: 'worksheets', title: 'Worksheets', icon: '📄' },
-    { id: 'calculator', title: 'Calculator Tools', icon: '🔢' }
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.4 }
+        );
+      case 'pdf':
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+        );
+      case 'external':
+      default:
+        return (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+          </svg>
+        );
     }
   };
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    <motion.a
+      href={resource.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center p-3 mb-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <div className="text-center mb-12">
-        <motion.h1 
-          className="text-4xl font-bold text-indigo-900 mb-4"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Learning Resources
-        </motion.h1>
-        <motion.p 
-          className="text-lg text-gray-600"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          Explore our comprehensive collection of math learning materials
-        </motion.p>
+      <div className="flex items-center justify-center w-10 h-10 rounded-full mr-4 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+        {getIcon()}
       </div>
-
-      {/* Tabs */}
-      <div className="flex justify-center mb-8 space-x-4">
-        {tabs.map((tab) => (
-          <motion.button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 rounded-full flex items-center space-x-2 transition-colors ${
-              activeTab === tab.id
-                ? 'bg-indigo-600 text-white shadow-lg'
-                : 'bg-white text-indigo-600 hover:bg-indigo-50'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="text-xl">{tab.icon}</span>
-            <span className="font-medium">{tab.title}</span>
-          </motion.button>
-        ))}
+      <div className="flex-1">
+        <h3 className="font-medium text-gray-800 dark:text-white">{resource.title}</h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {resource.source} • {resource.type?.toUpperCase() || 'LINK'}
+        </p>
       </div>
+    </motion.a>
+  );
+};
 
-      {/* Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.4 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {mathCurriculum.map((section) => (
-          <motion.div
-            key={section.id}
-            variants={itemVariants}
-            className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-          >
-            <div className="p-6">
-              <h3 className="text-xl font-bold text-indigo-900 mb-4">
-                {section.title}
-              </h3>
-              <ul className="space-y-3">
-                {section.topics.map((topic) => (
-                  <li key={topic.id} className="flex items-start">
-                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600 mr-3">
-                      {activeTab === 'practice' && '📝'}
-                      {activeTab === 'videos' && '🎥'}
-                      {activeTab === 'worksheets' && '📄'}
-                      {activeTab === 'calculator' && '🔢'}
-                    </span>
-                    <div>
-                      <h4 className="font-medium text-gray-900">
-                        {topic.title}
-                      </h4>
-                      <p className="text-sm text-gray-500">
-                        {topic.content}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <motion.button
-                className="mt-6 w-full px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg font-medium hover:bg-indigo-100 transition-colors"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                View All Resources
-              </motion.button>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+// Componente para um subtópico e seus recursos
+const SubtopicSection: React.FC<{ 
+  subtopicSlug: string, 
+  subtopicName: string, 
+  resources: {
+    videos: ExternalResource[];
+    exercises: ExternalResource[];
+    solutions: ExternalResource[];
+    otherResources: ExternalResource[];
+  }
+}> = ({ subtopicSlug, subtopicName, resources }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-      {/* Floating Action Button */}
-      <motion.button
-        className="fixed bottom-8 right-8 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-700"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+  // Combina todos os recursos para exibição em uma lista
+  const allResources = [
+    ...resources.videos,
+    ...resources.exercises,
+    ...resources.solutions,
+    ...resources.otherResources
+  ];
+
+  return (
+    <div className="mb-4">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full p-3 bg-gray-100 dark:bg-gray-700 rounded-lg mb-2"
       >
-        <span className="text-2xl">💡</span>
-      </motion.button>
+        <h3 className="font-medium text-gray-800 dark:text-white">{subtopicName}</h3>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="pl-4">
+          {allResources.map((resource, idx) => (
+            <ResourceItem key={`${subtopicSlug}-${idx}`} resource={resource} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Componente para um tópico e seus subtópicos
+const TopicSection: React.FC<{ unitId: string }> = ({ unitId }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const topic = topicsData.find((t: Topic) => t.$id === unitId);
+  const resources = curriculumResources[unitId] || {};
+  
+  const getColorClass = () => {
+    const color = unitColors[unitId as keyof typeof unitColors] || 'gray';
+    
+    // Special handling for the units with custom gradients
+    if (unitId === 'unit-5') {
+      return {
+        bg: 'bg-gradient-to-br from-orange-50 to-amber-100 dark:bg-orange-900/20',
+        text: 'text-orange-800 dark:text-orange-200',
+        border: 'border-orange-200 dark:border-orange-700'
+      };
+    }
+    if (unitId === 'unit-6') {
+      return {
+        bg: 'bg-gradient-to-br from-purple-50 to-fuchsia-100 dark:bg-purple-900/20',
+        text: 'text-purple-800 dark:text-purple-200',
+        border: 'border-purple-200 dark:border-purple-700'
+      };
+    }
+    if (unitId === 'unit-9') {
+      return {
+        bg: 'bg-gradient-to-br from-green-50 to-emerald-100 dark:bg-green-900/20',
+        text: 'text-green-800 dark:text-green-200',
+        border: 'border-green-200 dark:border-green-700'
+      };
+    }
+    
+    // Standard color handling
+    return {
+      bg: `bg-${color}-100 dark:bg-${color}-900/20`,
+      text: `text-${color}-800 dark:text-${color}-200`,
+      border: `border-${color}-200 dark:border-${color}-700`
+    };
+  };
+  
+  const colors = getColorClass();
+  
+  // Se não houver recursos ou tópico, não renderize nada
+  if (!topic || Object.keys(resources).length === 0) {
+    return null;
+  }
+
+  // Mapeamento entre slug de subtópico e nome do subtópico
+  const subtopicNameMap: Record<string, string> = {};
+  topic.subtopics?.forEach((subtopic: any) => {
+    subtopicNameMap[subtopic.slug] = subtopic.name;
+  });
+
+  return (
+    <motion.div 
+      className={`mb-8 border rounded-xl overflow-hidden ${colors.border}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center justify-between w-full p-4 ${colors.bg} ${colors.text}`}
+      >
+        <h2 className="text-xl font-bold">{unitTitles[unitId as keyof typeof unitTitles] || topic.name}</h2>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="p-4">
+          {Object.entries(resources).map(([subtopicSlug, subtopicResources]) => (
+            <SubtopicSection
+              key={subtopicSlug}
+              subtopicSlug={subtopicSlug}
+              subtopicName={subtopicNameMap[subtopicSlug] || subtopicSlug}
+              resources={subtopicResources}
+            />
+          ))}
+        </div>
+      )}
     </motion.div>
+  );
+};
+
+// Componente para recursos oficiais Cambridge
+const OfficialResourcesSection: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <motion.div 
+      className="mb-8 border border-blue-200 dark:border-blue-800 rounded-xl overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between w-full p-4 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200"
+      >
+        <h2 className="text-xl font-bold">Official Cambridge Resources</h2>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      
+      {isOpen && (
+        <div className="p-4">
+          {officialResources.map((resource, idx) => (
+            <ResourceItem key={`official-${idx}`} resource={resource} />
+          ))}
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+// Página principal de recursos
+const ResourcesPage: React.FC = () => {
+  // Filtrar apenas os IDs de unidade que têm recursos disponíveis
+  const availableUnitIds = Object.keys(curriculumResources);
+  
+  return (
+    <div className="container max-w-4xl mx-auto px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-12"
+      >
+        <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">Learning Resources</h1>
+        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          Explore a curated collection of educational resources for each topic in the IGCSE International Mathematics curriculum.
+          Click on any topic to expand and discover videos, worksheets, and practice materials.
+        </p>
+      </motion.div>
+      
+      {/* Recursos por tópico */}
+      <div>
+        {availableUnitIds.map(unitId => (
+          <TopicSection key={unitId} unitId={unitId} />
+        ))}
+      </div>
+      
+      {/* Recursos oficiais Cambridge */}
+      <OfficialResourcesSection />
+    </div>
   );
 };
 

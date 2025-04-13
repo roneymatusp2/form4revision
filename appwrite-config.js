@@ -5,12 +5,12 @@ const client = new Client();
 
 client
     .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('67eff58c0026f452ff3d');
+    .setProject('67eff58c0026f452ff3d'); // Você pode manter o mesmo projeto ou criar um novo
 
 // Initialize Appwrite storage
 const storage = new Storage(client);
 
-// Storage bucket IDs
+// Storage bucket IDs para Form 4
 export const STORAGE_BUCKETS = {
     PDF: '67f03c12001381e227aa',
     VIDEOS: '67f03c7600242f02fd1a',

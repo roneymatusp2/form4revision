@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route, Outlet } from 'react-router-dom';
 import Layout from './components/Layout';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { LoadingSpinner } from './components/LoadingSpinner';
 
 // Lazy load components for better performance

@@ -1,5 +1,5 @@
 {
-  "name": "fresh-math-app",
+  "name": "form4-math-revision",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,6 +14,8 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "appwrite": "^17.0.1",
+    "axios": "^1.8.4",
+    "dotenv": "^16.5.0",
     "firebase": "^10.9.0",
     "framer-motion": "^11.18.2",
     "react": "^18.2.0",

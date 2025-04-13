@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   
   return (
-    <footer className="bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900 text-white relative overflow-hidden">
+    <footer className="bg-gradient-to-r from-emerald-900 via-green-900 to-teal-900 text-white relative overflow-hidden">
       {/* Mathematical Decorative Elements */}
       <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden">
         {/* Grid Background */}
@@ -133,40 +133,40 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Logo/Title */}
           <div className="mb-6 md:mb-0">
-            <h2 className="text-2xl font-bold">Form 3 Mathematics</h2>
-            <p className="text-indigo-200 mt-1">Cambridge IGCSE™ International Mathematics</p>
+            <h2 className="text-2xl font-bold">Form 4 Mathematics</h2>
+            <p className="text-emerald-200 mt-1">Cambridge IGCSE™ International Mathematics</p>
           </div>
           
           {/* Links */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-4 text-sm">
             <div className="flex flex-col space-y-2">
-              <h3 className="text-indigo-200 font-medium mb-1">Topics</h3>
-              <Link to="/topic/number-systems" className="hover:text-indigo-300 transition-colors">Number Systems</Link>
-              <Link to="/topic/algebraic-manipulation" className="hover:text-indigo-300 transition-colors">Algebraic Manipulation</Link>
-              <Link to="/topic/mensuration" className="hover:text-indigo-300 transition-colors">Mensuration</Link>
+              <h3 className="text-emerald-200 font-medium mb-1">Topics</h3>
+              <Link to="/topic/number-systems" className="hover:text-emerald-300 transition-colors">Number Systems</Link>
+              <Link to="/topic/algebraic-manipulation" className="hover:text-emerald-300 transition-colors">Algebraic Manipulation</Link>
+              <Link to="/topic/mensuration" className="hover:text-emerald-300 transition-colors">Mensuration</Link>
             </div>
             <div className="flex flex-col space-y-2">
-              <h3 className="text-indigo-200 font-medium mb-1">More Topics</h3>
-              <Link to="/topic/linear-patterns" className="hover:text-indigo-300 transition-colors">Linear Patterns</Link>
-              <Link to="/topic/angles" className="hover:text-indigo-300 transition-colors">Angles</Link>
-              <Link to="/topic/trigonometry" className="hover:text-indigo-300 transition-colors">Trigonometry</Link>
+              <h3 className="text-emerald-200 font-medium mb-1">More Topics</h3>
+              <Link to="/topic/linear-patterns" className="hover:text-emerald-300 transition-colors">Linear Patterns</Link>
+              <Link to="/topic/angles" className="hover:text-emerald-300 transition-colors">Angles</Link>
+              <Link to="/topic/trigonometry" className="hover:text-emerald-300 transition-colors">Trigonometry</Link>
             </div>
             <div className="flex flex-col space-y-2 col-span-2 md:col-span-1">
-              <h3 className="text-indigo-200 font-medium mb-1">Resources</h3>
-              <Link to="/resources" className="hover:text-indigo-300 transition-colors">Study Materials</Link>
-              <a href="https://www.corbettmaths.com/" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-300 transition-colors">Corbett Maths</a>
-              <a href="https://www.mathsgenie.co.uk/" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-300 transition-colors">Maths Genie</a>
+              <h3 className="text-emerald-200 font-medium mb-1">Resources</h3>
+              <Link to="/resources" className="hover:text-emerald-300 transition-colors">Study Materials</Link>
+              <a href="https://www.corbettmaths.com/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">Corbett Maths</a>
+              <a href="https://www.mathsgenie.co.uk/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 transition-colors">Maths Genie</a>
             </div>
           </div>
         </div>
         
-        <div className="border-t border-indigo-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-indigo-300">&copy; {currentYear} Form 3 Mathematics. All rights reserved.</p>
+        <div className="border-t border-emerald-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-emerald-300">&copy; {currentYear} Form 4 Mathematics. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="#" className="text-indigo-300 hover:text-white transition-colors">
+            <a href="#" className="text-emerald-300 hover:text-white transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-indigo-300 hover:text-white transition-colors">
+            <a href="#" className="text-emerald-300 hover:text-white transition-colors">
               Terms of Use
             </a>
           </div>
@@ -175,7 +175,7 @@ const Footer: React.FC = () => {
         {/* Made by Mr. NASCIMENTO */}
         <div className="text-center mt-6">
           <motion.p 
-            className="text-lg font-serif tracking-wide text-indigo-200 font-semibold"
+            className="text-lg font-serif tracking-wide text-emerald-200 font-semibold"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5 }}

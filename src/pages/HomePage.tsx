@@ -5,6 +5,7 @@ import TopicCard from '../components/TopicCard';
 import topics from '../data/topics';
 import { Topic, Subtopic } from '../data/topics';
 import { unitColors } from '../data/externalResources-new';
+import { PythagorasTheorem } from '../components/MathComponents';
 
 // Animated Mathematical Features
 // Enhanced Mathematical Hero with interactive animations
@@ -76,7 +77,7 @@ const MathematicalHero: React.FC = () => {
   }, [mathSymbols]);
 
   return (
-    <div className="relative w-full h-[600px] overflow-hidden bg-gradient-to-r from-indigo-900 via-purple-900 to-indigo-900">
+    <div className="relative w-full h-[600px] overflow-hidden bg-gradient-to-r from-emerald-900 via-green-900 to-teal-900">
       {/* Grid Background - Graph Paper Effect */}
       <div 
         className="absolute inset-0 opacity-15"
@@ -240,11 +241,11 @@ const MathematicalHero: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          Form 3 Mathematics
+          Form 4 Mathematics
         </motion.h1>
         
         <motion.p 
-          className="text-xl md:text-2xl mb-8 max-w-2xl text-indigo-100"
+          className="text-xl md:text-2xl mb-8 max-w-2xl text-emerald-100"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -252,10 +253,14 @@ const MathematicalHero: React.FC = () => {
           Your journey through Cambridge IGCSE™ International Mathematics
         </motion.p>
         
-        {/* Interactive Math Formula Animation */}
-        <div className="mb-10">
-          <QuadraticFormula />
-        </div>
+        {/* Interactive Math Animation - Removed temporarily */}
+        {/* <div className="mb-10">
+          <PythagorasTheorem 
+            className="max-w-md mx-auto" 
+            greenTheme={true} 
+            designStyle="glass" 
+          />
+        </div> */}
         
         <motion.div 
           className="flex flex-wrap justify-center gap-4 mt-4"
@@ -265,7 +270,7 @@ const MathematicalHero: React.FC = () => {
         >
           <a 
             href="#main-content" 
-            className="px-8 py-3 bg-white text-indigo-900 rounded-full font-bold hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="px-8 py-3 bg-white text-emerald-900 rounded-full font-bold hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Start Learning
           </a>
@@ -332,6 +337,15 @@ const QuadraticFormula: React.FC = () => {
     };
   }, []);
   
+  // New Form 4 theme colors
+  const baseColor = 'white';
+  const highlightColor = '#34D399'; // Green highlight for Form 4
+  const rootSymbolColor = 'text-emerald-200';
+  const rootLineGradient = 'bg-gradient-to-r from-emerald-200 via-green-200 to-emerald-200';
+  const divisionLineGradient = 'bg-gradient-to-r from-emerald-300 via-green-200 to-emerald-300';
+  const explanationTextColor = 'text-emerald-200';
+  const glowEffect = '0 0 10px rgba(52, 211, 153, 0.8)'; // Green glow for Form 4
+  
   return (
     <motion.div 
       className="flex flex-col items-center justify-center text-xl md:text-3xl text-white font-serif"
@@ -341,12 +355,12 @@ const QuadraticFormula: React.FC = () => {
     >
       {/* Equation name with glow effect */}
       <motion.div
-        className="text-base md:text-lg mb-2 text-indigo-200"
+        className={`text-base md:text-lg mb-2 ${explanationTextColor}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.5 }}
         style={{
-          textShadow: '0 0 10px rgba(165, 180, 252, 0.5)'
+          textShadow: '0 0 10px rgba(52, 211, 153, 0.5)' // Green glow for Form 4
         }}
       >
         The Quadratic Formula
@@ -380,8 +394,8 @@ const QuadraticFormula: React.FC = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3, delay: 1.3 }}
                   style={{
-                    color: highlight === 'b' ? '#93C5FD' : 'white',
-                    textShadow: highlight === 'b' ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                    color: highlight === 'b' ? highlightColor : baseColor,
+                    textShadow: highlight === 'b' ? glowEffect : 'none'
                   }}
                 >
                   -b
@@ -400,7 +414,7 @@ const QuadraticFormula: React.FC = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 1.6 }}
-                    className="text-indigo-200 mr-0.5"
+                    className={`${rootSymbolColor} mr-0.5`}
                   >
                     √
                   </motion.span>
@@ -414,8 +428,8 @@ const QuadraticFormula: React.FC = () => {
                     >
                       <span 
                         style={{
-                          color: highlight === 'b' ? '#93C5FD' : 'white',
-                          textShadow: highlight === 'b' ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                          color: highlight === 'b' ? highlightColor : baseColor,
+                          textShadow: highlight === 'b' ? glowEffect : 'none'
                         }}
                       >
                         b²
@@ -423,24 +437,24 @@ const QuadraticFormula: React.FC = () => {
                       {' - '}
                       <span 
                         style={{
-                          color: (highlight === '4' || highlight === 'discriminant') ? '#93C5FD' : 'white',
-                          textShadow: (highlight === '4' || highlight === 'discriminant') ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                          color: (highlight === '4' || highlight === 'discriminant') ? highlightColor : baseColor,
+                          textShadow: (highlight === '4' || highlight === 'discriminant') ? glowEffect : 'none'
                         }}
                       >
                         4
                       </span>
                       <span 
                         style={{
-                          color: highlight === 'a' ? '#93C5FD' : 'white',
-                          textShadow: highlight === 'a' ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                          color: highlight === 'a' ? highlightColor : baseColor,
+                          textShadow: highlight === 'a' ? glowEffect : 'none'
                         }}
                       >
                         a
                       </span>
                       <span 
                         style={{
-                          color: highlight === 'c' ? '#93C5FD' : 'white',
-                          textShadow: highlight === 'c' ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                          color: highlight === 'c' ? highlightColor : baseColor,
+                          textShadow: highlight === 'c' ? glowEffect : 'none'
                         }}
                       >
                         c
@@ -449,7 +463,7 @@ const QuadraticFormula: React.FC = () => {
                     
                     {/* Root line that extends with enhanced visual */}
                     <motion.span 
-                      className="absolute left-0 top-0 h-0.5 bg-gradient-to-r from-indigo-200 via-purple-200 to-indigo-200" 
+                      className={`absolute left-0 top-0 h-0.5 ${rootLineGradient}`} 
                       initial={{ width: "0%" }}
                       animate={{ width: `${raizWidth}%` }}
                       transition={{ duration: 1, delay: 2.0 }}
@@ -462,7 +476,7 @@ const QuadraticFormula: React.FC = () => {
               
               {/* Division line with gradient */}
               <motion.div 
-                className="h-0.5 bg-gradient-to-r from-indigo-300 via-purple-200 to-indigo-300 my-1"
+                className={`h-0.5 ${divisionLineGradient} my-1`}
                 initial={{ width: 0 }}
                 animate={{ width: '100%' }}
                 transition={{ duration: 0.8, delay: 2.2 }}
@@ -475,8 +489,8 @@ const QuadraticFormula: React.FC = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 2.5 }}
                 style={{
-                  color: highlight === 'a' ? '#93C5FD' : 'white',
-                  textShadow: highlight === 'a' ? '0 0 10px rgba(147, 197, 253, 0.8)' : 'none'
+                  color: highlight === 'a' ? highlightColor : baseColor,
+                  textShadow: highlight === 'a' ? glowEffect : 'none'
                 }}
               >
                 2a
@@ -488,7 +502,7 @@ const QuadraticFormula: React.FC = () => {
       
       {/* Small explanation text that appears after the formula is complete */}
       <motion.div
-        className="text-xs md:text-sm mt-2 text-indigo-200 max-w-xs text-center"
+        className={`text-xs md:text-sm mt-2 ${explanationTextColor} max-w-xs text-center`}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: step === 0 ? 0 : 1, y: step === 0 ? 10 : 0 }}
         transition={{ duration: 0.5 }}
@@ -527,12 +541,66 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
   
   // Topic-specific components with interactive animations
   const MathIcons: Record<string, React.ReactElement | null> = {
-    'unit-1': null,
-    'unit-2': null,
-    'unit-3': null,
-    'unit-4': null,
-    'unit-5': null,
-    'unit-8': null
+    'unit-1': (
+      <div className="absolute top-4 right-4 opacity-10 text-4xl font-serif">
+        π
+      </div>
+    ),
+    'unit-2': (
+      <div className="absolute bottom-4 right-4 opacity-10 text-4xl font-serif">
+        (x+y)²
+      </div>
+    ),
+    'unit-3': (
+      <div className="absolute top-4 right-4 opacity-10">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.53,2 12,2Z" />
+        </svg>
+      </div>
+    ),
+    'unit-4': (
+      <div className="absolute bottom-4 right-4 opacity-10">
+        <svg width="40" height="40" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="1.5">
+          <line x1="2" y1="20" x2="22" y2="10" />
+          <line x1="2" y1="8" x2="22" y2="16" />
+        </svg>
+      </div>
+    ),
+    'unit-5': (
+      <div className="absolute top-4 right-4 opacity-10">
+        <svg width="40" height="40" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="1.5">
+          <path d="M12,2L2,12H6V22H18V12H22L12,2Z" />
+        </svg>
+      </div>
+    ),
+    'unit-6': (
+      <div className="absolute bottom-4 right-4 opacity-10">
+        <svg width="50" height="50" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="1.5">
+          <path d="M4,4 Q12,-2 20,4 Q28,10 4,20" />
+        </svg>
+        <div className="absolute top-1 right-1 font-serif text-lg">x²</div>
+      </div>
+    ),
+    'unit-7': (
+      <div className="absolute bottom-6 right-8 opacity-10 text-2xl font-serif transform -rotate-12">
+        1, 2, 3, 5, 8, 13...
+      </div>
+    ),
+    'unit-8': (
+      <div className="absolute top-6 right-4 opacity-10">
+        <svg width="40" height="40" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="1.5">
+          <path d="M2,18 L22,18 L12,2 Z" />
+          <line x1="12" y1="2" x2="12" y2="18" />
+        </svg>
+      </div>
+    ),
+    'unit-9': (
+      <div className="absolute bottom-6 right-4 opacity-10 font-serif">
+        <div className="text-xl">f(x)</div>
+        <div className="text-lg">g(x)</div>
+        <div className="text-base">f(g(x))</div>
+      </div>
+    )
   };
   
   const cardVariants: Variants = {
@@ -555,23 +623,61 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
       }}
     >
       <div className={`h-4 ${
-        topic.$id === 'unit-1' ? 'bg-blue-500' : 
-        topic.$id === 'unit-2' ? 'bg-green-500' :
-        topic.$id === 'unit-3' ? 'bg-green-500' :
+        topic.$id === 'unit-1' ? 'bg-indigo-500' : 
+        topic.$id === 'unit-2' ? 'bg-emerald-500' :
+        topic.$id === 'unit-3' ? 'bg-teal-500' :
         topic.$id === 'unit-4' ? 'bg-blue-500' :
-        topic.$id === 'unit-5' ? 'bg-orange-500' :
+        topic.$id === 'unit-5' ? 'bg-amber-500' :
+        topic.$id === 'unit-6' ? 'bg-rose-500' :
+        topic.$id === 'unit-7' ? 'bg-violet-500' :
         topic.$id === 'unit-8' ? 'bg-purple-500' :
+        topic.$id === 'unit-9' ? 'bg-cyan-500' :
         'bg-gray-500'
       }`}></div>
       
+      {/* Topic-specific background pattern */}
+      <div className={`absolute inset-0 opacity-5 pointer-events-none ${
+        topic.$id === 'unit-1' ? 'bg-gradient-to-br from-indigo-200 to-transparent' : 
+        topic.$id === 'unit-2' ? 'bg-gradient-to-tr from-emerald-200 to-transparent' :
+        topic.$id === 'unit-3' ? 'bg-gradient-to-br from-teal-200 to-transparent' :
+        topic.$id === 'unit-4' ? 'bg-gradient-to-tr from-blue-200 to-transparent' :
+        topic.$id === 'unit-5' ? 'bg-gradient-to-br from-amber-200 to-transparent' :
+        topic.$id === 'unit-6' ? 'bg-gradient-to-tr from-rose-200 to-transparent' :
+        topic.$id === 'unit-7' ? 'bg-gradient-to-br from-violet-200 to-transparent' :
+        topic.$id === 'unit-8' ? 'bg-gradient-to-tr from-purple-200 to-transparent' :
+        topic.$id === 'unit-9' ? 'bg-gradient-to-br from-cyan-200 to-transparent' :
+        ''
+      }`}>
+        {topic.$id === 'unit-6' && (
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle, rgba(244,63,94,0.05) 1px, transparent 1px)',
+            backgroundSize: '20px 20px'
+          }}></div>
+        )}
+        {topic.$id === 'unit-7' && (
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'linear-gradient(to right, rgba(139,92,246,0.05) 1px, transparent 1px)',
+            backgroundSize: '15px 15px'
+          }}></div>
+        )}
+        {topic.$id === 'unit-9' && (
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'repeating-linear-gradient(45deg, rgba(34,211,238,0.05), rgba(34,211,238,0.05) 5px, transparent 5px, transparent 25px)',
+          }}></div>
+        )}
+      </div>
+      
       <div className="p-6 relative z-10">
         <h2 className={`text-2xl font-bold mb-4 ${
-          topic.$id === 'unit-1' ? 'text-blue-800' : 
-          topic.$id === 'unit-2' ? 'text-green-800' :
-          topic.$id === 'unit-3' ? 'text-green-800' :
+          topic.$id === 'unit-1' ? 'text-indigo-800' : 
+          topic.$id === 'unit-2' ? 'text-emerald-800' :
+          topic.$id === 'unit-3' ? 'text-teal-800' :
           topic.$id === 'unit-4' ? 'text-blue-800' :
-          topic.$id === 'unit-5' ? 'text-orange-800' :
+          topic.$id === 'unit-5' ? 'text-amber-800' :
+          topic.$id === 'unit-6' ? 'text-rose-800' :
+          topic.$id === 'unit-7' ? 'text-violet-800' :
           topic.$id === 'unit-8' ? 'text-purple-800' :
+          topic.$id === 'unit-9' ? 'text-cyan-800' :
           'text-gray-800'
         }`}>
           {topic.name}
@@ -582,12 +688,15 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
         <Link
           to={`/topic/${topic.$id}`}
           className={`inline-flex items-center px-6 py-2 rounded-lg text-white font-medium transition-colors ${
-            topic.$id === 'unit-1' ? 'bg-blue-600 hover:bg-blue-700' : 
-            topic.$id === 'unit-2' ? 'bg-green-600 hover:bg-green-700' :
-            topic.$id === 'unit-3' ? 'bg-green-600 hover:bg-green-700' :
+            topic.$id === 'unit-1' ? 'bg-indigo-600 hover:bg-indigo-700' : 
+            topic.$id === 'unit-2' ? 'bg-emerald-600 hover:bg-emerald-700' :
+            topic.$id === 'unit-3' ? 'bg-teal-600 hover:bg-teal-700' :
             topic.$id === 'unit-4' ? 'bg-blue-600 hover:bg-blue-700' :
-            topic.$id === 'unit-5' ? 'bg-orange-600 hover:bg-orange-700' :
+            topic.$id === 'unit-5' ? 'bg-amber-600 hover:bg-amber-700' :
+            topic.$id === 'unit-6' ? 'bg-rose-600 hover:bg-rose-700' :
+            topic.$id === 'unit-7' ? 'bg-violet-600 hover:bg-violet-700' :
             topic.$id === 'unit-8' ? 'bg-purple-600 hover:bg-purple-700' :
+            topic.$id === 'unit-9' ? 'bg-cyan-600 hover:bg-cyan-700' :
             'bg-gray-600 hover:bg-gray-700'
           }`}
         >
@@ -600,12 +709,15 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
       
       {/* Topic-specific mathematical visual */}
       <div className={`absolute inset-0 pointer-events-none ${
-        topic.$id === 'unit-1' ? 'text-blue-800' : 
-        topic.$id === 'unit-2' ? 'text-green-800' :
-        topic.$id === 'unit-3' ? 'text-green-800' :
+        topic.$id === 'unit-1' ? 'text-indigo-800' : 
+        topic.$id === 'unit-2' ? 'text-emerald-800' :
+        topic.$id === 'unit-3' ? 'text-teal-800' :
         topic.$id === 'unit-4' ? 'text-blue-800' :
-        topic.$id === 'unit-5' ? 'text-orange-800' :
+        topic.$id === 'unit-5' ? 'text-amber-800' :
+        topic.$id === 'unit-6' ? 'text-rose-800' :
+        topic.$id === 'unit-7' ? 'text-violet-800' :
         topic.$id === 'unit-8' ? 'text-purple-800' :
+        topic.$id === 'unit-9' ? 'text-cyan-800' :
         'text-gray-800'
       }`}>
         {MathIcons[topic.$id] || null}
@@ -613,195 +725,6 @@ const TopicCardComponent: React.FC<TopicCardProps> = ({ topic, index }) => {
     </motion.div>
   );
 };
-
-// Enhanced Daily Challenge with interactive steps and visual solution
-const DailyChallenge: React.FC = () => {
-  const [showSolution, setShowSolution] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const totalSteps = 3;
-  
-  // Navigate through solution steps
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
-  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
-  
-  return (
-    <motion.div 
-      className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-6 shadow-md border border-indigo-100"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.8 }}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-xl font-bold text-indigo-900">Today's Math Challenge</h3>
-        
-        <div className="flex items-center space-x-1">
-          <motion.div 
-            className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
-            animate={{ opacity: Math.random() * 0.4 + 0.6 }}
-            transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
-          />
-          <motion.div
-            className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
-            animate={{ opacity: Math.random() * 0.4 + 0.6 }}
-            transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', delay: 0.3 }}
-          />
-          <motion.div
-            className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
-            animate={{ opacity: Math.random() * 0.4 + 0.6 }}
-            transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', delay: 0.6 }}
-          />
-        </div>
-      </div>
-      
-      <div className="bg-white rounded-lg p-4 shadow-sm border border-indigo-50">
-        <p className="text-gray-700 mb-2 font-medium">
-          If the sum of the roots of the quadratic equation x² + bx + 15 = 0 is equal to -6, find the value of b.
-        </p>
-        
-        <div className="text-gray-500 text-sm italic">
-          Cambridge IGCSE Mathematics - Quadratic Equations
-        </div>
-      </div>
-      
-      <div className="flex flex-wrap gap-4 mt-4">
-        <button
-          onClick={() => setShowSolution(!showSolution)}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
-        >
-          {showSolution ? "Hide Solution" : "View Solution"}
-        </button>
-      </div>
-      
-      {showSolution && (
-        <motion.div 
-          className="mt-4 pt-4 border-t border-indigo-100"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="mb-3 flex justify-between items-center">
-            <p className="text-indigo-800 font-medium text-lg">Solution:</p>
-            <div className="flex space-x-2">
-              <button 
-                onClick={prevStep}
-                disabled={currentStep === 0}
-                className={`p-1 rounded ${currentStep === 0 ? 'text-gray-400' : 'text-indigo-600 hover:bg-indigo-50'}`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-              </button>
-              <span className="text-sm text-gray-600">{currentStep + 1}/{totalSteps + 1}</span>
-              <button 
-                onClick={nextStep}
-                disabled={currentStep === totalSteps}
-                className={`p-1 rounded ${currentStep === totalSteps ? 'text-gray-400' : 'text-indigo-600 hover:bg-indigo-50'}`}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-lg p-4 border border-indigo-100">
-            {currentStep === 0 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-700">
-                  For any quadratic equation in the form ax² + bx + c = 0, we can use Vieta's formulas to relate the coefficients to the roots.
-                </p>
-                <div className="mt-2 font-medium text-indigo-800">
-                  If the roots are α and β:
-                </div>
-                <div className="mt-1 flex flex-col items-center text-center py-2">
-                  <div>α + β = -b/a</div>
-                  <div>α × β = c/a</div>
-                </div>
-              </motion.div>
-            )}
-            
-            {currentStep === 1 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-700">
-                  Looking at our equation: x² + bx + 15 = 0
-                </p>
-                <div className="mt-2">
-                  <div className="font-medium">We can identify:</div>
-                  <ul className="list-disc list-inside mt-1 ml-2 space-y-1">
-                    <li>a = 1 (coefficient of x²)</li>
-                    <li>b = b (coefficient of x)</li>
-                    <li>c = 15 (constant term)</li>
-                  </ul>
-                </div>
-              </motion.div>
-            )}
-            
-            {currentStep === 2 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-700">
-                  We're told that the sum of the roots is -6.
-                </p>
-                <div className="mt-2 font-medium">
-                  Using the formula from Vieta's relations:
-                </div>
-                <div className="mt-1 flex flex-col items-center text-center py-2">
-                  <div>α + β = -b/a = -6</div>
-                  <div className="mt-1">Since a = 1:</div>
-                  <div>-b = -6</div>
-                  <div>b = 6</div>
-                </div>
-              </motion.div>
-            )}
-            
-            {currentStep === 3 && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-700 font-medium">
-                  Therefore, b = 6
-                </p>
-                <div className="mt-2">
-                  <div>Let's verify by finding the roots of x² + 6x + 15 = 0 using the quadratic formula:</div>
-                  <div className="mt-2 flex justify-center">
-                    <div className="text-center">
-                      <div>x = (-b ± √(b² - 4ac))/2a</div>
-                      <div>x = (-6 ± √(36 - 4×1×15))/2</div>
-                      <div>x = (-6 ± √(36 - 60))/2</div>
-                      <div>x = (-6 ± √(-24))/2</div>
-                    </div>
-                  </div>
-                  <div className="mt-2">
-                    Since the discriminant b² - 4ac = -24 is negative, this quadratic has complex roots. 
-                    Their sum is still -6/1 = -6, confirming our answer.
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </motion.div>
-  );
-};
-
 
 // Feature Card Component
 interface FeatureCardProps {
@@ -833,11 +756,28 @@ const HomePage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [mathSymbols, setMathSymbols] = useState(['π', 'e', '∞', '∫', '∑', '√', 'Δ', '±', '≠', '≈', '⊂', '∪', '∩', '∀', '∃', '∇', 'φ', 'θ', 'λ', 'μ']);
 
+  // Enhanced search filtering
   const filteredTopics = useMemo(() => {
-    return topics.filter(topic => 
-      topic.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, mathSymbols]);
+    if (!searchTerm.trim()) return topics;
+    
+    const lowercasedSearch = searchTerm.toLowerCase();
+    
+    return topics.filter(topic => {
+      // Check if topic name matches
+      if (topic.name.toLowerCase().includes(lowercasedSearch)) return true;
+      
+      // Check if any subtopic matches
+      if (topic.subtopics && topic.subtopics.some(subtopic => 
+        subtopic.name.toLowerCase().includes(lowercasedSearch)
+      )) return true;
+      
+      return false;
+    });
+  }, [searchTerm]);
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
 
   return (
     <>
@@ -854,23 +794,130 @@ const HomePage: React.FC = () => {
           transition={{ duration: 0.8 }}
         >
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Explore Mathematics Topics</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+              {searchTerm ? `Search Results for "${searchTerm}"` : "Explore Mathematics Topics"}
+            </h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              Our curriculum covers all essential areas of the Cambridge IGCSE™ International Mathematics Extended syllabus, 
-              with comprehensive resources to help you excel.
+              {searchTerm 
+                ? `Showing ${filteredTopics.length} topics matching your search.`
+                : "Our curriculum covers all essential areas of the Cambridge IGCSE™ International Mathematics Extended syllabus, with comprehensive resources to help you excel."
+              }
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {topics.map((topic, index) => (
+            {filteredTopics.map((topic, index) => (
               <TopicCard key={topic.$id} topic={topic} index={index} />
             ))}
           </div>
+          
+          {searchTerm && filteredTopics.length === 0 && (
+            <div className="text-center py-10">
+              <p className="text-lg text-gray-600">No topics found matching your search.</p>
+              <p className="mt-2 text-gray-500">Try a different search term or browse all topics.</p>
+              <button 
+                onClick={clearSearch}
+                className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Show All Topics
+              </button>
+            </div>
+          )}
         </motion.div>
         
-        {/* Challenge of the Day Section */}
+        {/* Search Component Section - Moved below topics */}
         <div className="mb-16">
-          <DailyChallenge />
+          <motion.div 
+            className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-6 shadow-md border border-indigo-100"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-indigo-900">Find Resources and Subtopics</h3>
+              
+              <div className="flex items-center space-x-1">
+                <motion.div 
+                  className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
+                  animate={{ opacity: Math.random() * 0.4 + 0.6 }}
+                  transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
+                />
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
+                  animate={{ opacity: Math.random() * 0.4 + 0.6 }}
+                  transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse', delay: 0.3 }}
+                />
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-indigo-600 opacity-60"
+                  animate={{ opacity: Math.random() * 0.4 + 0.6 }}
+                  transition={{ duration: 1.8, repeat: Infinity, repeatType: 'reverse', delay: 0.6 }}
+                />
+              </div>
+            </div>
+            
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-indigo-50">
+              <div className="mb-4">
+                <label htmlFor="search-resources" className="block text-gray-700 mb-2 font-medium">
+                  Search for topics, subtopics or resources:
+                </label>
+                <div className="relative">
+                  <input
+                    id="search-resources"
+                    type="text"
+                    placeholder="e.g. Quadratic equations, Pythagoras theorem, Linear functions..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full py-3 px-4 pr-12 rounded-lg border border-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition-colors"
+                  />
+                  {searchTerm && (
+                    <button 
+                      className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      onClick={clearSearch}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  )}
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <h4 className="text-indigo-900 font-medium mb-2">Quick Filters:</h4>
+                <div className="flex flex-wrap gap-2">
+                  {['Quadratic', 'Linear', 'Pythagoras', 'Functions', 'Fractions', 'Sequences', 'Geometry'].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setSearchTerm(term)}
+                      className="px-3 py-1 text-sm rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {searchTerm && (
+                <div className="mt-4">
+                  <h4 className="text-indigo-900 font-medium mb-2">Search Results:</h4>
+                  {filteredTopics.length === 0 ? (
+                    <p className="text-gray-600">No topics or subtopics found matching "{searchTerm}"</p>
+                  ) : (
+                    <p className="text-gray-600">Found {filteredTopics.length} topics/subtopics matching "{searchTerm}"</p>
+                  )}
+                </div>
+              )}
+              
+              <div className="mt-4 text-gray-600 text-sm">
+                Find what you need quickly by searching across all topics, subtopics, and educational resources in our Cambridge IGCSE Mathematics curriculum.
+              </div>
+            </div>
+          </motion.div>
         </div>
         
         {/* Features Section */}
@@ -955,7 +1002,7 @@ const HomePage: React.FC = () => {
           <div className="relative z-10">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">About This Website</h2>
             <p className="text-gray-700 mb-4">
-              This website is designed to help Form 3 students prepare for their End of Year examinations in Mathematics.
+              This website is designed to help Form 4 students prepare for their End of Year examinations in Mathematics.
               It follows the Cambridge IGCSE™ International Mathematics (0607) Extended curriculum and provides a variety
               of resources including:
             </p>

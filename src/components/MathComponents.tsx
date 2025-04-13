@@ -1,3 +1,181 @@
+// Pythagoras Theorem Component (Static Version)
+export const PythagorasTheorem: React.FC<{
+  className?: string;
+  greenTheme?: boolean;
+  designStyle?: 'glass' | 'dark' | 'gradient' | 'minimal';
+}> = ({
+  className = "",
+  greenTheme = true,
+  designStyle = 'glass'
+}) => {
+  // Colors based on theme
+  const colors = {
+    sideA: greenTheme ? "#10B981" : "#818CF8", // emerald-500 or indigo-400
+    sideB: greenTheme ? "#059669" : "#6366F1", // emerald-600 or indigo-500
+    sideC: greenTheme ? "#047857" : "#4F46E5", // emerald-700 or indigo-600
+    squareA: greenTheme ? "rgba(16, 185, 129, 0.2)" : "rgba(129, 140, 248, 0.2)",
+    squareB: greenTheme ? "rgba(5, 150, 105, 0.2)" : "rgba(99, 102, 241, 0.2)",
+    squareC: greenTheme ? "rgba(4, 120, 87, 0.2)" : "rgba(79, 70, 229, 0.2)",
+    text: "white"
+  };
+  
+  // Container style based on design style selection
+  const containerStyles = {
+    glass: `backdrop-filter backdrop-blur-md bg-opacity-20 border border-white border-opacity-30 shadow-lg ${
+      greenTheme ? 'bg-emerald-900/30 text-emerald-50' : 'bg-indigo-900/30 text-indigo-50'
+    }`,
+    dark: `${
+      greenTheme ? 'bg-emerald-900 border-emerald-700' : 'bg-indigo-900 border-indigo-700'
+    } border shadow-lg`,
+    gradient: `${
+      greenTheme 
+        ? 'bg-gradient-to-br from-emerald-800 to-green-900' 
+        : 'bg-gradient-to-br from-indigo-800 to-purple-900'
+    } shadow-lg`,
+    minimal: `bg-transparent border-0 shadow-none ${
+      greenTheme ? 'text-emerald-900' : 'text-indigo-900'
+    }`
+  };
+  
+  return (
+    <div className={`font-serif ${className} ${containerStyles[designStyle]} rounded-xl p-5 relative overflow-hidden`}>
+      {/* Top title */}
+      <div className="text-center text-sm font-medium tracking-wide mb-4 opacity-90">
+        Pythagoras Theorem
+      </div>
+      
+      {/* Main visualization area */}
+      <div className="relative h-[200px] flex items-center justify-center">
+        {/* Triangle and squares visualization */}
+        <svg viewBox="0 0 240 200" className="w-full max-w-[320px] h-auto">
+          {/* Squares on each side */}
+          {/* Square on side a */}
+          <rect 
+            x="50" 
+            y="100" 
+            width="80" 
+            height="80" 
+            fill={colors.squareA}
+            stroke={colors.sideA}
+            strokeWidth="1.5"
+            opacity="0.7"
+          />
+          <text 
+            x="90" 
+            y="140" 
+            textAnchor="middle" 
+            fill={colors.text} 
+            fontSize="16"
+            fontWeight="bold"
+          >
+            a²
+          </text>
+          
+          {/* Square on side b */}
+          <rect 
+            x="50" 
+            y="20" 
+            width="80" 
+            height="80" 
+            fill={colors.squareB}
+            stroke={colors.sideB}
+            strokeWidth="1.5"
+            transform="translate(130, 50) rotate(90)"
+            opacity="0.7"
+          />
+          <text 
+            x="150" 
+            y="70" 
+            textAnchor="middle" 
+            fill={colors.text} 
+            fontSize="16"
+            fontWeight="bold"
+          >
+            b²
+          </text>
+          
+          {/* Square on hypotenuse (side c) */}
+          <path 
+            d="M50,100 L130,100 L130,20 L50,20 Z" 
+            fill={colors.squareC}
+            stroke={colors.sideC}
+            strokeWidth="1.5"
+            transform="translate(40, 40) rotate(-45, 90, 60)"
+            opacity="0.7"
+          />
+          <text 
+            x="90" 
+            y="60" 
+            textAnchor="middle" 
+            fill={colors.text} 
+            fontSize="16"
+            fontWeight="bold"
+          >
+            c²
+          </text>
+          
+          {/* Right triangle */}
+          <path 
+            d="M50,100 L130,100 L130,20 Z" 
+            fill="none" 
+            stroke="white" 
+            strokeWidth="2"
+            opacity="0.9"
+          />
+          
+          {/* Right angle mark */}
+          <path 
+            d="M60,100 L60,90 L50,90" 
+            fill="none" 
+            stroke="white" 
+            strokeWidth="1.5"
+            opacity="0.8"
+          />
+          
+          {/* Side labels */}
+          <text 
+            x="90" 
+            y="110" 
+            textAnchor="middle" 
+            fill="white" 
+            fontSize="18"
+            fontWeight="bold"
+          >
+            a
+          </text>
+          
+          <text 
+            x="140" 
+            y="60" 
+            textAnchor="middle" 
+            fill="white" 
+            fontSize="18"
+            fontWeight="bold"
+          >
+            b
+          </text>
+          
+          <text 
+            x="85" 
+            y="65" 
+            textAnchor="middle" 
+            fill="white" 
+            fontSize="18"
+            fontWeight="bold"
+          >
+            c
+          </text>
+        </svg>
+      </div>
+      
+      {/* Formula at the bottom */}
+      <div className="text-center text-2xl mt-4 font-bold">
+        <span>a² + b² = c²</span>
+      </div>
+    </div>
+  );
+};
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 
@@ -1688,6 +1866,255 @@ export const SimpleCalculator: React.FC<{ className?: string }> = ({ className =
         <button onClick={() => handleNumberClick(".")} className="calc-button bg-gray-200 hover:bg-gray-300">.</button>
         <button onClick={handleCalculate} className="calc-button bg-indigo-600 text-white hover:bg-indigo-700">=</button>
       </div>
+    </div>
+  );
+};
+
+// Polynomial Factorization Component
+export const PolynomialFactorization: React.FC<{
+  className?: string;
+  greenTheme?: boolean;
+  designStyle?: 'glass' | 'dark' | 'gradient' | 'minimal';
+}> = ({
+  className = "",
+  greenTheme = true,
+  designStyle = 'glass'
+}) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
+  
+  // Define the steps of the polynomial factorization
+  const steps = [
+    // Initial quadratic expression
+    {
+      expression: "x² - 5x + 6",
+      explanation: "Let's factor this quadratic expression"
+    },
+    // Find factors of the constant term
+    {
+      expression: "6 = 1 × 6 = 2 × 3",
+      explanation: "Find factors of the constant term (6)"
+    },
+    // Identify correct factors
+    {
+      expression: "2 + 3 = 5",
+      explanation: "We need factors that sum to 5 (coefficient of x)"
+    },
+    // Write factors as binomials
+    {
+      expression: "(x - 2)(x - 3)",
+      explanation: "Write as product of binomials"
+    },
+    // Verify through expansion
+    {
+      expression: "x² - 3x - 2x + 6",
+      explanation: "Verify: (x - 2)(x - 3) = x² - 3x - 2x + 6"
+    },
+    // Final simplified form
+    {
+      expression: "x² - 5x + 6",
+      explanation: "Simplified: x² - 5x + 6 ✓"
+    }
+  ];
+  
+  // Set up automatic stepping through the animation
+  useEffect(() => {
+    if (!isAnimating) return;
+    
+    const timer = setTimeout(() => {
+      if (currentStep < steps.length - 1) {
+        setCurrentStep(prevStep => prevStep + 1);
+      } else {
+        // Loop back to the beginning after a longer pause
+        setTimeout(() => {
+          setCurrentStep(0);
+        }, 2000);
+      }
+    }, 2500);
+    
+    return () => clearTimeout(timer);
+  }, [currentStep, steps.length, isAnimating]);
+  
+  // Design style variations
+  const designStyles = {
+    glass: {
+      container: `backdrop-filter backdrop-blur-md bg-white bg-opacity-20 border border-white border-opacity-30 shadow-lg ${greenTheme ? 'text-white' : 'text-indigo-50'}`,
+      heading: 'text-white text-opacity-90',
+      expression: 'text-white font-medium',
+      explanation: 'bg-white bg-opacity-20 text-white text-opacity-90',
+      dot: `${greenTheme ? 'bg-emerald-400' : 'bg-indigo-400'}`,
+      inactiveDot: 'bg-white bg-opacity-30'
+    },
+    dark: {
+      container: `${greenTheme ? 'bg-emerald-900' : 'bg-indigo-900'} shadow-lg border ${greenTheme ? 'border-emerald-700' : 'border-indigo-700'}`,
+      heading: `${greenTheme ? 'text-emerald-200' : 'text-indigo-200'}`,
+      expression: 'text-white font-medium',
+      explanation: `${greenTheme ? 'bg-emerald-800 text-emerald-100' : 'bg-indigo-800 text-indigo-100'}`,
+      dot: `${greenTheme ? 'bg-emerald-400' : 'bg-indigo-400'}`,
+      inactiveDot: `${greenTheme ? 'bg-emerald-700' : 'bg-indigo-700'}`
+    },
+    gradient: {
+      container: `${greenTheme ? 'bg-gradient-to-br from-emerald-800 to-green-900' : 'bg-gradient-to-br from-indigo-800 to-purple-900'} shadow-lg`,
+      heading: 'text-white text-opacity-90',
+      expression: 'text-white font-bold',
+      explanation: `${greenTheme ? 'bg-emerald-700 bg-opacity-50 text-white' : 'bg-indigo-700 bg-opacity-50 text-white'}`,
+      dot: `${greenTheme ? 'bg-green-400' : 'bg-indigo-400'}`,
+      inactiveDot: 'bg-white bg-opacity-30'
+    },
+    minimal: {
+      container: 'bg-transparent border-0 shadow-none',
+      heading: 'text-white text-opacity-80',
+      expression: 'text-white font-bold',
+      explanation: 'bg-black bg-opacity-30 text-white',
+      dot: `${greenTheme ? 'bg-green-400' : 'bg-indigo-400'}`,
+      inactiveDot: 'bg-white bg-opacity-20'
+    }
+  };
+  
+  // Select the appropriate style
+  const style = designStyles[designStyle];
+  
+  // Visualization of the polynomial factorization steps
+  const PolynomialVisualization = ({ step }: { step: number }) => {
+    // Only show visualization from step 1 onwards
+    const isVisible = step >= 1;
+    
+    // Visual representation of factorization
+    return (
+      <motion.div 
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isVisible ? 0.7 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <svg width="100%" height="100%" viewBox="0 0 100 100" className="text-white text-opacity-30">
+          {/* Background grid for polynomial visualization */}
+          <g strokeWidth="0.5" stroke="currentColor" strokeOpacity="0.3">
+            <line x1="10" y1="50" x2="90" y2="50" />
+            <line x1="50" y1="10" x2="50" y2="90" />
+            
+            {/* Coordinate markings */}
+            <text x="92" y="52" fill="currentColor" fontSize="8">x</text>
+            <text x="48" y="10" fill="currentColor" fontSize="8">y</text>
+          </g>
+          
+          {/* Step-specific visualizations */}
+          {step >= 3 && (
+            <>
+              {/* Parabola for x² - 5x + 6 */}
+              <path
+                d="M 20,80 Q 50,20 80,80"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              
+              {/* Root markers (x = 2 and x = 3) */}
+              <circle cx="35" cy="50" r="2" fill="currentColor" />
+              <circle cx="65" cy="50" r="2" fill="currentColor" />
+              
+              {/* Root labels */}
+              <text x="35" y="45" fill="currentColor" fontSize="8" textAnchor="middle">2</text>
+              <text x="65" y="45" fill="currentColor" fontSize="8" textAnchor="middle">3</text>
+            </>
+          )}
+          
+          {/* Binomial factors visualization for steps 4+ */}
+          {step >= 4 && (
+            <>
+              <line x1="35" y1="30" x2="35" y2="70" stroke="currentColor" strokeDasharray="1,1" />
+              <line x1="65" y1="30" x2="65" y2="70" stroke="currentColor" strokeDasharray="1,1" />
+              <text x="30" y="85" fill="currentColor" fontSize="7">(x-2)</text>
+              <text x="60" y="85" fill="currentColor" fontSize="7">(x-3)</text>
+            </>
+          )}
+        </svg>
+      </motion.div>
+    );
+  };
+  
+  // Render the component
+  return (
+    <div 
+      className={`font-serif ${className} ${style.container} rounded-xl p-5 relative overflow-hidden`}
+      onClick={() => setIsAnimating(!isAnimating)}
+    >
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Mathematical symbols */}
+        <div className="text-white text-opacity-10 font-serif absolute top-2 right-2 text-4xl transform rotate-12">x²</div>
+        <div className="text-white text-opacity-10 font-serif absolute bottom-4 left-4 text-3xl transform -rotate-12">+</div>
+        <div className="text-white text-opacity-5 font-serif absolute bottom-2 right-8 text-4xl">-</div>
+        
+        {/* Grid lines */}
+        <div 
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)',
+            backgroundSize: '20px 20px'
+          }}
+        />
+      </div>
+      
+      {/* Top label */}
+      <div className={`text-xs ${style.heading} mb-2 font-sans font-medium tracking-wide`}>
+        Polynomial Factorization
+      </div>
+      
+      {/* Expression display */}
+      <div className="text-center my-5 relative z-10">
+        <motion.div
+          className={`text-3xl sm:text-4xl ${style.expression}`}
+          key={currentStep}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {steps[currentStep].expression}
+        </motion.div>
+      </div>
+      
+      {/* Polynomial visualization */}
+      <div className="relative h-28">
+        <PolynomialVisualization step={currentStep} />
+      </div>
+      
+      {/* Explanation */}
+      <motion.div
+        className={`text-xs sm:text-sm mt-3 px-3 py-2 rounded-lg ${style.explanation} relative z-10`}
+        key={`explanation-${currentStep}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        {steps[currentStep].explanation}
+      </motion.div>
+      
+      {/* Progress dots */}
+      <div className="flex justify-center mt-4 space-x-2 relative z-10">
+        {steps.map((_, index) => (
+          <motion.div
+            key={index}
+            className={`w-2 h-2 rounded-full ${currentStep === index ? style.dot : style.inactiveDot}`}
+            initial={{ scale: 1 }}
+            animate={{ scale: currentStep === index ? [1, 1.2, 1] : 1 }}
+            transition={{ duration: 0.5 }}
+          />
+        ))}
+      </div>
+      
+      {/* Interactive hint */}
+      <div className="absolute bottom-2 right-2 text-[10px] text-white text-opacity-60">
+        Click to {isAnimating ? 'pause' : 'play'}
+      </div>
+      
+      {/* Glow effect for glass style */}
+      {designStyle === 'glass' && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 blur-xl" 
+               style={{ transform: 'rotate(-15deg) translateY(-30%)' }}></div>
+        </div>
+      )}
     </div>
   );
 };
