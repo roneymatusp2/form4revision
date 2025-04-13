@@ -1,6 +1,9 @@
 name: Check and Fix Broken Links
 
 on:
+  push:
+    branches:
+      - '**'  # Matches all branches
   schedule:
     - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
   workflow_dispatch:     # Allow manual triggering
