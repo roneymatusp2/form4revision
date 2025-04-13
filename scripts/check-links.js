@@ -6,11 +6,18 @@ const traverse = require('@babel/traverse').default;
 const generator = require('@babel/generator').default;
 
 // API Configuration
+const GOOGLE_GEMINI_API = process.env.GOOGLE_GEMINI_API;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-const QWEN_API_KEY = process.env.QWEN_API_KEY;
+const QWEN_API_KEY = process.env.QWEN_API;
+
+const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent';
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const QWEN_API_URL = 'https://api.qwen.ai/v1/chat/completions';
 
+console.log(`Google Gemini API Key present: ${GOOGLE_GEMINI_API ? 'Yes' : 'No'}`);
+console.log(`OpenAI API Key present: ${OPENAI_API_KEY ? 'Yes' : 'No'}`);
 console.log(`DeepSeek API Key present: ${DEEPSEEK_API_KEY ? 'Yes' : 'No'}`);
 console.log(`Qwen API Key present: ${QWEN_API_KEY ? 'Yes' : 'No'}`);
 
@@ -45,7 +52,12 @@ const AUTHORIZED_WEBSITES = [
   'gcse.com',
   'mathedup.co.uk',
   'mathsbot.com',
-  'diagnosticquestions.com'
+  'diagnosticquestions.com',
+  'mathswatch.co.uk',
+  'crashmaths.com',
+  'revision.co.uk',
+  'mymaths.co.uk',
+  'teachitmaths.co.uk'
 ];
 
 // File path for the resources
@@ -59,10 +71,15 @@ async function isValidUrl(url) {
   try {
     console.log(`Checking URL: ${url}`);
     const response = await axios.head(url, { 
-      timeout: 10000,
+      timeout: 15000,
       validateStatus: status => status < 400, // Accept any status code less than 400
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Cache-Control': 'max-age=0'
       }
     });
     return true;
@@ -91,7 +108,17 @@ function formatYouTubeUrl(url) {
   return url;
 }
 
-// Mock replacement function for when both APIs are not available
+// Extract domain from URL for categorization
+function extractDomain(url) {
+  try {
+    const domain = new URL(url).hostname;
+    return domain.startsWith('www.') ? domain.substring(4) : domain;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Mock replacement function for when all APIs fail
 function getMockReplacement(title, type, source) {
   if (type === 'video') {
     if (title.toLowerCase().includes('linear')) {
@@ -102,6 +129,10 @@ function getMockReplacement(title, type, source) {
       return 'https://www.youtube.com/embed/NVuMULQjb3o'; // Angles video
     } else if (title.toLowerCase().includes('trigonometry')) {
       return 'https://www.youtube.com/embed/F21S9Wpi0y8'; // Trigonometry video
+    } else if (title.toLowerCase().includes('pythagoras')) {
+      return 'https://www.youtube.com/embed/JCB-RILJJ_k'; // Pythagoras theorem
+    } else if (title.toLowerCase().includes('circle')) {
+      return 'https://www.youtube.com/embed/O-cawByg2aA'; // Circle theorems
     } else {
       return 'https://www.youtube.com/embed/l9nh1l8ZIJQ'; // General math video
     }
@@ -117,6 +148,160 @@ function getMockReplacement(title, type, source) {
     }
   }
   return null;
+}
+
+// Function to find replacement using Google Gemini API
+async function findGeminiReplacement(title, type, source, topic, subtopic) {
+  if (!GOOGLE_GEMINI_API) {
+    console.log('No Google Gemini API key available, skipping Gemini API call');
+    return null;
+  }
+  
+  try {
+    console.log(`Searching for replacement using Google Gemini for: ${title} (${type}) from ${source}`);
+    
+    const response = await axios.post(
+      `${GOOGLE_GEMINI_API_URL}?key=${GOOGLE_GEMINI_API}`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: `You are an educational resource expert. Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 100
+        }
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('Google Gemini API response received');
+    let suggestedUrl = '';
+    
+    if (response.data && 
+        response.data.candidates && 
+        response.data.candidates[0] && 
+        response.data.candidates[0].content && 
+        response.data.candidates[0].content.parts && 
+        response.data.candidates[0].content.parts[0] && 
+        response.data.candidates[0].content.parts[0].text) {
+      suggestedUrl = response.data.candidates[0].content.parts[0].text.trim();
+    }
+    
+    console.log(`Google Gemini suggested URL: ${suggestedUrl}`);
+    
+    // Skip if URL doesn't appear to be valid
+    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
+      console.log('Invalid URL format received from Google Gemini');
+      return null;
+    }
+    
+    const formattedUrl = formatYouTubeUrl(suggestedUrl);
+    
+    // Validate the suggested URL is from an authorized website
+    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
+    if (!isAuthorized) {
+      console.log(`Google Gemini suggested URL ${formattedUrl} is not from an authorized domain`);
+      return null;
+    }
+    
+    // Check if the URL is valid
+    const isValid = await isValidUrl(formattedUrl);
+    if (!isValid) {
+      console.log(`Google Gemini suggested URL ${formattedUrl} is not valid`);
+      return null;
+    }
+    
+    return formattedUrl;
+  } catch (error) {
+    console.error(`Error finding replacement with Google Gemini: ${error.message}`);
+    if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
+      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
+    }
+    return null;
+  }
+}
+
+// Function to find replacement using OpenAI API
+async function findOpenAIReplacement(title, type, source, topic, subtopic) {
+  if (!OPENAI_API_KEY) {
+    console.log('No OpenAI API key available, skipping OpenAI API call');
+    return null;
+  }
+  
+  try {
+    console.log(`Searching for replacement using OpenAI for: ${title} (${type}) from ${source}`);
+    
+    const response = await axios.post(
+      OPENAI_API_URL,
+      {
+        model: 'gpt-4o-mini-2024-07-18',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an educational resource expert. Your task is to find replacement links for broken educational resources. Respond ONLY with the URL, no other text.'
+          },
+          {
+            role: 'user',
+            content: `Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 100
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('OpenAI API response received');
+    const suggestedUrl = response.data.choices[0].message.content.trim();
+    console.log(`OpenAI suggested URL: ${suggestedUrl}`);
+    
+    // Skip if URL doesn't appear to be valid
+    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
+      console.log('Invalid URL format received from OpenAI');
+      return null;
+    }
+    
+    const formattedUrl = formatYouTubeUrl(suggestedUrl);
+    
+    // Validate the suggested URL is from an authorized website
+    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
+    if (!isAuthorized) {
+      console.log(`OpenAI suggested URL ${formattedUrl} is not from an authorized domain`);
+      return null;
+    }
+    
+    // Check if the URL is valid
+    const isValid = await isValidUrl(formattedUrl);
+    if (!isValid) {
+      console.log(`OpenAI suggested URL ${formattedUrl} is not valid`);
+      return null;
+    }
+    
+    return formattedUrl;
+  } catch (error) {
+    console.error(`Error finding replacement with OpenAI: ${error.message}`);
+    if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
+      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
+    }
+    return null;
+  }
 }
 
 // Function to find replacement using DeepSeek Reasoner API
@@ -158,6 +343,12 @@ async function findDeepSeekReplacement(title, type, source, topic, subtopic) {
     const suggestedUrl = response.data.choices[0].message.content.trim();
     console.log(`DeepSeek suggested URL: ${suggestedUrl}`);
     
+    // Skip if URL doesn't appear to be valid
+    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
+      console.log('Invalid URL format received from DeepSeek');
+      return null;
+    }
+    
     const formattedUrl = formatYouTubeUrl(suggestedUrl);
     
     // Validate the suggested URL is from an authorized website
@@ -198,7 +389,7 @@ async function findQwenReplacement(title, type, source, topic, subtopic) {
     const response = await axios.post(
       QWEN_API_URL,
       {
-        model: 'qwen-max',  // Qwen model with reasoning capabilities
+        model: 'qwen-max',
         messages: [
           {
             role: 'system',
@@ -223,6 +414,12 @@ async function findQwenReplacement(title, type, source, topic, subtopic) {
     console.log('Qwen API response received');
     const suggestedUrl = response.data.choices[0].message.content.trim();
     console.log(`Qwen suggested URL: ${suggestedUrl}`);
+    
+    // Skip if URL doesn't appear to be valid
+    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
+      console.log('Invalid URL format received from Qwen');
+      return null;
+    }
     
     const formattedUrl = formatYouTubeUrl(suggestedUrl);
     
@@ -251,29 +448,53 @@ async function findQwenReplacement(title, type, source, topic, subtopic) {
   }
 }
 
-// Main function to find a replacement using multiple APIs
+// Main function to find a replacement using multiple APIs in cascade
 async function findReplacement(title, type, source, topic, subtopic) {
-  // First try DeepSeek
-  let replacement = await findDeepSeekReplacement(title, type, source, topic, subtopic);
+  // Track which API succeeded for analytics
+  let successfulProvider = null;
+  
+  // 1. First try Google Gemini (newest and potentially most accurate)
+  let replacement = await findGeminiReplacement(title, type, source, topic, subtopic);
   if (replacement) {
-    console.log(`Using DeepSeek replacement: ${replacement}`);
-    return replacement;
+    console.log(`Using Google Gemini replacement: ${replacement}`);
+    successfulProvider = 'Google Gemini';
+    return { url: replacement, provider: successfulProvider };
   }
   
-  // If DeepSeek fails, try Qwen
+  // 2. If Google Gemini fails, try OpenAI
+  console.log('Google Gemini failed, trying OpenAI API');
+  replacement = await findOpenAIReplacement(title, type, source, topic, subtopic);
+  if (replacement) {
+    console.log(`Using OpenAI replacement: ${replacement}`);
+    successfulProvider = 'OpenAI';
+    return { url: replacement, provider: successfulProvider };
+  }
+  
+  // 3. If OpenAI fails, try DeepSeek
+  console.log('OpenAI failed, trying DeepSeek API');
+  replacement = await findDeepSeekReplacement(title, type, source, topic, subtopic);
+  if (replacement) {
+    console.log(`Using DeepSeek replacement: ${replacement}`);
+    successfulProvider = 'DeepSeek';
+    return { url: replacement, provider: successfulProvider };
+  }
+  
+  // 4. If DeepSeek fails, try Qwen
   console.log('DeepSeek failed, trying Qwen API');
   replacement = await findQwenReplacement(title, type, source, topic, subtopic);
   if (replacement) {
     console.log(`Using Qwen replacement: ${replacement}`);
-    return replacement;
+    successfulProvider = 'Qwen';
+    return { url: replacement, provider: successfulProvider };
   }
   
-  // If both APIs fail, use mock replacement
-  console.log('Both APIs failed, using mock replacement');
+  // 5. If all APIs fail, use mock replacement
+  console.log('All APIs failed, using mock replacement');
   replacement = getMockReplacement(title, type, source);
   if (replacement) {
     console.log(`Using mock replacement: ${replacement}`);
-    return replacement;
+    successfulProvider = 'Mock';
+    return { url: replacement, provider: successfulProvider };
   }
   
   console.log('No replacement found for this resource');
@@ -282,7 +503,22 @@ async function findReplacement(title, type, source, topic, subtopic) {
 
 async function main() {
   try {
-    console.log('Starting enhanced link checker with DeepSeek and Qwen APIs...');
+    console.log('Starting enhanced link checker with Google Gemini, OpenAI, DeepSeek and Qwen APIs...');
+    
+    // Statistics tracking
+    const stats = {
+      totalLinks: 0,
+      brokenLinks: 0,
+      fixedLinks: 0,
+      providerSuccess: {
+        'Google Gemini': 0,
+        'OpenAI': 0,
+        'DeepSeek': 0,
+        'Qwen': 0,
+        'Mock': 0,
+        'Failed': 0
+      }
+    };
     
     // Read the resources file
     const code = fs.readFileSync(resourcesFilePath, 'utf8');
@@ -342,6 +578,9 @@ async function main() {
             currentNode = currentNode.parentPath;
           }
           
+          // Track total links
+          stats.totalLinks++;
+          
           // Check if URL is valid
           const checkUrl = async () => {
             if (!shouldContinue) return; // Skip if global timeout reached
@@ -351,23 +590,38 @@ async function main() {
             
             const valid = await isValidUrl(url);
             if (!valid) {
+              stats.brokenLinks++;
               console.log(`\nFound broken link #${brokenLinksFixed + 1}: ${url}`);
               console.log(`Resource: ${title}, Type: ${type}, Source: ${source}`);
               
               // Find replacement
-              const replacement = await findReplacement(title, type, source, topic, subtopic);
-              if (replacement) {
-                console.log(`Replacing with: ${replacement}`);
-                urlNode.value = replacement;
+              const replacementResult = await findReplacement(title, type, source, topic, subtopic);
+              if (replacementResult && replacementResult.url) {
+                console.log(`Replacing with: ${replacementResult.url} (provided by ${replacementResult.provider})`);
+                urlNode.value = replacementResult.url;
                 changesMade = true;
                 brokenLinksFixed++;
+                stats.fixedLinks++;
+                
+                // Track which provider succeeded
+                if (replacementResult.provider) {
+                  stats.providerSuccess[replacementResult.provider]++;
+                }
                 
                 // Save intermediate results every 10 fixed links
                 if (brokenLinksFixed % 10 === 0) {
                   const intermediateOutput = generator(ast, {}, code).code;
                   fs.writeFileSync(resourcesFilePath, intermediateOutput);
                   console.log(`\nSaved intermediate results after fixing ${brokenLinksFixed} links\n`);
+                  
+                  // Also save stats
+                  fs.writeFileSync(
+                    path.resolve(__dirname, 'link-check-stats.json'), 
+                    JSON.stringify(stats, null, 2)
+                  );
                 }
+              } else {
+                stats.providerSuccess['Failed']++;
               }
             }
           };
@@ -379,7 +633,7 @@ async function main() {
     });
     
     // Process all checks in batches to avoid overwhelming the system
-    const BATCH_SIZE = 20;
+    const BATCH_SIZE = 15;
     for (let i = 0; i < checkPromises.length; i += BATCH_SIZE) {
       if (!shouldContinue) break; // Stop if global timeout reached
       
@@ -393,6 +647,20 @@ async function main() {
       const output = generator(ast, {}, code).code;
       fs.writeFileSync(resourcesFilePath, output);
       console.log(`\nCompleted link checker. Checked ${linksChecked} links, fixed ${brokenLinksFixed} broken links.`);
+      
+      // Generate success rate statistics
+      console.log('\nSuccess rate by provider:');
+      for (const [provider, count] of Object.entries(stats.providerSuccess)) {
+        if (count > 0) {
+          console.log(`${provider}: ${count} links (${Math.round(count / stats.brokenLinks * 100)}%)`);
+        }
+      }
+      
+      // Save detailed statistics
+      fs.writeFileSync(
+        path.resolve(__dirname, 'link-check-stats.json'), 
+        JSON.stringify(stats, null, 2)
+      );
     } else {
       console.log('\nNo broken links found or fixed');
     }
