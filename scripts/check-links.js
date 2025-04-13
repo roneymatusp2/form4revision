@@ -11,7 +11,8 @@ const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const QWEN_API_KEY = process.env.QWEN_API;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent';
+// Corrigido para usar o modelo correto do Gemini
+const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const QWEN_API_URL = 'https://api.qwen.ai/v1/chat/completions';
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
