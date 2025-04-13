@@ -41,21 +41,21 @@ async function isValidUrl(url) {
   }
 }
 
-// Function to find replacement using DeepSeek API
+// Function to find replacement using DeepSeek Reasoner API
 async function findReplacement(title, type, source, topic, subtopic) {
   try {
     const response = await axios.post(
       DEEPSEEK_API_URL,
       {
-        model: 'deepseek-chat',
+        model: 'deepseek-reasoner',  // Using DeepSeek Reasoner model
         messages: [
           {
             role: 'system',
-            content: 'You are an educational resource expert. Find appropriate replacement links for broken educational resources.'
+            content: 'You are an educational resource expert with strong reasoning abilities. Find appropriate replacement links for broken educational resources using careful analysis and verification.'
           },
           {
             role: 'user',
-            content: `Find a ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL.`
+            content: `Find a ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL after careful reasoning and verification.`
           }
         ],
         temperature: 0.2,
