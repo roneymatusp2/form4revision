@@ -11,6 +11,8 @@ on:
 jobs:
   check-links:
     runs-on: ubuntu-latest
+    timeout-minutes: 60  # Enforce a 1-hour timeout at the GitHub Actions level
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -27,6 +29,7 @@ jobs:
       - name: Run link checker script
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          QWEN_API_KEY: ${{ secrets.QWEN_API }}
         run: node scripts/check-links.js
         
       - name: Commit and push if there are changes
@@ -34,4 +37,4 @@ jobs:
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'actions@github.com'
           git add src/data/externalResources-new.ts
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-fix broken links" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-fix broken links using DeepSeek and Qwen APIs" && git push)

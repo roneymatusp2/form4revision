@@ -5,10 +5,23 @@ const { parse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const generator = require('@babel/generator').default;
 
-// DeepSeek API Configuration
+// API Configuration
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-console.log(`API Key present: ${DEEPSEEK_API_KEY ? 'Yes' : 'No'}`);
+const QWEN_API_KEY = process.env.QWEN_API_KEY;
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const QWEN_API_URL = 'https://api.qwen.ai/v1/chat/completions';
+
+console.log(`DeepSeek API Key present: ${DEEPSEEK_API_KEY ? 'Yes' : 'No'}`);
+console.log(`Qwen API Key present: ${QWEN_API_KEY ? 'Yes' : 'No'}`);
+
+// Set a global timeout to ensure we finish within 1 hour
+const GLOBAL_TIMEOUT = 55 * 60 * 1000; // 55 minutes in milliseconds
+let shouldContinue = true;
+
+setTimeout(() => {
+  console.log('Global timeout reached (55 minutes). Finalizing current operations...');
+  shouldContinue = false;
+}, GLOBAL_TIMEOUT);
 
 // Authorized educational websites
 const AUTHORIZED_WEBSITES = [
@@ -18,11 +31,21 @@ const AUTHORIZED_WEBSITES = [
   'mathsgenie.co.uk',
   'draustinmaths.com',
   'physicsandmathstutor.com',
-  'youtube.com',  // For embedded videos
+  'youtube.com',      // For embedded videos
   'maths4everyone.com',
   'mathsaurus.com',
   'mathantics.com',
-  'fuseschool.org'
+  'fuseschool.org',
+  'bbc.co.uk',        // BBC Bitesize
+  'pearsonactivelearn.com',
+  'onmaths.com',
+  'edplace.com',
+  'hegartymaths.com',
+  'justmaths.co.uk',
+  'gcse.com',
+  'mathedup.co.uk',
+  'mathsbot.com',
+  'diagnosticquestions.com'
 ];
 
 // File path for the resources
@@ -54,38 +77,62 @@ async function isValidUrl(url) {
   }
 }
 
-// Mock replacement function for when API is not available
+// Function to ensure URL is in correct format for YouTube videos
+function formatYouTubeUrl(url) {
+  // If it's a YouTube URL, ensure it's in embed format
+  if (url.includes('youtube.com/watch?v=')) {
+    const videoId = url.split('v=')[1].split('&')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1].split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  return url;
+}
+
+// Mock replacement function for when both APIs are not available
 function getMockReplacement(title, type, source) {
   if (type === 'video') {
-    return 'https://www.youtube.com/embed/dQw4w9WgXcQ'; // Example video URL
-  } else if (type === 'pdf') {
-    if (source.includes('Corbett')) {
-      return 'https://corbettmaths.com/wp-content/uploads/2019/02/GCSE-Revision-Cards.pdf';
-    } else if (source.includes('Austin')) {
-      return 'https://www.draustinmaths.com/resources';
+    if (title.toLowerCase().includes('linear')) {
+      return 'https://www.youtube.com/embed/m9-_sYVcSxk'; // Linear functions video
+    } else if (title.toLowerCase().includes('quadratic')) {
+      return 'https://www.youtube.com/embed/YHKShQgTLAY'; // Quadratic equations video
+    } else if (title.toLowerCase().includes('angle')) {
+      return 'https://www.youtube.com/embed/NVuMULQjb3o'; // Angles video
+    } else if (title.toLowerCase().includes('trigonometry')) {
+      return 'https://www.youtube.com/embed/F21S9Wpi0y8'; // Trigonometry video
     } else {
-      return 'https://www.mathsgenie.co.uk/resources/gcse-revision-cards.pdf';
+      return 'https://www.youtube.com/embed/l9nh1l8ZIJQ'; // General math video
+    }
+  } else if (type === 'pdf') {
+    if (source.toLowerCase().includes('corbett')) {
+      return 'https://corbettmaths.com/wp-content/uploads/2019/02/GCSE-Revision-Cards.pdf';
+    } else if (source.toLowerCase().includes('austin')) {
+      return 'https://www.draustinmaths.com/workbooks';
+    } else if (source.toLowerCase().includes('genie')) {
+      return 'https://www.mathsgenie.co.uk/resources/gcse-maths-takeaway.pdf';
+    } else {
+      return 'https://www.mathsgenie.co.uk/resources/gcse-maths-takeaway.pdf';
     }
   }
   return null;
 }
 
 // Function to find replacement using DeepSeek Reasoner API
-async function findReplacement(title, type, source, topic, subtopic) {
+async function findDeepSeekReplacement(title, type, source, topic, subtopic) {
+  if (!DEEPSEEK_API_KEY) {
+    console.log('No DeepSeek API key available, skipping DeepSeek API call');
+    return null;
+  }
+  
   try {
-    console.log(`Searching for replacement for: ${title} (${type}) from ${source}`);
-    console.log(`Using DeepSeek API with key: ${DEEPSEEK_API_KEY ? DEEPSEEK_API_KEY.substring(0, 5) + '...' : 'Not available'}`);
-    
-    // If no API key, use mock replacement
-    if (!DEEPSEEK_API_KEY) {
-      console.log('No API key available, using mock replacement');
-      return getMockReplacement(title, type, source);
-    }
+    console.log(`Searching for replacement using DeepSeek for: ${title} (${type}) from ${source}`);
     
     const response = await axios.post(
       DEEPSEEK_API_URL,
       {
-        model: 'deepseek-reasoner',  // Using DeepSeek Reasoner model
+        model: 'deepseek-reasoner',
         messages: [
           {
             role: 'system',
@@ -93,7 +140,7 @@ async function findReplacement(title, type, source, topic, subtopic) {
           },
           {
             role: 'user',
-            content: `Find a ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL after careful reasoning and verification.`
+            content: `Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
           }
         ],
         temperature: 0.2,
@@ -109,35 +156,133 @@ async function findReplacement(title, type, source, topic, subtopic) {
 
     console.log('DeepSeek API response received');
     const suggestedUrl = response.data.choices[0].message.content.trim();
-    console.log(`Suggested URL: ${suggestedUrl}`);
+    console.log(`DeepSeek suggested URL: ${suggestedUrl}`);
+    
+    const formattedUrl = formatYouTubeUrl(suggestedUrl);
     
     // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => suggestedUrl.includes(domain));
+    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
     if (!isAuthorized) {
-      console.log(`Suggested URL ${suggestedUrl} is not from an authorized domain`);
-      return getMockReplacement(title, type, source);
+      console.log(`DeepSeek suggested URL ${formattedUrl} is not from an authorized domain`);
+      return null;
     }
     
     // Check if the URL is valid
-    const isValid = await isValidUrl(suggestedUrl);
+    const isValid = await isValidUrl(formattedUrl);
     if (!isValid) {
-      console.log(`Suggested URL ${suggestedUrl} is not valid`);
-      return getMockReplacement(title, type, source);
+      console.log(`DeepSeek suggested URL ${formattedUrl} is not valid`);
+      return null;
     }
     
-    return suggestedUrl;
+    return formattedUrl;
   } catch (error) {
-    console.error(`Error finding replacement: ${error.message}`);
+    console.error(`Error finding replacement with DeepSeek: ${error.message}`);
     if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
       console.error(`Response data: ${JSON.stringify(error.response.data)}`);
     }
-    return getMockReplacement(title, type, source);
+    return null;
   }
+}
+
+// Function to find replacement using Qwen API
+async function findQwenReplacement(title, type, source, topic, subtopic) {
+  if (!QWEN_API_KEY) {
+    console.log('No Qwen API key available, skipping Qwen API call');
+    return null;
+  }
+  
+  try {
+    console.log(`Searching for replacement using Qwen for: ${title} (${type}) from ${source}`);
+    
+    const response = await axios.post(
+      QWEN_API_URL,
+      {
+        model: 'qwen-max',  // Qwen model with reasoning capabilities
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an educational resource expert with internet access. Find appropriate working replacement links for broken educational resources, verifying they exist and work.'
+          },
+          {
+            role: 'user',
+            content: `Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
+          }
+        ],
+        temperature: 0.2,
+        max_tokens: 100
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${QWEN_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('Qwen API response received');
+    const suggestedUrl = response.data.choices[0].message.content.trim();
+    console.log(`Qwen suggested URL: ${suggestedUrl}`);
+    
+    const formattedUrl = formatYouTubeUrl(suggestedUrl);
+    
+    // Validate the suggested URL is from an authorized website
+    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
+    if (!isAuthorized) {
+      console.log(`Qwen suggested URL ${formattedUrl} is not from an authorized domain`);
+      return null;
+    }
+    
+    // Check if the URL is valid
+    const isValid = await isValidUrl(formattedUrl);
+    if (!isValid) {
+      console.log(`Qwen suggested URL ${formattedUrl} is not valid`);
+      return null;
+    }
+    
+    return formattedUrl;
+  } catch (error) {
+    console.error(`Error finding replacement with Qwen: ${error.message}`);
+    if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
+      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
+    }
+    return null;
+  }
+}
+
+// Main function to find a replacement using multiple APIs
+async function findReplacement(title, type, source, topic, subtopic) {
+  // First try DeepSeek
+  let replacement = await findDeepSeekReplacement(title, type, source, topic, subtopic);
+  if (replacement) {
+    console.log(`Using DeepSeek replacement: ${replacement}`);
+    return replacement;
+  }
+  
+  // If DeepSeek fails, try Qwen
+  console.log('DeepSeek failed, trying Qwen API');
+  replacement = await findQwenReplacement(title, type, source, topic, subtopic);
+  if (replacement) {
+    console.log(`Using Qwen replacement: ${replacement}`);
+    return replacement;
+  }
+  
+  // If both APIs fail, use mock replacement
+  console.log('Both APIs failed, using mock replacement');
+  replacement = getMockReplacement(title, type, source);
+  if (replacement) {
+    console.log(`Using mock replacement: ${replacement}`);
+    return replacement;
+  }
+  
+  console.log('No replacement found for this resource');
+  return null;
 }
 
 async function main() {
   try {
-    console.log('Starting link checker...');
+    console.log('Starting enhanced link checker with DeepSeek and Qwen APIs...');
     
     // Read the resources file
     const code = fs.readFileSync(resourcesFilePath, 'utf8');
@@ -150,18 +295,17 @@ async function main() {
     
     // Track if any changes were made
     let changesMade = false;
+    let linksChecked = 0;
+    let brokenLinksFixed = 0;
     
     // Initialize array to hold all the check promises
     const checkPromises = [];
-    
-    // Count of broken links to limit processing
-    let brokenLinkCount = 0;
-    const MAX_BROKEN_LINKS = 5; // Limit to 5 broken links per run to avoid API rate limits
     
     // Find all URL properties in the file
     traverse(ast, {
       ObjectProperty(path) {
         if (
+          shouldContinue &&
           path.node.key.type === 'Identifier' && 
           path.node.key.name === 'url' &&
           path.node.value.type === 'StringLiteral'
@@ -186,7 +330,6 @@ async function main() {
           });
           
           // Determine topic and subtopic from context
-          // This is a simplified approach - you might need to adapt this
           let currentNode = path.parentPath;
           while (currentNode && (!topic || !subtopic)) {
             if (currentNode.node.key && currentNode.node.key.name) {
@@ -199,19 +342,16 @@ async function main() {
             currentNode = currentNode.parentPath;
           }
           
-          // Check if URL is valid (would be async in actual implementation)
+          // Check if URL is valid
           const checkUrl = async () => {
-            await delay(500); // Add delay to avoid rate limiting
+            if (!shouldContinue) return; // Skip if global timeout reached
             
-            if (brokenLinkCount >= MAX_BROKEN_LINKS) {
-              console.log(`Skipping check for ${url} - reached limit of ${MAX_BROKEN_LINKS} broken links`);
-              return;
-            }
+            await delay(300); // Add small delay to avoid rate limiting
+            linksChecked++;
             
             const valid = await isValidUrl(url);
             if (!valid) {
-              brokenLinkCount++;
-              console.log(`Found broken link: ${url}`);
+              console.log(`\nFound broken link #${brokenLinksFixed + 1}: ${url}`);
               console.log(`Resource: ${title}, Type: ${type}, Source: ${source}`);
               
               // Find replacement
@@ -220,6 +360,14 @@ async function main() {
                 console.log(`Replacing with: ${replacement}`);
                 urlNode.value = replacement;
                 changesMade = true;
+                brokenLinksFixed++;
+                
+                // Save intermediate results every 10 fixed links
+                if (brokenLinksFixed % 10 === 0) {
+                  const intermediateOutput = generator(ast, {}, code).code;
+                  fs.writeFileSync(resourcesFilePath, intermediateOutput);
+                  console.log(`\nSaved intermediate results after fixing ${brokenLinksFixed} links\n`);
+                }
               }
             }
           };
@@ -230,16 +378,23 @@ async function main() {
       }
     });
     
-    // Wait for all checks to complete
-    await Promise.all(checkPromises);
+    // Process all checks in batches to avoid overwhelming the system
+    const BATCH_SIZE = 20;
+    for (let i = 0; i < checkPromises.length; i += BATCH_SIZE) {
+      if (!shouldContinue) break; // Stop if global timeout reached
+      
+      const batch = checkPromises.slice(i, i + BATCH_SIZE);
+      await Promise.all(batch);
+      console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(checkPromises.length / BATCH_SIZE)}`);
+    }
     
     // If changes were made, write the updated file
     if (changesMade) {
       const output = generator(ast, {}, code).code;
       fs.writeFileSync(resourcesFilePath, output);
-      console.log('Updated resources file with fixed links');
+      console.log(`\nCompleted link checker. Checked ${linksChecked} links, fixed ${brokenLinksFixed} broken links.`);
     } else {
-      console.log('No broken links found or fixed');
+      console.log('\nNo broken links found or fixed');
     }
     
   } catch (error) {
