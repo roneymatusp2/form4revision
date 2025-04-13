@@ -7,19 +7,19 @@ const generator = require('@babel/generator').default;
 
 // API Configuration
 const GOOGLE_GEMINI_API = process.env.GOOGLE_GEMINI_API;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const QWEN_API_KEY = process.env.QWEN_API;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent';
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 const QWEN_API_URL = 'https://api.qwen.ai/v1/chat/completions';
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 console.log(`Google Gemini API Key present: ${GOOGLE_GEMINI_API ? 'Yes' : 'No'}`);
-console.log(`OpenAI API Key present: ${OPENAI_API_KEY ? 'Yes' : 'No'}`);
 console.log(`DeepSeek API Key present: ${DEEPSEEK_API_KEY ? 'Yes' : 'No'}`);
 console.log(`Qwen API Key present: ${QWEN_API_KEY ? 'Yes' : 'No'}`);
+console.log(`OpenAI API Key present: ${OPENAI_API_KEY ? 'Yes' : 'No'}`);
 
 // Set a global timeout to ensure we finish within 1 hour
 const GLOBAL_TIMEOUT = 55 * 60 * 1000; // 55 minutes in milliseconds
@@ -232,78 +232,6 @@ async function findGeminiReplacement(title, type, source, topic, subtopic) {
   }
 }
 
-// Function to find replacement using OpenAI API
-async function findOpenAIReplacement(title, type, source, topic, subtopic) {
-  if (!OPENAI_API_KEY) {
-    console.log('No OpenAI API key available, skipping OpenAI API call');
-    return null;
-  }
-  
-  try {
-    console.log(`Searching for replacement using OpenAI for: ${title} (${type}) from ${source}`);
-    
-    const response = await axios.post(
-      OPENAI_API_URL,
-      {
-        model: 'gpt-4o-mini-2024-07-18',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an educational resource expert. Your task is to find replacement links for broken educational resources. Respond ONLY with the URL, no other text.'
-          },
-          {
-            role: 'user',
-            content: `Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
-          }
-        ],
-        temperature: 0.1,
-        max_tokens: 100
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    console.log('OpenAI API response received');
-    const suggestedUrl = response.data.choices[0].message.content.trim();
-    console.log(`OpenAI suggested URL: ${suggestedUrl}`);
-    
-    // Skip if URL doesn't appear to be valid
-    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
-      console.log('Invalid URL format received from OpenAI');
-      return null;
-    }
-    
-    const formattedUrl = formatYouTubeUrl(suggestedUrl);
-    
-    // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
-    if (!isAuthorized) {
-      console.log(`OpenAI suggested URL ${formattedUrl} is not from an authorized domain`);
-      return null;
-    }
-    
-    // Check if the URL is valid
-    const isValid = await isValidUrl(formattedUrl);
-    if (!isValid) {
-      console.log(`OpenAI suggested URL ${formattedUrl} is not valid`);
-      return null;
-    }
-    
-    return formattedUrl;
-  } catch (error) {
-    console.error(`Error finding replacement with OpenAI: ${error.message}`);
-    if (error.response) {
-      console.error(`Response status: ${error.response.status}`);
-      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
-    }
-    return null;
-  }
-}
-
 // Function to find replacement using DeepSeek Reasoner API
 async function findDeepSeekReplacement(title, type, source, topic, subtopic) {
   if (!DEEPSEEK_API_KEY) {
@@ -448,12 +376,84 @@ async function findQwenReplacement(title, type, source, topic, subtopic) {
   }
 }
 
+// Function to find replacement using OpenAI API
+async function findOpenAIReplacement(title, type, source, topic, subtopic) {
+  if (!OPENAI_API_KEY) {
+    console.log('No OpenAI API key available, skipping OpenAI API call');
+    return null;
+  }
+  
+  try {
+    console.log(`Searching for replacement using OpenAI for: ${title} (${type}) from ${source}`);
+    
+    const response = await axios.post(
+      OPENAI_API_URL,
+      {
+        model: 'gpt-4o-mini-2024-07-18',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an educational resource expert. Your task is to find replacement links for broken educational resources. Respond ONLY with the URL, no other text.'
+          },
+          {
+            role: 'user',
+            content: `Find a working ${type} resource about "${title}" for ${topic}, ${subtopic} from one of these sources: ${AUTHORIZED_WEBSITES.join(', ')}. The original source was ${source}. Return only the URL without any explanation or additional text. For YouTube videos, prefer the embed URL format (https://www.youtube.com/embed/VIDEO_ID).`
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 100
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('OpenAI API response received');
+    const suggestedUrl = response.data.choices[0].message.content.trim();
+    console.log(`OpenAI suggested URL: ${suggestedUrl}`);
+    
+    // Skip if URL doesn't appear to be valid
+    if (!suggestedUrl || !suggestedUrl.startsWith('http')) {
+      console.log('Invalid URL format received from OpenAI');
+      return null;
+    }
+    
+    const formattedUrl = formatYouTubeUrl(suggestedUrl);
+    
+    // Validate the suggested URL is from an authorized website
+    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
+    if (!isAuthorized) {
+      console.log(`OpenAI suggested URL ${formattedUrl} is not from an authorized domain`);
+      return null;
+    }
+    
+    // Check if the URL is valid
+    const isValid = await isValidUrl(formattedUrl);
+    if (!isValid) {
+      console.log(`OpenAI suggested URL ${formattedUrl} is not valid`);
+      return null;
+    }
+    
+    return formattedUrl;
+  } catch (error) {
+    console.error(`Error finding replacement with OpenAI: ${error.message}`);
+    if (error.response) {
+      console.error(`Response status: ${error.response.status}`);
+      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
+    }
+    return null;
+  }
+}
+
 // Main function to find a replacement using multiple APIs in cascade
 async function findReplacement(title, type, source, topic, subtopic) {
   // Track which API succeeded for analytics
   let successfulProvider = null;
   
-  // 1. First try Google Gemini (newest and potentially most accurate)
+  // 1. First try Google Gemini (per user's request)
   let replacement = await findGeminiReplacement(title, type, source, topic, subtopic);
   if (replacement) {
     console.log(`Using Google Gemini replacement: ${replacement}`);
@@ -461,17 +461,8 @@ async function findReplacement(title, type, source, topic, subtopic) {
     return { url: replacement, provider: successfulProvider };
   }
   
-  // 2. If Google Gemini fails, try OpenAI
-  console.log('Google Gemini failed, trying OpenAI API');
-  replacement = await findOpenAIReplacement(title, type, source, topic, subtopic);
-  if (replacement) {
-    console.log(`Using OpenAI replacement: ${replacement}`);
-    successfulProvider = 'OpenAI';
-    return { url: replacement, provider: successfulProvider };
-  }
-  
-  // 3. If OpenAI fails, try DeepSeek
-  console.log('OpenAI failed, trying DeepSeek API');
+  // 2. If Google Gemini fails, try DeepSeek
+  console.log('Google Gemini failed, trying DeepSeek API');
   replacement = await findDeepSeekReplacement(title, type, source, topic, subtopic);
   if (replacement) {
     console.log(`Using DeepSeek replacement: ${replacement}`);
@@ -479,12 +470,21 @@ async function findReplacement(title, type, source, topic, subtopic) {
     return { url: replacement, provider: successfulProvider };
   }
   
-  // 4. If DeepSeek fails, try Qwen
+  // 3. If DeepSeek fails, try Qwen
   console.log('DeepSeek failed, trying Qwen API');
   replacement = await findQwenReplacement(title, type, source, topic, subtopic);
   if (replacement) {
     console.log(`Using Qwen replacement: ${replacement}`);
     successfulProvider = 'Qwen';
+    return { url: replacement, provider: successfulProvider };
+  }
+  
+  // 4. If Qwen fails, try OpenAI as last resort
+  console.log('Qwen failed, trying OpenAI API');
+  replacement = await findOpenAIReplacement(title, type, source, topic, subtopic);
+  if (replacement) {
+    console.log(`Using OpenAI replacement: ${replacement}`);
+    successfulProvider = 'OpenAI';
     return { url: replacement, provider: successfulProvider };
   }
   
@@ -503,7 +503,7 @@ async function findReplacement(title, type, source, topic, subtopic) {
 
 async function main() {
   try {
-    console.log('Starting enhanced link checker with Google Gemini, OpenAI, DeepSeek and Qwen APIs...');
+    console.log('Starting enhanced link checker with Google Gemini, DeepSeek, Qwen and OpenAI APIs...');
     
     // Statistics tracking
     const stats = {
@@ -512,9 +512,9 @@ async function main() {
       fixedLinks: 0,
       providerSuccess: {
         'Google Gemini': 0,
-        'OpenAI': 0,
         'DeepSeek': 0,
         'Qwen': 0,
+        'OpenAI': 0,
         'Mock': 0,
         'Failed': 0
       }
@@ -534,14 +534,13 @@ async function main() {
     let linksChecked = 0;
     let brokenLinksFixed = 0;
     
-    // Initialize array to hold all the check promises
-    const checkPromises = [];
+    // Store links to be checked to avoid the AST traversal issue
+    const linksToCheck = [];
     
     // Find all URL properties in the file
     traverse(ast, {
       ObjectProperty(path) {
         if (
-          shouldContinue &&
           path.node.key.type === 'Identifier' && 
           path.node.key.name === 'url' &&
           path.node.value.type === 'StringLiteral'
@@ -555,91 +554,95 @@ async function main() {
           let topic = '', subtopic = '';
           
           // Extract information from the parent object
-          parentObject.node.properties.forEach(prop => {
-            if (prop.key.name === 'title' && prop.value.type === 'StringLiteral') {
-              title = prop.value.value;
-            } else if (prop.key.name === 'type' && prop.value.type === 'StringLiteral') {
-              type = prop.value.value;
-            } else if (prop.key.name === 'source' && prop.value.type === 'StringLiteral') {
-              source = prop.value.value;
-            }
-          });
-          
-          // Determine topic and subtopic from context
-          let currentNode = path.parentPath;
-          while (currentNode && (!topic || !subtopic)) {
-            if (currentNode.node.key && currentNode.node.key.name) {
-              if (!subtopic && currentNode.node.key.value) {
-                subtopic = currentNode.node.key.value;
-              } else if (!topic && currentNode.node.key.value) {
-                topic = currentNode.node.key.value;
+          if (parentObject && parentObject.node && parentObject.node.properties) {
+            parentObject.node.properties.forEach(prop => {
+              if (prop.key && prop.key.name === 'title' && prop.value && prop.value.type === 'StringLiteral') {
+                title = prop.value.value;
+              } else if (prop.key && prop.key.name === 'type' && prop.value && prop.value.type === 'StringLiteral') {
+                type = prop.value.value;
+              } else if (prop.key && prop.key.name === 'source' && prop.value && prop.value.type === 'StringLiteral') {
+                source = prop.value.value;
               }
-            }
-            currentNode = currentNode.parentPath;
+            });
           }
+          
+          // Instead of trying to determine topic and subtopic from AST structure,
+          // use a simpler approach
+          
+          // Store the link info for later processing
+          linksToCheck.push({
+            urlNode,
+            url,
+            title,
+            type,
+            source,
+            topic: topic || 'mathematics',
+            subtopic: subtopic || 'general'
+          });
           
           // Track total links
           stats.totalLinks++;
-          
-          // Check if URL is valid
-          const checkUrl = async () => {
-            if (!shouldContinue) return; // Skip if global timeout reached
-            
-            await delay(300); // Add small delay to avoid rate limiting
-            linksChecked++;
-            
-            const valid = await isValidUrl(url);
-            if (!valid) {
-              stats.brokenLinks++;
-              console.log(`\nFound broken link #${brokenLinksFixed + 1}: ${url}`);
-              console.log(`Resource: ${title}, Type: ${type}, Source: ${source}`);
-              
-              // Find replacement
-              const replacementResult = await findReplacement(title, type, source, topic, subtopic);
-              if (replacementResult && replacementResult.url) {
-                console.log(`Replacing with: ${replacementResult.url} (provided by ${replacementResult.provider})`);
-                urlNode.value = replacementResult.url;
-                changesMade = true;
-                brokenLinksFixed++;
-                stats.fixedLinks++;
-                
-                // Track which provider succeeded
-                if (replacementResult.provider) {
-                  stats.providerSuccess[replacementResult.provider]++;
-                }
-                
-                // Save intermediate results every 10 fixed links
-                if (brokenLinksFixed % 10 === 0) {
-                  const intermediateOutput = generator(ast, {}, code).code;
-                  fs.writeFileSync(resourcesFilePath, intermediateOutput);
-                  console.log(`\nSaved intermediate results after fixing ${brokenLinksFixed} links\n`);
-                  
-                  // Also save stats
-                  fs.writeFileSync(
-                    path.resolve(__dirname, 'link-check-stats.json'), 
-                    JSON.stringify(stats, null, 2)
-                  );
-                }
-              } else {
-                stats.providerSuccess['Failed']++;
-              }
-            }
-          };
-          
-          // Add this URL check to our list of promises
-          checkPromises.push(checkUrl());
         }
       }
     });
     
-    // Process all checks in batches to avoid overwhelming the system
-    const BATCH_SIZE = 15;
-    for (let i = 0; i < checkPromises.length; i += BATCH_SIZE) {
+    console.log(`Found ${linksToCheck.length} links to check`);
+    
+    // Process all links in batches to avoid overwhelming the system
+    const BATCH_SIZE = 10; // Reduced batch size for more stability
+    for (let i = 0; i < linksToCheck.length; i += BATCH_SIZE) {
       if (!shouldContinue) break; // Stop if global timeout reached
       
-      const batch = checkPromises.slice(i, i + BATCH_SIZE);
-      await Promise.all(batch);
-      console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(checkPromises.length / BATCH_SIZE)}`);
+      const batch = linksToCheck.slice(i, i + BATCH_SIZE);
+      const batchPromises = batch.map(async (linkInfo) => {
+        if (!shouldContinue) return; // Skip if global timeout reached
+        
+        await delay(500); // Add delay to avoid rate limiting
+        linksChecked++;
+        
+        const { urlNode, url, title, type, source, topic, subtopic } = linkInfo;
+        
+        // Check if URL is valid
+        const valid = await isValidUrl(url);
+        if (!valid) {
+          stats.brokenLinks++;
+          console.log(`\nFound broken link #${brokenLinksFixed + 1}: ${url}`);
+          console.log(`Resource: ${title}, Type: ${type}, Source: ${source}`);
+          
+          // Find replacement
+          const replacementResult = await findReplacement(title, type, source, topic, subtopic);
+          if (replacementResult && replacementResult.url) {
+            console.log(`Replacing with: ${replacementResult.url} (provided by ${replacementResult.provider})`);
+            urlNode.value = replacementResult.url;
+            changesMade = true;
+            brokenLinksFixed++;
+            stats.fixedLinks++;
+            
+            // Track which provider succeeded
+            if (replacementResult.provider) {
+              stats.providerSuccess[replacementResult.provider]++;
+            }
+          } else {
+            stats.providerSuccess['Failed']++;
+          }
+        }
+      });
+      
+      await Promise.all(batchPromises);
+      console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(linksToCheck.length / BATCH_SIZE)}`);
+      
+      // Save intermediate results every few batches
+      if (changesMade && i % (BATCH_SIZE * 3) === 0 && i > 0) {
+        const intermediateOutput = generator(ast, {}, code).code;
+        fs.writeFileSync(resourcesFilePath, intermediateOutput);
+        console.log(`\nSaved intermediate results after processing ${i} links\n`);
+        
+        // Also save stats
+        fs.writeFileSync(
+          path.resolve(__dirname, 'link-check-stats.json'), 
+          JSON.stringify(stats, null, 2)
+        );
+      }
     }
     
     // If changes were made, write the updated file
