@@ -108,6 +108,9 @@ async function main() {
     // Track if any changes were made
     let changesMade = false;
     
+    // Initialize array to hold all the check promises
+    const checkPromises = [];
+    
     // Find all URL properties in the file
     traverse(ast, {
       ObjectProperty(path) {
@@ -171,9 +174,6 @@ async function main() {
         }
       }
     });
-    
-    // Initialize array to hold all the check promises
-    const checkPromises = [];
     
     // Wait for all checks to complete
     await Promise.all(checkPromises);
