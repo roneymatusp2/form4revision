@@ -4,10 +4,12 @@ const path = require('path');
 const axios = require('axios');
 const { parse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
+const generator = require('@babel/generator').default;
 
-// Retry settings
-const MAX_RETRIES = 3;
-const RETRY_DELAY_MS = 2000;
+// Retry settings - increased and with exponential backoff
+const MAX_RETRIES = 5;
+const INITIAL_RETRY_DELAY_MS = 2000;
+const MAX_RETRY_DELAY_MS = 30000;
 
 /**
  * API key configuration for AI models
@@ -19,15 +21,15 @@ const CLAUDE_API           = process.env.CLAUDE_API           || null;
 const QWEN_API             = process.env.QWEN_API             || null; // Replaces Mistral
 const QWEN_API_2           = process.env.QWEN_API_2           || null; // Additional option
 
-// API endpoints (placeholders; adjust if you have real endpoints)
-const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent';
+// API endpoints for generative AI providers
+const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 const OPENAI_API_URL        = 'https://api.openai.com/v1/chat/completions';
-const DEEPSEEK_API_URL      = 'https://api.deepseek.com/v1/messages';
-const CLAUDE_API_URL        = 'https://api.claude.ai/v1/messages';
+const DEEPSEEK_API_URL      = 'https://api.deepseek.com/v1/chat/completions';
+const CLAUDE_API_URL        = 'https://api.anthropic.com/v1/messages';
 const QWEN_API_URL          = 'https://api.qwen.ai/v1/chat/completions';
 const QWEN_API_2_URL        = 'https://api.qwen.ai/v2/chat/completions';
 
-// Authorized domains (kept as is)
+// Authorized domains
 const AUTHORIZED_WEBSITES = [
   'corbettmaths.com',
   'khanacademy.org',
@@ -57,14 +59,26 @@ const AUTHORIZED_WEBSITES = [
   'teachitmaths.co.uk'
 ];
 
-// Common URL pattern map (example placeholders)
+// Common URL patterns for quick fixes
 const COMMON_URL_PATTERNS = {
   'corbettmaths.com': [
     {
       original: /-pdf1.pdf/,
       replacement: '-pdf.pdf'
+    },
+    {
+      original: /-pdf2.pdf/,
+      replacement: '-pdf.pdf'
+    },
+    {
+      // Older files might have moved to newer years
+      original: /\/uploads\/2013\/02\//,
+      replacement: '/uploads/2018/11/'
+    },
+    {
+      original: /\/uploads\/2019\/09\//,
+      replacement: '/uploads/2021/09/'
     }
-    // Add more patterns if needed
   ]
 };
 
@@ -72,6 +86,17 @@ const COMMON_URL_PATTERNS = {
 const resourcesFilePath = path.resolve(__dirname, '../src/data/externalResources-new.ts');
 // Location for saving the final report
 const reportFilePath = path.resolve(__dirname, 'link-check-stats.json');
+// Backup file
+const backupFilePath = path.resolve(__dirname, '../src/data/externalResources-backup.ts');
+
+// ========== TEST MODE ==========
+const args = process.argv.slice(2);
+const TEST_MODE = args.includes('--test') || args.includes('-t');
+const LINKS_LIMIT = args.find(arg => arg.startsWith('--limit='))?.split('=')[1] || (TEST_MODE ? 5 : null);
+
+if (TEST_MODE) {
+  console.log('[INFO] Running in TEST MODE - no real HTTP requests will be made');
+}
 
 /**
  * Sleep function to implement delays
@@ -81,7 +106,7 @@ function sleep(ms) {
 }
 
 /**
- * Function to make requests with automatic retry
+ * Function to make requests with exponential backoff retry
  */
 async function makeRequestWithRetry(fn, retries = MAX_RETRIES) {
   try {
@@ -89,14 +114,18 @@ async function makeRequestWithRetry(fn, retries = MAX_RETRIES) {
   } catch (error) {
     if (retries > 0) {
       const isRateLimited = error?.response?.status === 429;
-      // If rate-limited, we increase the wait time on subsequent attempts
-      const retryDelay = isRateLimited
-        ? RETRY_DELAY_MS * (MAX_RETRIES - retries + 1)
-        : RETRY_DELAY_MS;
+      // Exponential backoff with jitter
+      const exponentialDelay = Math.min(
+        INITIAL_RETRY_DELAY_MS * Math.pow(2, MAX_RETRIES - retries),
+        MAX_RETRY_DELAY_MS
+      );
+      // Add random jitter (±20%)
+      const jitter = exponentialDelay * (0.8 + Math.random() * 0.4);
+      const retryDelay = isRateLimited ? jitter : INITIAL_RETRY_DELAY_MS;
 
       console.log(
         `[RETRY] ${isRateLimited ? 'Rate limited' : 'Request failed'}, ` +
-          `retrying in ${retryDelay}ms (${retries} attempts left)`
+          `retrying in ${Math.round(retryDelay)}ms (${retries} attempts left)`
       );
 
       await sleep(retryDelay);
@@ -106,18 +135,81 @@ async function makeRequestWithRetry(fn, retries = MAX_RETRIES) {
   }
 }
 
-// ========== LINK CHECKING (IMPROVED) ==========
-async function checkUrlWithFallback(url) {
+// Create a backup of the resources file before modifications
+function backupResourcesFile() {
   try {
-    // Add a User-Agent to avoid being blocked
-    const headers = {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    };
+    fs.copyFileSync(resourcesFilePath, backupFilePath);
+    console.log(`[INFO] Created backup at ${backupFilePath}`);
+  } catch (err) {
+    console.error(`[ERROR] Failed to create backup: ${err.message}`);
+  }
+}
 
-    // Attempt HEAD with retry
+// Função robusta para checagem de links
+async function checkUrlWithFallback(url, type = '') {
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+  };
+  let brokenReason = '';
+
+  // 1. PDFs
+  if (url.toLowerCase().endsWith('.pdf') || type === 'pdf') {
     try {
-      await makeRequestWithRetry(() =>
+      const resp = await makeRequestWithRetry(() =>
+        axios.get(url, {
+          timeout: 20000,
+          headers: { ...headers, 'Range': 'bytes=0-2047' },
+          responseType: 'arraybuffer',
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+      const data = resp.data;
+      const asString = Buffer.from(data).toString('utf8');
+      if (asString.startsWith('%PDF-')) {
+        return { valid: true };
+      }
+      if (asString.toLowerCase().includes('<html')) {
+        brokenReason = 'Returned HTML instead of PDF';
+        return { valid: false, brokenReason };
+      }
+      brokenReason = 'PDF signature not found';
+      return { valid: false, brokenReason };
+    } catch (err) {
+      brokenReason = `PDF request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
+
+  // 2. YouTube (watch ou embed)
+  if (/youtube\.com\/(watch|embed)|youtu\.be\//.test(url) || type === 'video') {
+    try {
+      const resp = await makeRequestWithRetry(() =>
+        axios.get(url, {
+          timeout: 20000,
+          headers,
+          responseType: 'text',
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+      const html = resp.data.toString();
+      if (/Video unavailable|This video is private|404 Not Found|has been removed|not available|Sign in to confirm your age|watch this video on YouTube|content is not available/.test(html)) {
+        brokenReason = 'YouTube: Video unavailable/private/removed';
+        return { valid: false, brokenReason };
+      }
+      // Se não encontrou erro, considera válido
+      return { valid: true };
+    } catch (err) {
+      brokenReason = `YouTube request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
+
+  // 3. Outros vídeos (Vimeo, etc)
+  if (/\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url) || (type && type.toLowerCase().includes('video'))) {
+    try {
+      const resp = await makeRequestWithRetry(() =>
         axios.head(url, {
           timeout: 15000,
           headers,
@@ -125,51 +217,100 @@ async function checkUrlWithFallback(url) {
           maxRedirects: 5
         })
       );
-      return true; // If successful, consider valid
-    } catch (headError) {
-      // 429 => rate limit; accept as "possibly valid"
-      if (headError?.response?.status === 429) {
-        console.log(`[WARN] Rate-limited (HEAD) => Accepting ${url} as possibly valid`);
-        return true;
+      const ct = resp.headers['content-type'] || '';
+      if (ct.startsWith('video/') || ct === 'application/octet-stream') {
+        return { valid: true };
       }
+      if (ct.includes('text/html')) {
+        brokenReason = 'Returned HTML instead of video';
+        return { valid: false, brokenReason };
+      }
+      brokenReason = `Unexpected content-type for video: ${ct}`;
+      return { valid: false, brokenReason };
+    } catch (err) {
+      brokenReason = `Video request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
 
-      // If HEAD failed, try GET
+  // 4. Demais links (espera-se HTML, mas pode ser erro)
+  try {
+    // HEAD primeiro
+    let resp;
+    try {
+      resp = await makeRequestWithRetry(() =>
+        axios.head(url, {
+          timeout: 15000,
+          headers,
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+    } catch (err) {
+      // Se HEAD falhar, tenta GET
       try {
-        const getResp = await makeRequestWithRetry(() =>
+        resp = await makeRequestWithRetry(() =>
           axios.get(url, {
             timeout: 20000,
             headers,
+            responseType: 'text',
             validateStatus: s => s < 400,
-            maxRedirects: 5,
-            responseType: 'stream'
+            maxRedirects: 5
           })
         );
-        getResp.data.destroy(); // Destroy the stream once existence is confirmed
-        return true;
-      } catch (getError) {
-        if (getError?.response?.status === 429) {
-          console.log(`[WARN] Rate-limited (GET) => Accepting ${url} as possibly valid`);
-          return true;
-        }
-        // GET failed
-        return false;
+      } catch (err2) {
+        brokenReason = `Request failed: ${err2.message}`;
+        return { valid: false, brokenReason };
       }
     }
+    // Se for HTML, checa se tem mensagem de erro
+    const ct = resp.headers['content-type'] || '';
+    if (ct.includes('text/html')) {
+      // Baixa um trecho do HTML para procurar mensagens de erro
+      try {
+        const htmlResp = await makeRequestWithRetry(() =>
+          axios.get(url, {
+            timeout: 10000,
+            headers,
+            responseType: 'text',
+            validateStatus: s => s < 400,
+            maxRedirects: 5
+          })
+        );
+        const html = htmlResp.data.toString().toLowerCase();
+        if (/not found|404|error|unavailable|page not found|does not exist|forbidden|private|gone|removed/.test(html)) {
+          brokenReason = 'HTML page contains error message';
+          return { valid: false, brokenReason };
+        }
+      } catch (err) {
+        // Se não conseguir baixar, ignora
+      }
+    }
+    // Se chegou aqui, considera válido
+    return { valid: true };
   } catch (err) {
-    // Any other failure -> invalid
-    return false;
+    brokenReason = `General request failed: ${err.message}`;
+    return { valid: false, brokenReason };
   }
 }
 
-async function isValidUrl(url) {
-  if (!url || typeof url !== 'string') return false;
-  if (!url.startsWith('http')) return false;
-  try {
-    return await checkUrlWithFallback(url);
-  } catch (err) {
-    console.log(`[ERROR] Failed to check URL ${url}: ${err.message}`);
-    return false;
+// Nova versão de isValidUrl
+async function isValidUrl(url, type = '') {
+  if (!url || typeof url !== 'string') return { valid: false, brokenReason: 'Invalid URL string' };
+  if (!url.startsWith('http')) return { valid: false, brokenReason: 'Not HTTP/HTTPS' };
+
+  if (TEST_MODE) {
+    // Simular alguns links quebrados para teste
+    const mockBrokenLinks = [
+      'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf',
+      'https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf',
+      'https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf',
+      'https://www.draustinmaths.com/_files/ugd/7ac124_1548f69d09d94b80824a05fcaba64a2e.pdf'
+    ];
+    return { valid: !mockBrokenLinks.includes(url), brokenReason: mockBrokenLinks.includes(url) ? 'Simulated broken (test mode)' : undefined };
   }
+
+  return await checkUrlWithFallback(url, type);
 }
 
 // Extract domain from URL
@@ -191,14 +332,34 @@ function generateAlternativeUrls(url) {
     if (!rootDomain || !COMMON_URL_PATTERNS[rootDomain]) {
       return [];
     }
+    
     const patterns = COMMON_URL_PATTERNS[rootDomain];
-    const alternatives = [];
+    let alternatives = [];
 
+    // Apply each pattern
     for (const pattern of patterns) {
       if (pattern.original.test(url)) {
         alternatives.push(url.replace(pattern.original, pattern.replacement));
       }
     }
+    
+    // For Corbett Maths, try multiple years
+    if (domain.includes('corbettmaths.com')) {
+      const years = ['2018', '2019', '2020', '2021', '2022'];
+      const baseUrl = url.replace(/\/uploads\/\d{4}\//, '/uploads/YEAR/');
+      
+      for (const year of years) {
+        alternatives.push(baseUrl.replace('YEAR', year));
+      }
+      
+      // Also try with different months
+      const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+      for (const month of months) {
+        alternatives.push(url.replace(/\/\d{2}\//, `/${month}/`));
+      }
+    }
+    
+    // Remove duplicates
     return [...new Set(alternatives)];
   } catch (error) {
     console.log(`[ERROR] Failed to generate alternative URLs: ${error.message}`);
@@ -209,14 +370,51 @@ function generateAlternativeUrls(url) {
 async function findWorkingAlternativeUrl(url) {
   const alternatives = generateAlternativeUrls(url);
   console.log(`[INFO] Testing ${alternatives.length} alternative URLs for ${url}`);
-  for (const altUrl of alternatives) {
-    try {
-      if (await isValidUrl(altUrl)) {
-        console.log(`[SUCCESS] Found alternative URL: ${altUrl}`);
-        return altUrl;
-      }
-    } catch {}
+  
+  // Em modo de teste, simular resultados
+  if (TEST_MODE) {
+    // Simular alternativas que funcionam
+    if (url === 'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf') {
+      return 'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf.pdf';
+    }
+    if (url === 'https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf') {
+      return 'https://corbettmaths.com/wp-content/uploads/2018/11/types-of-numbers-pdf.pdf';
+    }
+    return null;
   }
+  
+  // Check all alternatives in parallel with a concurrency limit
+  const validAlternatives = [];
+  const concurrency = 3;
+  
+  for (let i = 0; i < alternatives.length; i += concurrency) {
+    const batch = alternatives.slice(i, i + concurrency);
+    const results = await Promise.all(
+      batch.map(async (altUrl) => {
+        try {
+          const { valid } = await isValidUrl(altUrl);
+          return { url: altUrl, valid };
+        } catch {
+          return { url: altUrl, valid: false };
+        }
+      })
+    );
+    
+    for (const result of results) {
+      if (result.valid) {
+        validAlternatives.push(result.url);
+      }
+    }
+    
+    // If we found any valid alternatives, break early
+    if (validAlternatives.length > 0) break;
+  }
+  
+  if (validAlternatives.length > 0) {
+    console.log(`[SUCCESS] Found alternative URL: ${validAlternatives[0]}`);
+    return validAlternatives[0];
+  }
+  
   return null;
 }
 
@@ -231,6 +429,9 @@ async function validateSuggestion(suggestion, originalUrl) {
   }
   cleanUrl = cleanUrl.split(' ')[0];
 
+  // Remove any markdown or quotes
+  cleanUrl = cleanUrl.replace(/[`'"]/g, '');
+  
   // Check if URL is well-formed
   try {
     // eslint-disable-next-line no-new
@@ -257,8 +458,8 @@ async function validateSuggestion(suggestion, originalUrl) {
   }
 
   // Finally, check if it actually works
-  const isWorking = await isValidUrl(cleanUrl);
-  if (!isWorking) {
+  const { valid } = await isValidUrl(cleanUrl);
+  if (!valid) {
     console.log(`[INFO] Suggested URL is not working: ${cleanUrl}`);
     return null;
   }
@@ -268,19 +469,26 @@ async function validateSuggestion(suggestion, originalUrl) {
 function extractUrlFromResponse(response) {
   if (!response) return null;
   response = response.replace(/[\r\n\t]/g, ' ').trim();
-  // Remove preceding text up to the first https
+  
+  // Remove common prefixes models might add
   response = response.replace(/^.*?(https?:\/\/)/i, 'https://');
-  // Remove anything after the real URL
+  
+  // Remove anything after the URL
   response = response.replace(/(\S+:\/\/[^\s'"]+).*/i, '$1');
-
+  
+  // Clean up common ending punctuation
+  response = response.replace(/[.,;:)]$/, '');
+  
+  // If no URL format yet, try to extract it with regex
   if (!/^https?:\/\//i.test(response)) {
     const match = response.match(/https?:\/\/[^\s"'<>]+/i);
     return match ? match[0] : null;
   }
+  
   return response;
 }
 
-//  AI model-specific functions — placeholders:
+//  AI model-specific functions
 async function findGeminiSuggestion(title, type, topic, subtopic, source, originalUrl) {
   if (!GOOGLE_GEMINI_API) return null;
   try {
@@ -364,7 +572,7 @@ IMPORTANT:
       axios.post(
         OPENAI_API_URL,
         {
-          model: 'gpt-4o',
+          model: 'gpt-4o-mini', // Using smaller model to reduce costs
           messages: [
             {
               role: 'system',
@@ -403,29 +611,42 @@ async function findDeepSeekSuggestion(title, type, topic, subtopic, source, orig
     const prompt = `
 You are a math educational resource specialist.
 This specific URL is broken: ${originalUrl}
-...
-(omitted for brevity)
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+1. Keep same domain if possible.
+2. For corbettmaths.com, PDFs might be at different years or months.
+3. Return ONLY the URL, nothing else.
 `;
 
     const resp = await makeRequestWithRetry(() =>
       axios.post(
         DEEPSEEK_API_URL,
         {
-          model: 'deepseek-latest-model',
+          model: 'deepseek-reasoner',
           max_tokens: 100,
           temperature: 0.1,
           messages: [{ role: 'user', content: prompt }]
         },
         {
           headers: {
-            'x-api-key': DEEPSEEK_API_KEY,
+            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
             'Content-Type': 'application/json'
           }
         }
       )
     );
 
-    const content = resp.data?.content?.trim() || '';
+    const content = resp.data?.choices?.[0]?.message?.content?.trim() || '';
     if (!content || content.toLowerCase().includes('none')) return null;
 
     const extractedUrl = extractUrlFromResponse(content);
@@ -440,20 +661,162 @@ This specific URL is broken: ${originalUrl}
 
 async function findClaudeSuggestion(title, type, topic, subtopic, source, originalUrl) {
   if (!CLAUDE_API) return null;
-  // Similar approach as above; omitted for brevity
-  return null;
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+1. Keep same domain if possible.
+2. Return ONLY the replacement URL, no extra text.
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        CLAUDE_API_URL,
+        {
+          model: 'claude-3-haiku-20240307',
+          max_tokens: 100,
+          temperature: 0.1,
+          messages: [{ role: 'user', content: prompt }]
+        },
+        {
+          headers: {
+            'x-api-key': CLAUDE_API,
+            'Content-Type': 'application/json',
+            'anthropic-version': '2023-06-01'
+          }
+        }
+      )
+    );
+
+    const content = resp.data?.content?.[0]?.text?.trim() || '';
+    if (!content || content.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(content);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[Claude] Error: ${err.message}`);
+    return null;
+  }
 }
 
 async function findQwenSuggestion(title, type, topic, subtopic, source, originalUrl) {
   if (!QWEN_API) return null;
-  // Similar approach to generate prompt & validate
-  return null;
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+1. Keep same domain if possible.
+2. Return ONLY the full URL, no extra text.
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        QWEN_API_URL,
+        {
+          model: 'qwen-max',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 100,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${QWEN_API}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    );
+
+    const suggestion = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!suggestion || suggestion.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(suggestion);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[QWEN] Error: ${err.message}`);
+    return null;
+  }
 }
 
 async function findQwen2Suggestion(title, type, topic, subtopic, source, originalUrl) {
   if (!QWEN_API_2) return null;
-  // Similar approach if you have QWEN v2
-  return null;
+  // Similar approach with QWEN API 2
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Find a replacement URL that is valid now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+Return ONLY the full URL, nothing else.
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        QWEN_API_2_URL,
+        {
+          model: 'qwen-max',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 100,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${QWEN_API_2}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    );
+
+    const suggestion = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!suggestion || suggestion.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(suggestion);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[QWEN2] Error: ${err.message}`);
+    return null;
+  }
 }
 
 /**
@@ -475,13 +838,25 @@ async function findAlternativeUrl(url, title, type, topic, subtopic, source) {
  * Cascade approach to use multiple models
  */
 async function cascadeSuggester(title, type, topic, subtopic, source, originalUrl) {
+  // Em modo de teste, retornar resultados simulados
+  if (TEST_MODE) {
+    if (originalUrl === 'https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf') {
+      return { provider: 'OpenAI', url: 'https://corbettmaths.com/wp-content/uploads/2021/09/Irrational-and-Rational-Numbers.pdf' };
+    }
+    return null;
+  }
+
   const domain = extractDomain(originalUrl);
 
   // Try OpenAI first for corbettmaths
   if (domain.includes('corbettmaths.com') && OPENAI_API_KEY) {
     console.log('[INFO] Trying OpenAI first for CorbettMaths...');
-    const o = await findOpenAISuggestion(title, type, topic, subtopic, source, originalUrl);
-    if (o) return { provider: 'OpenAI', url: o };
+    try {
+      const o = await findOpenAISuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (o) return { provider: 'OpenAI', url: o };
+    } catch (err) {
+      console.log('[INFO] OpenAI failed for CorbettMaths. Trying next.');
+    }
   }
 
   // Then try Gemini
@@ -515,7 +890,10 @@ async function cascadeSuggester(title, type, topic, subtopic, source, originalUr
     } catch (err) {
       console.log('[INFO] DeepSeek failed. Trying next.');
     }
-  } else if (CLAUDE_API) {
+  }
+  
+  // Claude
+  if (CLAUDE_API) {
     console.log('[INFO] Trying Claude...');
     try {
       const c = await findClaudeSuggestion(title, type, topic, subtopic, source, originalUrl);
@@ -532,7 +910,7 @@ async function cascadeSuggester(title, type, topic, subtopic, source, originalUr
       const q = await findQwenSuggestion(title, type, topic, subtopic, source, originalUrl);
       if (q) return { provider: 'QWEN', url: q };
     } catch (err) {
-      console.log('[INFO] QWEN failed.');
+      console.log('[INFO] QWEN failed. Trying QWEN API 2.');
     }
   }
 
@@ -588,6 +966,11 @@ async function main() {
   console.log('=== Broken Link Diagnosis ===');
   console.log(`Resources file: ${resourcesFilePath}`);
   console.log(`Report will be saved in: ${reportFilePath}`);
+  
+  // Create a backup before making any changes
+  if (!TEST_MODE) {
+    backupResourcesFile();
+  }
 
   let pLimit;
   try {
@@ -648,6 +1031,11 @@ async function main() {
         totalLinks++;
         const url = path.node.value.value;
 
+        // Skip URLs that are already checked in this run
+        if (brokenLinksData.some(item => item.url === url)) {
+          return;
+        }
+
         const parentProps = path.parentPath.node.properties;
         let title = '',
           rtype = '',
@@ -682,7 +1070,8 @@ async function main() {
           subtopic,
           isBroken: false,
           suggestion: null,
-          suggestionProvider: null
+          suggestionProvider: null,
+          brokenReason: null
         });
       }
     }
@@ -690,13 +1079,24 @@ async function main() {
 
   console.log(`[INFO] Total links found: ${totalLinks}`);
 
-  const limit = pLimit(3); // limit concurrency to 3
+  // Limitar links se necessário
+  if (LINKS_LIMIT) {
+    const limit = parseInt(LINKS_LIMIT, 10);
+    if (!isNaN(limit) && limit > 0 && limit < brokenLinksData.length) {
+      console.log(`[INFO] Limiting check to first ${limit} links due to --limit parameter`);
+      brokenLinksData.splice(limit);
+    }
+  }
+
+  const limit = pLimit(2); // reduce concurrency to 2 to avoid rate limits
   const tasks = brokenLinksData.map(item =>
     limit(async () => {
-      const valid = await isValidUrl(item.url);
+      const { valid, brokenReason } = await isValidUrl(item.url, item.type);
       if (!valid) {
         item.isBroken = true;
+        item.brokenReason = brokenReason;
         console.log(`\n[WARN] Broken link: ${item.url} (Line: ${item.line}, Title: ${item.title})`);
+        if (brokenReason) console.log(`[REASON] ${brokenReason}`);
 
         // Attempt to find alternative
         const alternativeResult = await findAlternativeUrl(
@@ -716,8 +1116,10 @@ async function main() {
           );
 
           // Double-check validity
-          if (!(await isValidUrl(alternativeResult.url))) {
+          const { valid: altValid, brokenReason: altReason } = await isValidUrl(alternativeResult.url, item.type);
+          if (!altValid) {
             console.log(`[WARN] Suggested URL is invalid: ${alternativeResult.url}`);
+            if (altReason) console.log(`[REASON] ${altReason}`);
             item.suggestion = null;
             item.suggestionProvider = null;
           }
@@ -745,7 +1147,8 @@ async function main() {
       type: link.type,
       line: link.line,
       suggestedReplacement: link.suggestion,
-      suggestionSource: link.suggestionProvider
+      suggestionSource: link.suggestionProvider,
+      brokenReason: link.brokenReason || null
     }))
   };
 
