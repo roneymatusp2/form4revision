@@ -5,7 +5,6 @@ on:
     branches:
       - main
   schedule:
-    # Executa semanalmente às 2:30 da manhã de domingo (horário que tem menos chance de rate limits)
     - cron: '30 2 * * 0'
   workflow_dispatch:
 
@@ -17,7 +16,7 @@ jobs:
   check-links:
     name: Check and Fix Broken Links
     runs-on: ubuntu-latest
-    timeout-minutes: 120  # Aumentado para permitir retry em caso de rate limits
+    timeout-minutes: 120
 
     steps:
       - name: Checkout repository
@@ -37,55 +36,52 @@ jobs:
           set -eux
           npm ci
 
-      # Etapa específica para instalar axios (garantir que ele esteja disponível)
-      - name: Ensure axios is installed
+      - name: Ensure specific packages are installed
         run: |
           set -eux
           npm install axios p-limit @babel/parser @babel/traverse
 
-      # Execute com retry automático em caso de falha
       - name: Run link checker script with retries
         id: link-check
         env:
           GOOGLE_GEMINI_API: ${{ secrets.GOOGLE_GEMINI_API }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+          CLAUDE_API: ${{ secrets.CLAUDE_API }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          QWEN_API: ${{ secrets.QWEN_API }}
+          QWEN_API_2: ${{ secrets.QWEN_API_2 }}
         run: |
           set -eux
-          
-          # Função para executar com retry
+
           function run_with_retry {
             max_attempts=3
             attempt=1
-            
+
             while [ $attempt -le $max_attempts ]; do
-              echo "Tentativa $attempt de $max_attempts"
-              
-              if node scripts/check-links.js; then
-                echo "Script executado com sucesso!"
+              echo "Attempt $attempt of $max_attempts"
+
+              if node scripts/check-links.js; then # Assumes your script is at scripts/check-links.js
+                echo "Script executed successfully!"
                 return 0
               else
-                echo "Falha na tentativa $attempt. Código de saída: $?"
-                
+                echo "Attempt $attempt failed. Exit code: $?"
+
                 if [ $attempt -lt $max_attempts ]; then
-                  wait_time=$((60 * attempt))  # Aumenta o tempo de espera gradualmente
-                  echo "Aguardando $wait_time segundos antes da próxima tentativa..."
+                  wait_time=$((60 * attempt))
+                  echo "Waiting $wait_time seconds before next attempt..."
                   sleep $wait_time
                 fi
-                
+
                 attempt=$((attempt + 1))
               fi
             done
-            
-            echo "Todas as tentativas falharam!"
+
+            echo "All attempts failed!"
             return 1
           }
-          
-          # Executa o script com retry
+
           run_with_retry
-          
+
       - name: Upload link-check logs (artifacts)
         if: always()
         uses: actions/upload-artifact@v4
@@ -100,36 +96,35 @@ jobs:
         run: |
           set -eux
           if [ -f "scripts/link-check-stats.json" ]; then
-            BROKEN_LINKS_COUNT=$(jq '.brokenLinks' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
-            FIXED_LINKS_COUNT=$(jq '.fixedLinks' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
-            TOTAL_LINKS_COUNT=$(jq '.totalLinks' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
-            
+            BROKEN_LINKS_COUNT=$(jq '.brokenLinkCount' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
+            FIXED_LINKS_COUNT=$(jq '.linksFixedInFile' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
+            TOTAL_LINKS_COUNT=$(jq '.totalLinksChecked' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
+
             echo "## Link Checker Report" >> $GITHUB_STEP_SUMMARY
-            echo "- Total de links verificados: $TOTAL_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
-            echo "- Links quebrados encontrados: $BROKEN_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
-            echo "- Links quebrados corrigidos: $FIXED_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
-            
-            # Adiciona detalhes dos links corrigidos
+            echo "- Total links checked: $TOTAL_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "- Broken links found: $BROKEN_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "- Broken links fixed: $FIXED_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
+
             if [ "$FIXED_LINKS_COUNT" != "0" ] && [ "$FIXED_LINKS_COUNT" != "N/A" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### Links Corrigidos" >> $GITHUB_STEP_SUMMARY
-              jq -r '.brokenLinksData[] | select(.suggestion != null) | "- **" + .title + "**<br>  ❌ " + .url + "<br>  ✅ " + .suggestion + " (via " + .suggestionProvider + ")"' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
+              echo "### Fixed Links" >> $GITHUB_STEP_SUMMARY
+              jq -r '.brokenLinksDetails[] | select(.suggestedReplacement != null) | "- **" + .title + "**<br>  ❌ " + .originalUrl + "<br>  ✅ " + .suggestedReplacement + " (via " + .suggestionSource + ")"' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
             fi
-            
-            # Adiciona detalhes dos links não corrigidos
-            UNFIXED_COUNT=$(jq '.brokenLinks - .fixedLinks' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
+
+            UNFIXED_COUNT=$(jq '.brokenLinkCount - .linksFixedInFile' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
             if [ "$UNFIXED_COUNT" != "0" ] && [ "$UNFIXED_COUNT" != "N/A" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### Links Quebrados Não Corrigidos" >> $GITHUB_STEP_SUMMARY
-              jq -r '.brokenLinksData[] | select(.suggestion == null) | "- **" + .title + "**<br>  ❌ " + .url' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
+              echo "### Broken Links (Not Fixed)" >> $GITHUB_STEP_SUMMARY
+              jq -r '.brokenLinksDetails[] | select(.suggestedReplacement == null) | "- **" + .title + "**<br>  ❌ " + .originalUrl' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
             fi
           else
             echo "## Link Checker Report" >> $GITHUB_STEP_SUMMARY
-            echo "❌ Não foi possível gerar o relatório. Verifique os logs para mais detalhes." >> $GITHUB_STEP_SUMMARY
+            echo "❌ Could not generate report. Check logs for details." >> $GITHUB_STEP_SUMMARY
           fi
+        id: generate_summary # Added ID for potential future use
 
       - name: Commit and push changes to dedicated branch
-        if: success()
+        if: success() && steps.generate_summary.outcome == 'success' # Ensure summary generation didn't fail before commit
         run: |
           set -eux
 
@@ -139,13 +134,11 @@ jobs:
           BRANCH_NAME="chore/auto-link-fixes"
           git checkout -B "$BRANCH_NAME"
 
-          # Tenta adicionar os arquivos (usando || true para evitar falha se não houver mudanças)
-          git add src/data/externalResources-new.ts || echo "Arquivo não modificado ou não existe."
-          git add scripts/link-check-stats.json || echo "Arquivo não modificado ou não existe."
+          git add src/data/externalResources-new.ts || echo "File not modified or does not exist."
+          git add scripts/link-check-stats.json || echo "File not modified or does not exist."
 
-          # Verifica se há mudanças para commit
           if ! git diff --quiet --cached; then
-            echo "Mudanças detectadas. Realizando commit e push..."
+            echo "Changes detected. Committing and pushing..."
             git commit -m "fix(links): Auto-fix broken links" \
                        -m "Automated link fixing using pattern matching and multi-provider AI." \
                        -m "[skip ci]"
@@ -153,7 +146,7 @@ jobs:
             git push --force --set-upstream origin "$BRANCH_NAME"
             echo "changes_pushed=true" >> $GITHUB_OUTPUT
           else
-            echo "Nenhuma mudança detectada para commit."
+            echo "No changes detected for commit."
             echo "changes_pushed=false" >> $GITHUB_OUTPUT
           fi
         id: commit_push
@@ -167,8 +160,7 @@ jobs:
             const baseBranchName = 'main';
             const headBranchName = 'chore/auto-link-fixes';
             const prTitle = 'fix(links): Automatic Broken Link Fixes';
-            
-            // Obtém os dados do relatório para incluir no PR
+
             let reportData = {};
             const fs = require('fs');
             try {
@@ -176,49 +168,47 @@ jobs:
                 reportData = JSON.parse(fs.readFileSync('scripts/link-check-stats.json', 'utf8'));
               }
             } catch (error) {
-              console.error("Erro ao ler arquivo de relatório:", error);
+              console.error("Error reading report file:", error);
             }
-            
-            // Constrói o corpo do PR com detalhes dos links corrigidos
+
             let prBody = `
-            ## Correção Automática de Links Quebrados
+            ## Automatic Broken Link Fixes
 
-            Este Pull Request foi gerado automaticamente pelo workflow "Check and Fix Broken Links".
+            This Pull Request was automatically generated by the "Check and Fix Broken Links" workflow.
 
-            **Resumo:**
-            - Links verificados: ${reportData.totalLinks || 'N/A'}
-            - Links quebrados encontrados: ${reportData.brokenLinks || 'N/A'}
-            - Links corrigidos: ${reportData.fixedLinks || 'N/A'}
+            **Summary:**
+            - Links checked: ${reportData.totalLinksChecked || 'N/A'}
+            - Broken links found: ${reportData.brokenLinkCount || 'N/A'}
+            - Links fixed: ${reportData.linksFixedInFile || 'N/A'}
             `;
-            
-            // Adiciona detalhes dos links corrigidos, se houver
-            if (reportData.brokenLinksData && reportData.brokenLinksData.length > 0) {
-              const fixedLinks = reportData.brokenLinksData.filter(link => link.suggestion);
+
+            if (reportData.brokenLinksDetails && reportData.brokenLinksDetails.length > 0) {
+              const fixedLinks = reportData.brokenLinksDetails.filter(link => link.suggestedReplacement);
               if (fixedLinks.length > 0) {
-                prBody += `\n\n### Links Corrigidos:\n`;
+                prBody += `\n\n### Fixed Links:\n`;
                 fixedLinks.forEach(link => {
-                  prBody += `\n**${link.title}** (${link.type}):\n`;
-                  prBody += `- ❌ ${link.url}\n`;
-                  prBody += `- ✅ ${link.suggestion} (via ${link.suggestionProvider})\n`;
+                  prBody += `\n**${link.title}** (${link.type || 'N/A'}):\n`; // Added fallback for type
+                  prBody += `- ❌ \`${link.originalUrl}\`\n`; // Use backticks for URLs
+                  prBody += `- ✅ \`${link.suggestedReplacement}\` (via ${link.suggestionSource})\n`;
                 });
               }
-              
-              const unfixedLinks = reportData.brokenLinksData.filter(link => !link.suggestion);
+
+              const unfixedLinks = reportData.brokenLinksDetails.filter(link => !link.suggestedReplacement);
               if (unfixedLinks.length > 0) {
-                prBody += `\n\n### Links Quebrados (Não Corrigidos):\n`;
+                prBody += `\n\n### Broken Links (Not Fixed):\n`;
                 unfixedLinks.forEach(link => {
-                  prBody += `\n**${link.title}** (${link.type}):\n`;
-                  prBody += `- ❌ ${link.url}\n`;
+                  prBody += `\n**${link.title}** (${link.type || 'N/A'}):\n`;
+                  prBody += `- ❌ \`${link.originalUrl}\`\n`;
                 });
               }
             }
-            
-            prBody += `\n\n**Ação Necessária:**
-            Por favor, revise cuidadosamente as alterações antes de fazer o merge.
 
-            *Gerado por GitHub Actions.*
+            prBody += `\n\n**Action Required:**
+            Please carefully review the changes before merging.
+
+            *Generated by GitHub Actions.*
             `;
-            
+
             try {
               const { data: existingPulls } = await github.rest.pulls.list({
                 owner: context.repo.owner,
@@ -237,7 +227,7 @@ jobs:
                   title: prTitle,
                   body: prBody,
                 });
-                core.notice(`Pull Request existente #${pull_number} atualizado com sucesso.`);
+                core.notice(`Existing Pull Request #${pull_number} updated successfully.`);
 
               } else {
                 const { data: newPull } = await github.rest.pulls.create({
@@ -248,8 +238,8 @@ jobs:
                   title: prTitle,
                   body: prBody,
                 });
-                core.notice(`Novo Pull Request #${newPull.number} criado com sucesso.`);
+                core.notice(`New Pull Request #${newPull.number} created successfully.`);
               }
             } catch (error) {
-              core.setFailed(`Falha ao criar ou atualizar o Pull Request: ${error.message}`);
+              core.setFailed(`Failed to create or update Pull Request: ${error.message}`);
             }
