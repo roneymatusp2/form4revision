@@ -1106,35 +1106,6 @@ async function main() {
         item.brokenReason = brokenReason;
         console.log(`\n[WARN] Broken link: ${item.url} (Line: ${item.line}, Title: ${item.title})`);
         if (brokenReason) console.log(`[REASON] ${brokenReason}`);
-
-        // Attempt to find alternative
-        const alternativeResult = await findAlternativeUrl(
-          item.url,
-          item.title,
-          item.type,
-          item.topic,
-          item.subtopic,
-          item.source
-        );
-
-        if (alternativeResult?.url) {
-          item.suggestion = alternativeResult.url;
-          item.suggestionProvider = alternativeResult.provider;
-          console.log(
-            `[INFO] Alternative found: ${alternativeResult.url} (via ${alternativeResult.provider})`
-          );
-
-          // Double-check validity
-          const { valid: altValid, brokenReason: altReason } = await isValidUrl(alternativeResult.url, item.type);
-          if (!altValid) {
-            console.log(`[WARN] Suggested URL is invalid: ${alternativeResult.url}`);
-            if (altReason) console.log(`[REASON] ${altReason}`);
-            item.suggestion = null;
-            item.suggestionProvider = null;
-          }
-        } else {
-          console.log('[INFO] No alternative found.');
-        }
       }
     })
   );
@@ -1143,20 +1114,17 @@ async function main() {
 
   // Filter truly broken
   const onlyBroken = brokenLinksData.filter(x => x.isBroken);
-  const fixedCount = await updateResourcesFile(onlyBroken);
 
-  // Produce the final JSON matching the workflow's jq references
+  // Novo relatório simplificado
   const report = {
     totalLinksChecked: totalLinks,
     brokenLinkCount: onlyBroken.length,
-    linksFixedInFile: fixedCount,
     brokenLinksDetails: onlyBroken.map(link => ({
       originalUrl: link.url,
       title: link.title,
       type: link.type,
-      line: link.line,
-      suggestedReplacement: link.suggestion,
-      suggestionSource: link.suggestionProvider,
+      topic: link.topic,
+      subtopic: link.subtopic,
       brokenReason: link.brokenReason || null
     }))
   };
@@ -1166,7 +1134,6 @@ async function main() {
   console.log('\n=== FINISHED ===');
   console.log(`- Total links: ${totalLinks}`);
   console.log(`- Broken links: ${onlyBroken.length}`);
-  console.log(`- Links fixed: ${fixedCount}`);
   console.log(`Report saved in: ${reportFilePath}`);
 }
 
