@@ -11,6 +11,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-link-fix-branch
   cancel-in-progress: true
+  
 
 jobs:
   check-links:
