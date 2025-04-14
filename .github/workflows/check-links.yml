@@ -60,18 +60,16 @@ jobs:
             while [ $attempt -le $max_attempts ]; do
               echo "Attempt $attempt of $max_attempts"
 
-              if node scripts/check-links.js; then # Assumes your script is at scripts/check-links.js
+              if node scripts/check-links.js; then
                 echo "Script executed successfully!"
                 return 0
               else
                 echo "Attempt $attempt failed. Exit code: $?"
-
                 if [ $attempt -lt $max_attempts ]; then
                   wait_time=$((60 * attempt))
                   echo "Waiting $wait_time seconds before next attempt..."
                   sleep $wait_time
                 fi
-
                 attempt=$((attempt + 1))
               fi
             done
@@ -105,17 +103,29 @@ jobs:
             echo "- Broken links found: $BROKEN_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
             echo "- Broken links fixed: $FIXED_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
 
+            # List of fixed links:
             if [ "$FIXED_LINKS_COUNT" != "0" ] && [ "$FIXED_LINKS_COUNT" != "N/A" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
               echo "### Fixed Links" >> $GITHUB_STEP_SUMMARY
-              jq -r '.brokenLinksDetails[] | select(.suggestedReplacement != null) | "- **" + .title + "**<br>  ❌ " + .originalUrl + "<br>  ✅ " + .suggestedReplacement + " (via " + .suggestionSource + ")"' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
+              jq -r '.brokenLinksDetails[] 
+                | select(.suggestedReplacement != null) 
+                | "- **" + .title + "**<br>  ❌ " 
+                  + .originalUrl + "<br>  ✅ " 
+                  + .suggestedReplacement 
+                  + " (via " + .suggestionSource + ")"' \
+                scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
             fi
 
+            # Unfixed links:
             UNFIXED_COUNT=$(jq '.brokenLinkCount - .linksFixedInFile' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
             if [ "$UNFIXED_COUNT" != "0" ] && [ "$UNFIXED_COUNT" != "N/A" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
               echo "### Broken Links (Not Fixed)" >> $GITHUB_STEP_SUMMARY
-              jq -r '.brokenLinksDetails[] | select(.suggestedReplacement == null) | "- **" + .title + "**<br>  ❌ " + .originalUrl' scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
+              jq -r '.brokenLinksDetails[] 
+                | select(.suggestedReplacement == null) 
+                | "- **" + .title + "**<br>  ❌ " 
+                  + .originalUrl' \
+                scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
             fi
           else
             echo "## Link Checker Report" >> $GITHUB_STEP_SUMMARY
@@ -127,7 +137,6 @@ jobs:
         if: success() && steps.generate_summary.outcome == 'success'
         run: |
           set -eux
-
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
@@ -140,7 +149,7 @@ jobs:
           if ! git diff --quiet --cached; then
             echo "Changes detected. Committing and pushing..."
             git commit -m "fix(links): Auto-fix broken links" \
-                       -m "Automated link fixing using pattern matching and multi-provider AI." \
+                       -m "Automated link fixing using pattern matching + multi-provider AI." \
                        -m "[skip ci]"
 
             git push --force --set-upstream origin "$BRANCH_NAME"
@@ -215,7 +224,7 @@ jobs:
                 repo: context.repo.repo,
                 state: 'open',
                 head: `${context.repo.owner}:${headBranchName}`,
-                base: baseBranchName,
+                base: baseBranchName
               });
 
               if (existingPulls.length > 0) {
@@ -225,7 +234,7 @@ jobs:
                   repo: context.repo.repo,
                   pull_number,
                   title: prTitle,
-                  body: prBody,
+                  body: prBody
                 });
                 core.notice(`Existing Pull Request #${pull_number} updated successfully.`);
               } else {
@@ -235,7 +244,7 @@ jobs:
                   head: headBranchName,
                   base: baseBranchName,
                   title: prTitle,
-                  body: prBody,
+                  body: prBody
                 });
                 core.notice(`New Pull Request #${newPull.number} created successfully.`);
               }
