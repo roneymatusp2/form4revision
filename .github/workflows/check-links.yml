@@ -1,26 +1,17 @@
-name: Check, Suggest, and Fix Broken Links
+name: AI Link Checker for Maths Website
 
 on:
-  push:
-    branches:
-      - main
   schedule:
-    - cron: '30 2 * * 0'
+    - cron: '0 2 * * *' # roda todo dia às 2h UTC
   workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-link-fix-branch
-  cancel-in-progress: true
-  
 
 jobs:
   check-links:
-    name: Check, Suggest, and Fix Broken Links
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
     steps:
-      - name: Checkout repository
+      - name: Checkout site
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -33,17 +24,12 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          set -eux
-          npm ci
+        run: npm ci
 
       - name: Ensure specific packages are installed
-        run: |
-          set -eux
-          npm install axios p-limit @babel/parser @babel/traverse @babel/generator
+        run: npm install axios p-limit @babel/parser @babel/traverse @babel/generator
 
-      - name: Run link checker script with retries
-        id: link-check
+      - name: Run AI Link Checker
         env:
           GOOGLE_GEMINI_API: ${{ secrets.GOOGLE_GEMINI_API }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -53,142 +39,80 @@ jobs:
           QWEN_API_2: ${{ secrets.QWEN_API_2 }}
         run: |
           set -eux
+          node scripts/check-links.js
 
-          function run_with_retry {
-            max_attempts=3
-            attempt=1
-
-            while [ $attempt -le $max_attempts ]; do
-              echo "Attempt $attempt of $max_attempts"
-
-              if node scripts/check-links.js; then
-                echo "Script executed successfully!"
-                return 0
-              else
-                echo "Attempt $attempt failed. Exit code: $?"
-                if [ $attempt -lt $max_attempts ]; then
-                  wait_time=$((60 * attempt))
-                  echo "Waiting $wait_time seconds before next attempt..."
-                  sleep $wait_time
-                fi
-                attempt=$((attempt + 1))
-              fi
-            done
-
-            echo "All attempts failed!"
-            return 1
-          }
-
-          run_with_retry
-
-      - name: Upload link-check logs (artifacts)
+      - name: Upload broken links report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: link-check-logs
-          path: |
-            scripts/link-check-stats.json
-          if-no-files-found: ignore
+          name: broken-links-report
+          path: scripts/broken-links.json
+          if-no-files-found: error
 
       - name: Generate summary for GitHub Actions
         if: always()
         run: |
           set -eux
-          if [ -f "scripts/link-check-stats.json" ]; then
-            BROKEN_LINKS_COUNT=$(jq '.brokenLinkCount' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
-            TOTAL_LINKS_COUNT=$(jq '.totalLinksChecked' scripts/link-check-stats.json 2>/dev/null || echo 'N/A')
-
-            echo "## Link Checker Report" >> $GITHUB_STEP_SUMMARY
-            echo "- Total links checked: $TOTAL_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
+          if [ -f "scripts/broken-links.json" ]; then
+            BROKEN_LINKS_COUNT=$(jq 'length' scripts/broken-links.json 2>/dev/null || echo 'N/A')
+            echo "## AI Link Checker Report" >> $GITHUB_STEP_SUMMARY
             echo "- Broken links found: $BROKEN_LINKS_COUNT" >> $GITHUB_STEP_SUMMARY
-
             if [ "$BROKEN_LINKS_COUNT" != "0" ] && [ "$BROKEN_LINKS_COUNT" != "N/A" ]; then
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "### Broken Links" >> $GITHUB_STEP_SUMMARY
-              jq -r '.brokenLinksDetails[] 
-                | "- **\(.title)** (\(.type))<br>  🔗 [link](\(.originalUrl))<br>  📂 Topic: \(.topic) / \(.subtopic)<br>  🛑 Reason: \(.brokenReason)"' \
-                scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
+              echo "### Broken Links (JSON preview)" >> $GITHUB_STEP_SUMMARY
+              jq -r '.[] | "- **\(.topic)** / **\(.subtopic)** (\(.type))<br>  🔗 [link](\(.url))<br>  📝 \(.description)"' scripts/broken-links.json >> $GITHUB_STEP_SUMMARY
             fi
           else
-            echo "## Link Checker Report" >> $GITHUB_STEP_SUMMARY
+            echo "## AI Link Checker Report" >> $GITHUB_STEP_SUMMARY
             echo "❌ Could not generate report. Check logs for details." >> $GITHUB_STEP_SUMMARY
           fi
-        id: generate_summary
 
-      - name: Commit and push changes to dedicated branch
-        if: success() && steps.generate_summary.outcome == 'success'
+      - name: Commit and push report branch
+        if: always()
         run: |
           set -eux
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-
-          BRANCH_NAME="chore/auto-link-fixes"
+          BRANCH_NAME="chore/ai-link-checker-report"
           git checkout -B "$BRANCH_NAME"
-
-          git add src/data/externalResources-new.ts || echo "File not modified or does not exist."
-          git add scripts/link-check-stats.json || echo "File not modified or does not exist."
-
+          git add scripts/broken-links.json || echo "File not modified or does not exist."
           if ! git diff --quiet --cached; then
-            echo "Changes detected. Committing and pushing..."
-            git commit -m "chore: Broken links report" \
-                       -m "Automated link checking. See report for details." \
-                       -m "[skip ci]"
-
+            git commit -m "chore: AI link checker broken links report [skip ci]"
             git push --force --set-upstream origin "$BRANCH_NAME"
-            echo "changes_pushed=true" >> $GITHUB_OUTPUT
-          else
-            echo "No changes detected for commit."
-            echo "changes_pushed=false" >> $GITHUB_OUTPUT
           fi
-        id: commit_push
 
       - name: Create or Update Pull Request
-        if: success() && steps.commit_push.outputs.changes_pushed == 'true'
+        if: always()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PAT_FOR_ACTIONS || secrets.GITHUB_TOKEN }}
           script: |
             const baseBranchName = 'main';
-            const headBranchName = 'chore/auto-link-fixes';
-            const prTitle = 'chore: Broken Links Report';
+            const headBranchName = 'chore/ai-link-checker-report';
+            const prTitle = 'chore: AI Link Checker Broken Links Report';
 
-            let reportData = {};
+            let brokenLinks = [];
             const fs = require('fs');
             try {
-              if (fs.existsSync('scripts/link-check-stats.json')) {
-                reportData = JSON.parse(fs.readFileSync('scripts/link-check-stats.json', 'utf8'));
+              if (fs.existsSync('scripts/broken-links.json')) {
+                brokenLinks = JSON.parse(fs.readFileSync('scripts/broken-links.json', 'utf8'));
               }
             } catch (error) {
               console.error("Error reading report file:", error);
             }
 
             let prBody = `
-            ## Broken Links Report
-
-            This Pull Request was automatically generated by the "Check, Suggest, and Fix Broken Links" workflow.
+            ## AI Link Checker Broken Links Report
 
             **Summary:**
-            - Links checked: ${reportData.totalLinksChecked || 'N/A'}
-            - Broken links found: ${reportData.brokenLinkCount || 'N/A'}
+            - Broken links found: ${brokenLinks.length || 'N/A'}
             `;
 
-            if (reportData.brokenLinksDetails && reportData.brokenLinksDetails.length > 0) {
-              prBody += `\n\n### Broken Links:\n`;
-              reportData.brokenLinksDetails.forEach(link => {
-                prBody += `\n**${link.title}** (${link.type || 'N/A'})\n`;
-                prBody += `- 🔗 ${link.originalUrl}\n`;
-                prBody += `- 📂 Topic: ${link.topic || 'N/A'} / ${link.subtopic || 'N/A'}\n`;
-                if (link.brokenReason) {
-                  prBody += `- 🛑 Reason: ${link.brokenReason}\n`;
-                }
-              });
+            if (brokenLinks.length > 0) {
+              prBody += `\n\n### Broken Links (JSON format):\n\`\`\`json\n${JSON.stringify(brokenLinks, null, 2)}\n\`\`\`\n`;
             }
 
-            prBody += `\n\n**Action Required:**
-            Please review the broken links above and update them manually as needed.
-
-            *Generated by GitHub Actions.*
-            `;
+            prBody += `\n\n**Action Required:**\nPlease review and update the broken links manually as needed.\n\n*Generated by GitHub Actions.*\n`;
 
             try {
               const { data: existingPulls } = await github.rest.pulls.list({
