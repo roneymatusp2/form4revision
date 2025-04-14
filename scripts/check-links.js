@@ -98,6 +98,9 @@ const reportFilePath = path.resolve(__dirname, 'link-check-stats.json');
 // Backup file
 const backupFilePath = path.resolve(__dirname, '../src/data/externalResources-backup.ts');
 
+// Novo caminho do relatório
+const brokenLinksReportPath = path.resolve(__dirname, 'broken-links.json');
+
 // ========== TEST MODE ==========
 const args = process.argv.slice(2);
 const TEST_MODE = args.includes('--test') || args.includes('-t');
@@ -1115,26 +1118,21 @@ async function main() {
   // Filter truly broken
   const onlyBroken = brokenLinksData.filter(x => x.isBroken);
 
-  // Novo relatório simplificado
-  const report = {
-    totalLinksChecked: totalLinks,
-    brokenLinkCount: onlyBroken.length,
-    brokenLinksDetails: onlyBroken.map(link => ({
-      originalUrl: link.url,
-      title: link.title,
-      type: link.type,
-      topic: link.topic,
-      subtopic: link.subtopic,
-      brokenReason: link.brokenReason || null
-    }))
-  };
+  // Novo relatório no formato solicitado
+  const brokenLinksReport = onlyBroken.map(link => ({
+    topic: link.topic,
+    subtopic: link.subtopic,
+    type: link.type,
+    description: link.title,
+    url: link.url
+  }));
 
-  fs.writeFileSync(reportFilePath, JSON.stringify(report, null, 2), 'utf8');
+  fs.writeFileSync(brokenLinksReportPath, JSON.stringify(brokenLinksReport, null, 2), 'utf8');
 
   console.log('\n=== FINISHED ===');
   console.log(`- Total links: ${totalLinks}`);
   console.log(`- Broken links: ${onlyBroken.length}`);
-  console.log(`Report saved in: ${reportFilePath}`);
+  console.log(`Broken links report saved in: ${brokenLinksReportPath}`);
 }
 
 main().catch(err => {
