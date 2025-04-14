@@ -39,7 +39,7 @@ jobs:
       - name: Ensure specific packages are installed
         run: |
           set -eux
-          npm install axios p-limit @babel/parser @babel/traverse
+          npm install axios p-limit @babel/parser @babel/traverse @babel/generator
 
       - name: Run link checker script with retries
         id: link-check
@@ -124,7 +124,8 @@ jobs:
               jq -r '.brokenLinksDetails[] 
                 | select(.suggestedReplacement == null) 
                 | "- **" + .title + "**<br>  ❌ " 
-                  + .originalUrl' \
+                  + .originalUrl 
+                  + (if .brokenReason then "<br>  🛑 Reason: " + .brokenReason else "" end)' \
                 scripts/link-check-stats.json >> $GITHUB_STEP_SUMMARY
             fi
           else
@@ -207,7 +208,11 @@ jobs:
                 prBody += `\n\n### Broken Links (Not Fixed):\n`;
                 unfixedLinks.forEach(link => {
                   prBody += `\n**${link.title}** (${link.type || 'N/A'}):\n`;
-                  prBody += `- ❌ \`${link.originalUrl}\`\n`;
+                  prBody += `- ❌ \`${link.originalUrl}\``;
+                  if (link.brokenReason) {
+                    prBody += `\n  🛑 Reason: ${link.brokenReason}`;
+                  }
+                  prBody += `\n`;
                 });
               }
             }
