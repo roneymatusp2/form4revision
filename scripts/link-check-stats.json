@@ -1,0 +1,1406 @@
+{
+  "totalLinksChecked": 259,
+  "brokenLinkCount": 175,
+  "brokenLinksDetails": [
+    {
+      "originalUrl": "https://www.youtube.com/embed/Vk6O8r3UKNw",
+      "title": "Natural Numbers Introduction",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/FWmzg5-Yptw",
+      "title": "Types of Numbers",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf",
+      "title": "Types of Numbers Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/prime-numbers-pdf1.pdf",
+      "title": "Prime Numbers Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf",
+      "title": "Square Numbers and Square Roots",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/cube-numbers-pdf1.pdf",
+      "title": "Cube Numbers and Cube Roots",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/triangular-numbers-pdf2.pdf",
+      "title": "Triangular Numbers",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf",
+      "title": "Rational and Irrational Numbers",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_1548f69d09d94b80824a05fcaba64a2e.pdf",
+      "title": "Standard Form Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/standard-form",
+      "title": "Standard Form Practice Strips",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/hcf-lcm-pdf.pdf",
+      "title": "HCF and LCM Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/prime-factorisation-pdf.pdf",
+      "title": "Prime Factorisation Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/order-of-operations-pdf1.pdf",
+      "title": "Order of Operations (BODMAS) Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/powers-and-roots-pdf1.pdf",
+      "title": "Powers and Roots Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/adding-fractions-same-denominator-pdf.pdf",
+      "title": "Adding Fractions (Same Denominator)",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/adding-fractions-different-denominator-pdf.pdf",
+      "title": "Adding Fractions (Different Denominator)",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/improper-fractions-and-mixed-numbers-pdf1.pdf",
+      "title": "Improper Fractions & Mixed Numbers",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_fe57d7a8da0549ea89a69efd290a5cc5.pdf",
+      "title": "Powers and Roots Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_abcfff6c75f14b71886e2eaed5cd206d.pdf",
+      "title": "Fractions Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_7c2935bca03146d2906e7cd8bfa70c1e.pdf",
+      "title": "Surds Practice Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/fdp-pdf1.pdf",
+      "title": "FDP Conversion Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/2-fdp.pdf",
+      "title": "FDP Conversions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/6-recurring-decimals-to-fractions.pdf",
+      "title": "Converting Recurring Decimals to Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/ratio-pdf1.pdf",
+      "title": "Ratio Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/sharing-in-a-ratio-pdf.pdf",
+      "title": "Sharing in a Ratio",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/11/Ratio-Problem-Solving-pdf.pdf",
+      "title": "Ratio Problem Solving",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/proportion-pdf1.pdf",
+      "title": "Proportion Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_8caf4afcaaa44fa28b9498fbfe4af9a4.pdf",
+      "title": "Ratio and Proportion Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/DGzZ6sFtoO8",
+      "title": "Drawing Straight Line Graphs",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/ZyS0Bni9a44",
+      "title": "Finding the Equation of a Straight Line",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/8c-NJwJb0YY",
+      "title": "Midpoint of a Line Segment",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/m9Y0_O0OXYk",
+      "title": "Linear Equations in Slope-Intercept Form",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/16-graphs.pdf",
+      "title": "Straight Line Graphs",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/03/Straight-Line-Graphs.pdf",
+      "title": "Linear Functions Practice",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/7-equations-of-straight-lines.pdf",
+      "title": "Finding Equations of Lines",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/03/Straight-Line-Graphs-Answers.pdf",
+      "title": "Linear Functions Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/coordinates-and-linear-graphs",
+      "title": "Coordinates and Linear Graphs",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/",
+      "title": "Linear Graphs – Save My Exams",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/1JXG5aPz_f8",
+      "title": "Simultaneous Equations (Elimination Method)",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/Zsn_-eD7L6c",
+      "title": "Simultaneous Equations (Elimination Method)",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/GbSPb3X1VO0",
+      "title": "Solving Simultaneous Equations by Substitution",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/qlGOjlw__Zo",
+      "title": "Word Problems with Simultaneous Equations",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/gMZLnr-i-7o",
+      "title": "Linear Systems of 3 Variables",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/09/Simultaneous-Equations.pdf",
+      "title": "Simultaneous Equations",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/11/Simultaneous-Equations-Word-Problems.pdf",
+      "title": "Simultaneous Equations Word Problems",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/09/Simultaneous-Equations-Answers.pdf",
+      "title": "Simultaneous Equations Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/topic-questions/simultaneous-equations/",
+      "title": "Simultaneous Equations Practice Questions",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "Request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/topic-questions/",
+      "title": "Simultaneous Equations – Save My Exams",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/6oJ3QqbL7Yc",
+      "title": "Parallel and Perpendicular Lines",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/0XOcH_XySp0",
+      "title": "Parallel & Perpendicular Lines Intro",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/9L9T7_S72X4",
+      "title": "Perpendicular Bisector",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/international-maths/23/extended/revision-notes/coordinate-geometry-and-graphs/straight-line-graphs/perpendicular-lines/",
+      "title": "Perpendicular Lines",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/11/Laws-of-Indices-pdf.pdf",
+      "title": "Laws of Indices Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/11/Fractional-Indices-pdf.pdf",
+      "title": "Fractional Indices",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/11/Negative-Indices-pdf.pdf",
+      "title": "Negative Indices",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_c5f2ce9fe1d742dd9cd0c354d0b2ab94.pdf",
+      "title": "Simplifying Using Laws of Indices Practice Strips",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/expanding-brackets-2-pdf.pdf",
+      "title": "Expanding Double Brackets",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/expanding-brackets-3-pdf.pdf",
+      "title": "Expanding Triple Brackets",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_dada3c9a77f04c95ba1d9b2ddf3b9245.pdf",
+      "title": "Expanding Brackets Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/factorising-pdf1.pdf",
+      "title": "Factorising (Common Factor)",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_e4e34d485daf40d4a18aa76456a8a82a.pdf",
+      "title": "Factorising Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_c5b33eed09b64ac9a81c6b2e48b60c83.pdf",
+      "title": "Factorising with Common Factors Practice Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/bPPfgZoLMEE",
+      "title": "Angles formed by parallel lines and transversals",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/7Gs9YS1PJ_U",
+      "title": "Angles in Triangles",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/_mkqCGYfK2o",
+      "title": "Angles in Polygons",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/angles-on-a-straight-line-pdf.pdf",
+      "title": "Angles on a Straight Line",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/angles-around-a-point-pdf.pdf",
+      "title": "Angles Around a Point",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/vertically-opposite-angles-pdf.pdf",
+      "title": "Vertically Opposite Angles",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/02/Angles-in-Parallel-Lines.pdf",
+      "title": "Angles in Parallel Lines",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2018/09/Angles-in-Triangles-pdf.pdf",
+      "title": "Angles in Triangles",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/02/Angles-in-Parallel-Lines-Answers.pdf",
+      "title": "Angles in Parallel Lines Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/geometry/angle-properties/",
+      "title": "Angle Properties",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "Request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.geogebra.org/m/BpjHRGY6",
+      "title": "Interactive Angle Explorer",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "Request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/converting-areas-and-volumes-pdf.pdf",
+      "title": "Converting Areas and Volumes",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_fe77e5db5e0f41cc98b7613e8cb15d5a.pdf",
+      "title": "Converting Metric Units Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/area-of-a-triangle-pdf1.pdf",
+      "title": "Area of Triangle",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/area-of-a-trapezium-pdf1.pdf",
+      "title": "Area of Trapezium",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/M4_BUK5Lxhw",
+      "title": "Bearings Introduction",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/hrSyNrP6e6s",
+      "title": "Bearings Problems",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/6-bearings.pdf",
+      "title": "Bearings Questions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/6-bearingsans.pdf",
+      "title": "Bearings Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/5-pythagoras-ws.pdf",
+      "title": "Pythagoras Practice Questions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/5-pythagorasans.pdf",
+      "title": "Pythagoras Practice Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/solving-equations-pdf1.pdf",
+      "title": "Solving Equations Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/02/Equations-with-Brackets.pdf",
+      "title": "Equations with Brackets",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/equations-with-unknowns-on-both-sides-pdf.pdf",
+      "title": "Equations with Unknowns on Both Sides",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/equations-with-fractions-pdf.pdf",
+      "title": "Equations with Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_49d51b15e0974d9da79b75eec1c2f12a.pdf",
+      "title": "Equations and Inequalities Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/inequalities-pdf1.pdf",
+      "title": "Inequalities Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/representing-inequalities-on-a-number-line-pdf.pdf",
+      "title": "Representing Inequalities on a Number Line",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/solving-inequalities-pdf1.pdf",
+      "title": "Solving Inequalities Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/3-solving-inequalities.pdf",
+      "title": "Solving Inequalities",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/zCoJMG_MvGI",
+      "title": "Simplifying Algebraic Fractions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/XZJKrUWnEzM",
+      "title": "Algebraic Fractions Introduction",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/tsEjLbPySH0",
+      "title": "Simplifying Complex Fractions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/02/Algebraic-Fractions.pdf",
+      "title": "Algebraic Fractions (Basic)",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/9-simplifying-algebraic-fractions.pdf",
+      "title": "Simplifying Algebraic Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/02/Algebraic-Fractions-Answers.pdf",
+      "title": "Algebraic Fractions Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/4JlkA4BrJR4",
+      "title": "Adding and Subtracting Algebraic Fractions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/CwMT9gi73m0",
+      "title": "Add and Subtract Rational Expressions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/adding-algebraic-fractions-pdf1.pdf",
+      "title": "Adding Algebraic Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/a-level/pure/algebraicfractionsfurther.pdf",
+      "title": "Advanced Algebraic Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/s9w3E-SXSEE",
+      "title": "Multiplying and Dividing Algebraic Fractions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/-YmGJV5Xjws",
+      "title": "Multiply and Divide Rational Expressions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/dividing-algebraic-fractions.pdf",
+      "title": "Dividing Algebraic Fractions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/algebraic-fractions/",
+      "title": "Algebraic Fractions Complete Guide",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/4--eScc-vMs",
+      "title": "Introduction to Quadratic Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/X__2Hzd_e1g",
+      "title": "Quadratic Functions Intro",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/YBhLfSHXWLM",
+      "title": "Completing the Square",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/quadratic-functions-pdf1.pdf",
+      "title": "Quadratic Functions Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/quadratic-patterns-pdf1.pdf",
+      "title": "Quadratic Patterns Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/03/Completing-the-Square.pdf",
+      "title": "Completing the Square",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/03/Completing-the-Square-Answers.pdf",
+      "title": "Completing the Square Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/GJwb1aZUxW8",
+      "title": "Solving Quadratics by Factorisation",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/1bu0tBpJ0zo",
+      "title": "Factoring Simple Quadratics",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/AEZrXQ-VUzk",
+      "title": "Factoring Quadratics with Negative Coefficients",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/solving-quadratic-equations-pdf1.pdf",
+      "title": "Solving Quadratic Equations Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/5-factorising-quadratics.pdf",
+      "title": "Factorising Quadratics",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/5-factorising-quadraticsans.pdf",
+      "title": "Factorising Quadratics Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/JBIDo8zaMkU",
+      "title": "Using the Quadratic Formula",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.khanacademy.org/math/in-in-grade-10-ncert/x573d8ce20721c073:polynomials/x573d8ce20721c073:relationship-between-zeroes-and-coefficients/e/finding-the-unknown-through-sum-and-product-of-roots",
+      "title": "Sum and Product of Roots",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/2NPZ2SRKK2U",
+      "title": "Solving Quadratics with Technology",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/dp/maths/ib/ai/21/hl/revision-notes/number-and-algebra/number-toolkit/gdc-solving-equations/",
+      "title": "Solving Equations Using GDC",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/EeiVIkUihuk",
+      "title": "The Vertex of a Parabola",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/0jQVU71NzpM",
+      "title": "Finding Intercepts of Quadratic Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/YgeuJP9tHgQ",
+      "title": "Introduction to Sequences",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/LHRzDQN0a1o",
+      "title": "Linear Sequences",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/GecDgFwAlC0",
+      "title": "Nth Term",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/qLJdsYjWUUo",
+      "title": "Finding Terms in a Sequence",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/9EbZfX1TfnY",
+      "title": "Finding the Rule for a Linear Pattern",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/sequences-pdf1.pdf",
+      "title": "Sequences Worksheet",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/4-nth-term.pdf",
+      "title": "Arithmetic Sequences Questions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/4-nth-termans.pdf",
+      "title": "Arithmetic Sequences Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/topic-questions/algebra-and-sequences/sequences/",
+      "title": "Sequences Practice",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/2oHohH6_eis",
+      "title": "Quadratic Sequences",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2021/04/Quadratic-Sequences.pdf",
+      "title": "Quadratic Sequences Practice",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/international-maths/23/core/revision-notes/algebra-and-sequences/sequences/quadratic-and-cubic-sequences/",
+      "title": "Quadratic & Cubic Sequences",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/8A0FQ5xJ2YU",
+      "title": "Cubic Sequences",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/xYO2P_PVQQk",
+      "title": "Geometric Sequences",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/WhYdjxYhDnk",
+      "title": "Geometric Sequences and Series",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:sequences/x2f8bb11595b61c86:constructing-geometric-sequences/a/geometric-sequences-review",
+      "title": "Geometric Sequences",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:sequences/x2f8bb11595b61c86:introduction-to-geometric-sequences/e/geometric_sequences_2",
+      "title": "Geometric Sequences Practice",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/kY4R3WjkRI0",
+      "title": "Function Notation",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/FZ02S8m-cnQ",
+      "title": "Evaluating Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/04/Function-Notation.pdf",
+      "title": "Function Notation Introduction",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/6-domain-and-range.pdf",
+      "title": "Domain and Range Questions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/6-domain-and-rangeans.pdf",
+      "title": "Domain and Range Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/functions/introduction/",
+      "title": "Introduction to Functions",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/OXt-Dw7jYYM",
+      "title": "Composite Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/10-2jg4lhEI",
+      "title": "Composite Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/3L0N4WyDYh4",
+      "title": "Composing Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/04/Composite-Functions.pdf",
+      "title": "Composite Functions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/7-composite-and-inverse-functions.pdf",
+      "title": "Composite and Inverse Functions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/04/Composite-Functions-Answers.pdf",
+      "title": "Composite Functions Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/functions",
+      "title": "Functions",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/T4m0-6Nf_QE",
+      "title": "Inverse Functions",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/04/Inverse-Functions.pdf",
+      "title": "Inverse Functions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.khanacademy.org/math/algebra-home/alg-functions/alg-finding-inverse-functions/a/finding-inverse-functions",
+      "title": "Finding Inverse Functions",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/gcse/maths/edexcel/22/higher/revision-notes/algebra/functions/inverse-functions/",
+      "title": "Inverse Functions",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/QwE9Vof-OaQ",
+      "title": "Direct Variation",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/3BRkE7qpBqU",
+      "title": "Inverse Variation",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/direct-and-inverse-proportion-pdf.pdf",
+      "title": "Direct and Inverse Proportion",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/wXMO_jYBKPE",
+      "title": "SOHCAHTOA Explained",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/bALUluXOuTc",
+      "title": "Trigonometry - Finding Missing Sides",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/fP6zFupOxqM",
+      "title": "Trigonometry - Finding Missing Angles",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/trigonometry-missing-sides-pdf.pdf",
+      "title": "Trigonometry - Missing Sides",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/trigonometry-missing-angles-pdf.pdf",
+      "title": "Trigonometry - Missing Angles",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_cc79be15865842bdaef4c8bfecd2ba67.pdf",
+      "title": "Trigonometry Revision Grid",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsgenie.co.uk/resources/5-sohcahtoaans.pdf",
+      "title": "SOHCAHTOA Solutions",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.mathsisfun.com/algebra/trig-calculator.html",
+      "title": "Trigonometry Calculator",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "Request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.youtube.com/embed/_WllQRr_n7I",
+      "title": "Angles of Elevation and Depression",
+      "type": "video",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "YouTube: Video unavailable/private/removed"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/angles-of-elevation-pdf.pdf",
+      "title": "Angles of Elevation/Depression",
+      "type": "pdf",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "PDF request failed: Request failed with status code 404"
+    },
+    {
+      "originalUrl": "https://www.cambridgeinternational.org/programmes-and-qualifications/cambridge-igcse-international-mathematics-0607/past-papers/",
+      "title": "Cambridge IGCSE International Mathematics (0607) Past Papers",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://mathsaurus.com/gcse-and-igcse/igcse-exam-questions-by-topic/",
+      "title": "IGCSE Exam Questions by Topic",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    },
+    {
+      "originalUrl": "https://www.savemyexams.com/igcse/maths/cie/international-maths/past-papers/",
+      "title": "Cambridge IGCSE International Maths Past Papers",
+      "type": "external",
+      "topic": "mathematics",
+      "subtopic": "general",
+      "brokenReason": "HTML page contains error message"
+    }
+  ]
+}
