@@ -21,8 +21,17 @@ const CLAUDE_API           = process.env.CLAUDE_API           || null;
 const QWEN_API             = process.env.QWEN_API             || null; // Replaces Mistral
 const QWEN_API_2           = process.env.QWEN_API_2           || null; // Additional option
 
+// ===== MODELOS DE IA ATUALIZADOS =====
+const MODELS = {
+  CLAUDE: 'claude-3-5-sonnet-2024-10-22', // Claude 3.5 Sonnet
+  GEMINI: 'gemini-1.5-flash-latest',      // Gemini Flash (ou gemini-1.5-pro-latest se preferir)
+  OPENAI: 'gpt-4o',                       // OpenAI GPT-4o
+  DEEPSEEK: 'deepseek-chat',              // DeepSeek Chat
+  QWEN: 'qwen-max'                        // Qwen Max
+};
+
 // API endpoints for generative AI providers
-const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+const GOOGLE_GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODELS.GEMINI}:generateContent`;
 const OPENAI_API_URL        = 'https://api.openai.com/v1/chat/completions';
 const DEEPSEEK_API_URL      = 'https://api.deepseek.com/v1/chat/completions';
 const CLAUDE_API_URL        = 'https://api.anthropic.com/v1/messages';
@@ -572,7 +581,7 @@ IMPORTANT:
       axios.post(
         OPENAI_API_URL,
         {
-          model: 'gpt-4o-mini', // Using smaller model to reduce costs
+          model: MODELS.OPENAI,
           messages: [
             {
               role: 'system',
@@ -632,7 +641,7 @@ IMPORTANT:
       axios.post(
         DEEPSEEK_API_URL,
         {
-          model: 'deepseek-reasoner',
+          model: MODELS.DEEPSEEK,
           max_tokens: 100,
           temperature: 0.1,
           messages: [{ role: 'user', content: prompt }]
@@ -685,7 +694,7 @@ IMPORTANT:
       axios.post(
         CLAUDE_API_URL,
         {
-          model: 'claude-3-haiku-20240307',
+          model: MODELS.CLAUDE,
           max_tokens: 100,
           temperature: 0.1,
           messages: [{ role: 'user', content: prompt }]
@@ -739,7 +748,7 @@ IMPORTANT:
       axios.post(
         QWEN_API_URL,
         {
-          model: 'qwen-max',
+          model: MODELS.QWEN,
           messages: [{ role: 'user', content: prompt }],
           max_tokens: 100,
           temperature: 0.1
