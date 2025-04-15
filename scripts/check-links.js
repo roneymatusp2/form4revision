@@ -1138,4 +1138,8 @@ async function main() {
 main().catch(err => {
   console.error(`[ERROR] Main script failure: ${err.message}`);
   process.exit(1);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 633750fa2ff5345e03bb514641582744d99a80a1
