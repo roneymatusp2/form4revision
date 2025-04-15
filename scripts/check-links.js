@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
@@ -5,33 +6,39 @@ const { parse } = require('@babel/parser');
 const traverse = require('@babel/traverse').default;
 const generator = require('@babel/generator').default;
 
-// API Configuration
-const GOOGLE_GEMINI_API = process.env.GOOGLE_GEMINI_API;
-const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-const QWEN_API_KEY = process.env.QWEN_API;
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+// Retry settings - increased and with exponential backoff
+const MAX_RETRIES = 5;
+const INITIAL_RETRY_DELAY_MS = 2000;
+const MAX_RETRY_DELAY_MS = 30000;
 
-// Corrigido para usar o modelo correto do Gemini
-const GOOGLE_GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
-const QWEN_API_URL = 'https://api.qwen.ai/v1/chat/completions';
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+/**
+ * API key configuration for AI models
+ */
+const GOOGLE_GEMINI_API    = process.env.GOOGLE_GEMINI_API    || null;
+const OPENAI_API_KEY       = process.env.OPENAI_API_KEY       || null;
+const DEEPSEEK_API_KEY     = process.env.DEEPSEEK_API_KEY     || null; // Replaces Anthropic
+const CLAUDE_API           = process.env.CLAUDE_API           || null;
+const QWEN_API             = process.env.QWEN_API             || null; // Replaces Mistral
+const QWEN_API_2           = process.env.QWEN_API_2           || null; // Additional option
 
-console.log(`Google Gemini API Key present: ${GOOGLE_GEMINI_API ? 'Yes' : 'No'}`);
-console.log(`DeepSeek API Key present: ${DEEPSEEK_API_KEY ? 'Yes' : 'No'}`);
-console.log(`Qwen API Key present: ${QWEN_API_KEY ? 'Yes' : 'No'}`);
-console.log(`OpenAI API Key present: ${OPENAI_API_KEY ? 'Yes' : 'No'}`);
+// ===== MODELOS DE IA ATUALIZADOS =====
+const MODELS = {
+  CLAUDE: 'claude-3-5-sonnet-2024-10-22', // Claude 3.5 Sonnet
+  GEMINI: 'gemini-1.5-flash-latest',      // Gemini Flash (ou gemini-1.5-pro-latest se preferir)
+  OPENAI: 'gpt-4o',                       // OpenAI GPT-4o
+  DEEPSEEK: 'deepseek-chat',              // DeepSeek Chat
+  QWEN: 'qwen-max'                        // Qwen Max
+};
 
-// Set a global timeout to ensure we finish within 1 hour
-const GLOBAL_TIMEOUT = 55 * 60 * 1000; // 55 minutes in milliseconds
-let shouldContinue = true;
+// API endpoints for generative AI providers
+const GOOGLE_GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODELS.GEMINI}:generateContent`;
+const OPENAI_API_URL        = 'https://api.openai.com/v1/chat/completions';
+const DEEPSEEK_API_URL      = 'https://api.deepseek.com/v1/chat/completions';
+const CLAUDE_API_URL        = 'https://api.anthropic.com/v1/messages';
+const QWEN_API_URL          = 'https://api.qwen.ai/v1/chat/completions';
+const QWEN_API_2_URL        = 'https://api.qwen.ai/v2/chat/completions';
 
-setTimeout(() => {
-  console.log('Global timeout reached (55 minutes). Finalizing current operations...');
-  shouldContinue = false;
-}, GLOBAL_TIMEOUT);
-
-// Authorized educational websites
+// Authorized domains
 const AUTHORIZED_WEBSITES = [
   'corbettmaths.com',
   'khanacademy.org',
@@ -39,12 +46,12 @@ const AUTHORIZED_WEBSITES = [
   'mathsgenie.co.uk',
   'draustinmaths.com',
   'physicsandmathstutor.com',
-  'youtube.com',      // For embedded videos
+  'youtube.com',
   'maths4everyone.com',
   'mathsaurus.com',
   'mathantics.com',
   'fuseschool.org',
-  'bbc.co.uk',        // BBC Bitesize
+  'bbc.co.uk',
   'pearsonactivelearn.com',
   'onmaths.com',
   'edplace.com',
@@ -61,755 +68,1074 @@ const AUTHORIZED_WEBSITES = [
   'teachitmaths.co.uk'
 ];
 
-// File path for the resources
+// Common URL patterns for quick fixes
+const COMMON_URL_PATTERNS = {
+  'corbettmaths.com': [
+    {
+      original: /-pdf1.pdf/,
+      replacement: '-pdf.pdf'
+    },
+    {
+      original: /-pdf2.pdf/,
+      replacement: '-pdf.pdf'
+    },
+    {
+      // Older files might have moved to newer years
+      original: /\/uploads\/2013\/02\//,
+      replacement: '/uploads/2018/11/'
+    },
+    {
+      original: /\/uploads\/2019\/09\//,
+      replacement: '/uploads/2021/09/'
+    }
+  ]
+};
+
+// File containing your resources
 const resourcesFilePath = path.resolve(__dirname, '../src/data/externalResources-new.ts');
+// Location for saving the final report
+const reportFilePath = path.resolve(__dirname, 'link-check-stats.json');
+// Backup file
+const backupFilePath = path.resolve(__dirname, '../src/data/externalResources-backup.ts');
 
-// Helper function to add delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+// Novo caminho do relatório
+const brokenLinksReportPath = path.resolve(__dirname, 'broken-links.json');
 
-// Enhanced URL validation function with content type checking
-async function isValidUrl(url, type) {
+// ========== TEST MODE ==========
+const args = process.argv.slice(2);
+const TEST_MODE = args.includes('--test') || args.includes('-t');
+const LINKS_LIMIT = args.find(arg => arg.startsWith('--limit='))?.split('=')[1] || (TEST_MODE ? 5 : null);
+
+if (TEST_MODE) {
+  console.log('[INFO] Running in TEST MODE - no real HTTP requests will be made');
+}
+
+/**
+ * Sleep function to implement delays
+ */
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Function to make requests with exponential backoff retry
+ */
+async function makeRequestWithRetry(fn, retries = MAX_RETRIES) {
   try {
-    console.log(`Checking URL: ${url}`);
-    const response = await axios.head(url, { 
-      timeout: 15000,
-      validateStatus: status => status < 400, // Accept any status code less than 400
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Connection': 'keep-alive',
-        'Upgrade-Insecure-Requests': '1',
-        'Cache-Control': 'max-age=0'
-      }
-    });
-    
-    // Additional content type validation (optional - adds more checks)
-    if (type === 'pdf') {
-      const contentType = response.headers['content-type'];
-      if (contentType && !contentType.includes('pdf') && !contentType.includes('application/octet-stream')) {
-        console.log(`URL returned non-PDF content type: ${contentType}`);
-        return false;
-      }
-    }
-    
-    return true;
+    return await fn();
   } catch (error) {
-    console.log(`Error checking URL ${url}: ${error.message}`);
-    // If we got rate limited (429), let's consider it potentially valid for now
-    if (error.response && error.response.status === 429) {
-      console.log('Rate limited, but considering URL potentially valid');
-      return true;
+    if (retries > 0) {
+      const isRateLimited = error?.response?.status === 429;
+      // Exponential backoff with jitter
+      const exponentialDelay = Math.min(
+        INITIAL_RETRY_DELAY_MS * Math.pow(2, MAX_RETRIES - retries),
+        MAX_RETRY_DELAY_MS
+      );
+      // Add random jitter (±20%)
+      const jitter = exponentialDelay * (0.8 + Math.random() * 0.4);
+      const retryDelay = isRateLimited ? jitter : INITIAL_RETRY_DELAY_MS;
+
+      console.log(
+        `[RETRY] ${isRateLimited ? 'Rate limited' : 'Request failed'}, ` +
+          `retrying in ${Math.round(retryDelay)}ms (${retries} attempts left)`
+      );
+
+      await sleep(retryDelay);
+      return makeRequestWithRetry(fn, retries - 1);
     }
-    return false;
+    throw error;
   }
 }
 
-// Function to ensure URL is in correct format for YouTube videos
-function formatYouTubeUrl(url) {
-  // If it's a YouTube URL, ensure it's in embed format
-  if (url.includes('youtube.com/watch?v=')) {
-    const videoId = url.split('v=')[1]?.split('&')[0];
-    if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
+// Create a backup of the resources file before modifications
+function backupResourcesFile() {
+  try {
+    fs.copyFileSync(resourcesFilePath, backupFilePath);
+    console.log(`[INFO] Created backup at ${backupFilePath}`);
+  } catch (err) {
+    console.error(`[ERROR] Failed to create backup: ${err.message}`);
   }
-  if (url.includes('youtu.be/')) {
-    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
-    if (videoId) {
-      return `https://www.youtube.com/embed/${videoId}`;
-    }
-  }
-  return url;
 }
 
-// Extract domain from URL for categorization
+// Função robusta para checagem de links
+async function checkUrlWithFallback(url, type = '') {
+  const headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+  };
+  let brokenReason = '';
+
+  // 1. PDFs
+  if (url.toLowerCase().endsWith('.pdf') || type === 'pdf') {
+    try {
+      const resp = await makeRequestWithRetry(() =>
+        axios.get(url, {
+          timeout: 20000,
+          headers: { ...headers, 'Range': 'bytes=0-2047' },
+          responseType: 'arraybuffer',
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+      const data = resp.data;
+      const asString = Buffer.from(data).toString('utf8');
+      if (asString.startsWith('%PDF-')) {
+        return { valid: true };
+      }
+      if (asString.toLowerCase().includes('<html')) {
+        brokenReason = 'Returned HTML instead of PDF';
+        return { valid: false, brokenReason };
+      }
+      brokenReason = 'PDF signature not found';
+      return { valid: false, brokenReason };
+    } catch (err) {
+      brokenReason = `PDF request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
+
+  // 2. YouTube (watch ou embed)
+  if (/youtube\.com\/(watch|embed)|youtu\.be\//.test(url) || type === 'video') {
+    try {
+      const resp = await makeRequestWithRetry(() =>
+        axios.get(url, {
+          timeout: 20000,
+          headers,
+          responseType: 'text',
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+      const html = resp.data.toString();
+      if (/Video unavailable|This video is private|404 Not Found|has been removed|not available|Sign in to confirm your age|watch this video on YouTube|content is not available/.test(html)) {
+        brokenReason = 'YouTube: Video unavailable/private/removed';
+        return { valid: false, brokenReason };
+      }
+      // Se não encontrou erro, considera válido
+      return { valid: true };
+    } catch (err) {
+      brokenReason = `YouTube request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
+
+  // 3. Outros vídeos (Vimeo, etc)
+  if (/\.(mp4|webm|ogg|mov|avi|mkv)$/i.test(url) || (type && type.toLowerCase().includes('video'))) {
+    try {
+      const resp = await makeRequestWithRetry(() =>
+        axios.head(url, {
+          timeout: 15000,
+          headers,
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+      const ct = resp.headers['content-type'] || '';
+      if (ct.startsWith('video/') || ct === 'application/octet-stream') {
+        return { valid: true };
+      }
+      if (ct.includes('text/html')) {
+        brokenReason = 'Returned HTML instead of video';
+        return { valid: false, brokenReason };
+      }
+      brokenReason = `Unexpected content-type for video: ${ct}`;
+      return { valid: false, brokenReason };
+    } catch (err) {
+      brokenReason = `Video request failed: ${err.message}`;
+      return { valid: false, brokenReason };
+    }
+  }
+
+  // 4. Demais links (espera-se HTML, mas pode ser erro)
+  try {
+    // HEAD primeiro
+    let resp;
+    try {
+      resp = await makeRequestWithRetry(() =>
+        axios.head(url, {
+          timeout: 15000,
+          headers,
+          validateStatus: s => s < 400,
+          maxRedirects: 5
+        })
+      );
+    } catch (err) {
+      // Se HEAD falhar, tenta GET
+      try {
+        resp = await makeRequestWithRetry(() =>
+          axios.get(url, {
+            timeout: 20000,
+            headers,
+            responseType: 'text',
+            validateStatus: s => s < 400,
+            maxRedirects: 5
+          })
+        );
+      } catch (err2) {
+        brokenReason = `Request failed: ${err2.message}`;
+        return { valid: false, brokenReason };
+      }
+    }
+    // Se for HTML, checa se tem mensagem de erro
+    const ct = resp.headers['content-type'] || '';
+    if (ct.includes('text/html')) {
+      // Baixa um trecho do HTML para procurar mensagens de erro
+      try {
+        const htmlResp = await makeRequestWithRetry(() =>
+          axios.get(url, {
+            timeout: 10000,
+            headers,
+            responseType: 'text',
+            validateStatus: s => s < 400,
+            maxRedirects: 5
+          })
+        );
+        const html = htmlResp.data.toString().toLowerCase();
+        if (/not found|404|error|unavailable|page not found|does not exist|forbidden|private|gone|removed/.test(html)) {
+          brokenReason = 'HTML page contains error message';
+          return { valid: false, brokenReason };
+        }
+      } catch (err) {
+        // Se não conseguir baixar, ignora
+      }
+    }
+    // Se chegou aqui, considera válido
+    return { valid: true };
+  } catch (err) {
+    brokenReason = `General request failed: ${err.message}`;
+    return { valid: false, brokenReason };
+  }
+}
+
+// Nova versão de isValidUrl
+async function isValidUrl(url, type = '') {
+  if (!url || typeof url !== 'string') return { valid: false, brokenReason: 'Invalid URL string' };
+  if (!url.startsWith('http')) return { valid: false, brokenReason: 'Not HTTP/HTTPS' };
+
+  if (TEST_MODE) {
+    // Simular alguns links quebrados para teste
+    const mockBrokenLinks = [
+      'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf',
+      'https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf',
+      'https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf',
+      'https://www.draustinmaths.com/_files/ugd/7ac124_1548f69d09d94b80824a05fcaba64a2e.pdf'
+    ];
+    return { valid: !mockBrokenLinks.includes(url), brokenReason: mockBrokenLinks.includes(url) ? 'Simulated broken (test mode)' : undefined };
+  }
+
+  return await checkUrlWithFallback(url, type);
+}
+
+// Extract domain from URL
 function extractDomain(url) {
   try {
-    const domain = new URL(url).hostname;
-    return domain.startsWith('www.') ? domain.substring(4) : domain;
-  } catch (e) {
-    return null;
+    return new URL(url).hostname;
+  } catch {
+    return '';
   }
 }
 
-// Enhanced mock replacement function
-function getMockReplacement(title, type, source) {
-  // Map source to domain for consistency
-  const sourceDomain = source.toLowerCase();
+/**
+ * Generates alternative URLs based on common patterns for certain domains
+ */
+function generateAlternativeUrls(url) {
+  try {
+    const domain = extractDomain(url);
+    const rootDomain = AUTHORIZED_WEBSITES.find(d => domain.includes(d));
+    if (!rootDomain || !COMMON_URL_PATTERNS[rootDomain]) {
+      return [];
+    }
+    
+    const patterns = COMMON_URL_PATTERNS[rootDomain];
+    let alternatives = [];
+
+    // Apply each pattern
+    for (const pattern of patterns) {
+      if (pattern.original.test(url)) {
+        alternatives.push(url.replace(pattern.original, pattern.replacement));
+      }
+    }
+    
+    // For Corbett Maths, try multiple years
+    if (domain.includes('corbettmaths.com')) {
+      const years = ['2018', '2019', '2020', '2021', '2022'];
+      const baseUrl = url.replace(/\/uploads\/\d{4}\//, '/uploads/YEAR/');
+      
+      for (const year of years) {
+        alternatives.push(baseUrl.replace('YEAR', year));
+      }
+      
+      // Also try with different months
+      const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+      for (const month of months) {
+        alternatives.push(url.replace(/\/\d{2}\//, `/${month}/`));
+      }
+    }
+    
+    // Remove duplicates
+    return [...new Set(alternatives)];
+  } catch (error) {
+    console.log(`[ERROR] Failed to generate alternative URLs: ${error.message}`);
+    return [];
+  }
+}
+
+async function findWorkingAlternativeUrl(url) {
+  const alternatives = generateAlternativeUrls(url);
+  console.log(`[INFO] Testing ${alternatives.length} alternative URLs for ${url}`);
   
-  if (type === 'video') {
-    // Topic-specific video replacements (high quality content)
-    if (title.toLowerCase().includes('linear')) {
-      return 'https://www.youtube.com/embed/m9-_sYVcSxk'; // Linear functions video
-    } else if (title.toLowerCase().includes('quadratic')) {
-      return 'https://www.youtube.com/embed/YHKShQgTLAY'; // Quadratic equations video
-    } else if (title.toLowerCase().includes('angle') || title.toLowerCase().includes('geometry')) {
-      return 'https://www.youtube.com/embed/NVuMULQjb3o'; // Angles video
-    } else if (title.toLowerCase().includes('trigonometry')) {
-      return 'https://www.youtube.com/embed/F21S9Wpi0y8'; // Trigonometry video
-    } else if (title.toLowerCase().includes('pythagoras')) {
-      return 'https://www.youtube.com/embed/JCB-RILJJ_k'; // Pythagoras theorem
-    } else if (title.toLowerCase().includes('circle')) {
-      return 'https://www.youtube.com/embed/O-cawByg2aA'; // Circle theorems
-    } else if (title.toLowerCase().includes('indice') || title.toLowerCase().includes('indices')) {
-      return 'https://www.youtube.com/embed/09WIe54BVVc'; // Laws of indices
-    } else if (title.toLowerCase().includes('sequence')) {
-      return 'https://www.youtube.com/embed/EiXbEhxGS8g'; // Sequences
-    } else {
-      // Channel-specific defaults for when no topic-specific video is found
-      if (sourceDomain.includes('corbett')) {
-        return 'https://corbettmaths.com/more/5-a-day/gcse/'; // Corbett Maths 5-a-day practice
-      } else if (sourceDomain.includes('khan')) {
-        return 'https://www.khanacademy.org/math/cc-eighth-grade-math'; // Khan Academy math
-      } else {
-        return 'https://www.youtube.com/embed/l9nh1l8ZIJQ'; // General math video
-      }
+  // Em modo de teste, simular resultados
+  if (TEST_MODE) {
+    // Simular alternativas que funcionam
+    if (url === 'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf') {
+      return 'https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf.pdf';
     }
-  } else if (type === 'pdf') {
-    // Source-specific PDF replacements
-    if (sourceDomain.includes('corbett')) {
-      if (title.toLowerCase().includes('indice') || title.toLowerCase().includes('indices')) {
-        return 'https://corbettmaths.com/wp-content/uploads/2019/03/Indices.pdf';
-      } else {
-        return 'https://corbettmaths.com/wp-content/uploads/2019/02/GCSE-Revision-Cards.pdf';
-      }
-    } else if (sourceDomain.includes('austin')) {
-      return 'https://www.draustinmaths.com/workbooks';
-    } else if (sourceDomain.includes('genie')) {
-      return 'https://www.mathsgenie.co.uk/resources/gcse-maths-takeaway.pdf';
-    } else if (sourceDomain.includes('maths4everyone')) {
-      return 'https://www.maths4everyone.com/resources.html';
-    } else {
-      // Default for unknown sources
-      return 'https://www.mathsgenie.co.uk/resources/gcse-maths-takeaway.pdf';
+    if (url === 'https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf') {
+      return 'https://corbettmaths.com/wp-content/uploads/2018/11/types-of-numbers-pdf.pdf';
     }
+    return null;
   }
   
-  // Return null if no suitable replacement found - better to not provide a replacement
-  // than to provide something completely unrelated
+  // Check all alternatives in parallel with a concurrency limit
+  const validAlternatives = [];
+  const concurrency = 3;
+  
+  for (let i = 0; i < alternatives.length; i += concurrency) {
+    const batch = alternatives.slice(i, i + concurrency);
+    const results = await Promise.all(
+      batch.map(async (altUrl) => {
+        try {
+          const { valid } = await isValidUrl(altUrl);
+          return { url: altUrl, valid };
+        } catch {
+          return { url: altUrl, valid: false };
+        }
+      })
+    );
+    
+    for (const result of results) {
+      if (result.valid) {
+        validAlternatives.push(result.url);
+      }
+    }
+    
+    // If we found any valid alternatives, break early
+    if (validAlternatives.length > 0) break;
+  }
+  
+  if (validAlternatives.length > 0) {
+    console.log(`[SUCCESS] Found alternative URL: ${validAlternatives[0]}`);
+    return validAlternatives[0];
+  }
+  
   return null;
 }
 
-// Function to find replacement using Google Gemini API
-async function findGeminiReplacement(title, type, source, topic, subtopic) {
-  if (!GOOGLE_GEMINI_API) {
-    console.log('No Google Gemini API key available, skipping Gemini API call');
+// ========== AI SUGGESTION LOGIC ==========
+async function validateSuggestion(suggestion, originalUrl) {
+  if (!suggestion || typeof suggestion !== 'string') return null;
+
+  let cleanUrl = suggestion.trim();
+  const urlMatch = cleanUrl.match(/https?:\/\/[^\s"'<>]+/);
+  if (urlMatch) {
+    cleanUrl = urlMatch[0];
+  }
+  cleanUrl = cleanUrl.split(' ')[0];
+
+  // Remove any markdown or quotes
+  cleanUrl = cleanUrl.replace(/[`'"]/g, '');
+  
+  // Check if URL is well-formed
+  try {
+    // eslint-disable-next-line no-new
+    new URL(cleanUrl);
+  } catch {
+    console.log(`[INFO] Invalid suggestion (not a URL): ${cleanUrl}`);
     return null;
   }
+
+  // Verify if domain is authorized
+  const domain = extractDomain(cleanUrl);
+  const isDomainAuthorized = AUTHORIZED_WEBSITES.some(
+    authDomain => domain === authDomain || domain.endsWith(`.${authDomain}`)
+  );
+  if (!isDomainAuthorized) {
+    console.log(`[INFO] Unauthorized domain: ${domain}`);
+    return null;
+  }
+
+  // If it's the same as the original broken link, ignore
+  if (cleanUrl === originalUrl) {
+    console.log('[INFO] Suggested URL is the same as the broken one');
+    return null;
+  }
+
+  // Finally, check if it actually works
+  const { valid } = await isValidUrl(cleanUrl);
+  if (!valid) {
+    console.log(`[INFO] Suggested URL is not working: ${cleanUrl}`);
+    return null;
+  }
+  return cleanUrl;
+}
+
+function extractUrlFromResponse(response) {
+  if (!response) return null;
+  response = response.replace(/[\r\n\t]/g, ' ').trim();
   
+  // Remove common prefixes models might add
+  response = response.replace(/^.*?(https?:\/\/)/i, 'https://');
+  
+  // Remove anything after the URL
+  response = response.replace(/(\S+:\/\/[^\s'"]+).*/i, '$1');
+  
+  // Clean up common ending punctuation
+  response = response.replace(/[.,;:)]$/, '');
+  
+  // If no URL format yet, try to extract it with regex
+  if (!/^https?:\/\//i.test(response)) {
+    const match = response.match(/https?:\/\/[^\s"'<>]+/i);
+    return match ? match[0] : null;
+  }
+  
+  return response;
+}
+
+//  AI model-specific functions
+async function findGeminiSuggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!GOOGLE_GEMINI_API) return null;
   try {
-    console.log(`Searching for replacement using Google Gemini for: ${title} (${type}) from ${source}`);
-    
-    const response = await axios.post(
-      `${GOOGLE_GEMINI_API_URL}?key=${GOOGLE_GEMINI_API}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: `You are an educational resource expert. Your entire response must consist solely of a single valid URL and nothing else. No explanations, no comments, just the URL.
+    const promptText = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
 
-Find a specific working ${type} resource about "${title}" for ${topic}, ${subtopic}. The original source was ${source}.
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
 
-Choose from these sources: ${AUTHORIZED_WEBSITES.join(', ')}
+Analyze the format and structure of the broken URL. Find a replacement URL that is valid now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
 
-DO NOT provide generic index pages or collections (like '5-a-day' pages) unless you cannot find anything specific about "${title}".
+IMPORTANT:
+1. Keep the same domain if possible.
+2. corbettmaths.com PDFs might be moved to different years (2018, 2019, etc.).
+3. Return ONLY the full URL, no extra text.
+4. The URL must start with http:// or https://
+`;
 
-For YouTube videos, you MUST use the embed format like this: https://www.youtube.com/embed/VIDEO_ID (NOT the standard watch URL format).
-
-IMPORTANT: Your ENTIRE response must be ONLY the URL. If you cannot find a suitable resource, respond with only the word "NONE".`
-              }
-            ]
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        `${GOOGLE_GEMINI_API_URL}?key=${GOOGLE_GEMINI_API}`,
+        {
+          contents: [{ parts: [{ text: promptText }] }],
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 100
           }
-        ],
-        generationConfig: {
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    );
+
+    const output = resp.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+    if (!output || output.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(output);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[Gemini] Error: ${err.message}`);
+    return null;
+  }
+}
+
+async function findOpenAISuggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!OPENAI_API_KEY) return null;
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+1. Keep same domain if possible.
+2. For corbettmaths.com, PDFs might be at different years or months.
+3. Return ONLY the full URL, no extra text.
+4. The URL must start with http:// or https://
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        OPENAI_API_URL,
+        {
+          model: MODELS.OPENAI,
+          messages: [
+            {
+              role: 'system',
+              content: 'Respond only with the replacement URL or "NONE".'
+            },
+            { role: 'user', content: prompt }
+          ],
           temperature: 0.1,
-          maxOutputTokens: 100
-        }
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    console.log('Google Gemini API response received');
-    let suggestedUrl = '';
-    
-    if (response.data && 
-        response.data.candidates && 
-        response.data.candidates[0] && 
-        response.data.candidates[0].content && 
-        response.data.candidates[0].content.parts && 
-        response.data.candidates[0].content.parts[0] && 
-        response.data.candidates[0].content.parts[0].text) {
-      suggestedUrl = response.data.candidates[0].content.parts[0].text.trim();
-    }
-    
-    // Skip if response is "NONE" or doesn't appear to be a URL
-    if (suggestedUrl === "NONE" || !suggestedUrl.startsWith('http')) {
-      console.log('Invalid URL or "NONE" response received from Google Gemini');
-      return null;
-    }
-    
-    console.log(`Google Gemini suggested URL: ${suggestedUrl}`);
-    
-    const formattedUrl = formatYouTubeUrl(suggestedUrl);
-    
-    // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
-    if (!isAuthorized) {
-      console.log(`Google Gemini suggested URL ${formattedUrl} is not from an authorized domain`);
-      return null;
-    }
-    
-    // Check if the URL is valid with content type validation
-    const isValid = await isValidUrl(formattedUrl, type);
-    if (!isValid) {
-      console.log(`Google Gemini suggested URL ${formattedUrl} is not valid`);
-      return null;
-    }
-    
-    return formattedUrl;
-  } catch (error) {
-    console.error(`Error finding replacement with Google Gemini: ${error.message}`);
-    if (error.response) {
-      console.error(`Response status: ${error.response.status}`);
-      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
-    }
-    return null;
-  }
-}
-
-// Function to find replacement using DeepSeek Reasoner API
-async function findDeepSeekReplacement(title, type, source, topic, subtopic) {
-  if (!DEEPSEEK_API_KEY) {
-    console.log('No DeepSeek API key available, skipping DeepSeek API call');
-    return null;
-  }
-  
-  try {
-    console.log(`Searching for replacement using DeepSeek for: ${title} (${type}) from ${source}`);
-    
-    const response = await axios.post(
-      DEEPSEEK_API_URL,
-      {
-        model: 'deepseek-reasoner',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an educational resource expert with strong reasoning abilities. Your entire response must consist solely of a valid URL or the word "NONE" if no suitable resource is found. No explanations, no comments, just the URL or "NONE".'
-          },
-          {
-            role: 'user',
-            content: `Find a specific working ${type} resource about "${title}" for ${topic}, ${subtopic}. The original source was ${source}.
-
-Choose from these sources: ${AUTHORIZED_WEBSITES.join(', ')}
-
-DO NOT provide generic index pages or collections (like '5-a-day' pages) unless you cannot find anything specific about "${title}".
-
-For YouTube videos, you MUST use the embed format like this: https://www.youtube.com/embed/VIDEO_ID (NOT the standard watch URL format).
-
-IMPORTANT: Your ENTIRE response must be ONLY the URL. If you cannot find a suitable resource, respond with only the word "NONE".`
+          max_tokens: 100
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        temperature: 0.2,
-        max_tokens: 100
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
-          'Content-Type': 'application/json'
         }
-      }
+      )
     );
 
-    console.log('DeepSeek API response received');
-    const suggestedUrl = response.data.choices[0].message.content.trim();
-    
-    // Skip if response is "NONE" or doesn't appear to be a URL
-    if (suggestedUrl === "NONE" || !suggestedUrl.startsWith('http')) {
-      console.log('Invalid URL or "NONE" response received from DeepSeek');
-      return null;
-    }
-    
-    console.log(`DeepSeek suggested URL: ${suggestedUrl}`);
-    
-    const formattedUrl = formatYouTubeUrl(suggestedUrl);
-    
-    // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
-    if (!isAuthorized) {
-      console.log(`DeepSeek suggested URL ${formattedUrl} is not from an authorized domain`);
-      return null;
-    }
-    
-    // Check if the URL is valid with content type validation
-    const isValid = await isValidUrl(formattedUrl, type);
-    if (!isValid) {
-      console.log(`DeepSeek suggested URL ${formattedUrl} is not valid`);
-      return null;
-    }
-    
-    return formattedUrl;
-  } catch (error) {
-    console.error(`Error finding replacement with DeepSeek: ${error.message}`);
-    if (error.response) {
-      console.error(`Response status: ${error.response.status}`);
-      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
-    }
+    const suggestion = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!suggestion || suggestion.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(suggestion);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[OpenAI] Error: ${err.message}`);
     return null;
   }
 }
 
-// Function to find replacement using Qwen API
-async function findQwenReplacement(title, type, source, topic, subtopic) {
-  if (!QWEN_API_KEY) {
-    console.log('No Qwen API key available, skipping Qwen API call');
-    return null;
-  }
-  
+async function findDeepSeekSuggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!DEEPSEEK_API_KEY) return null;
   try {
-    console.log(`Searching for replacement using Qwen for: ${title} (${type}) from ${source}`);
-    
-    const response = await axios.post(
-      QWEN_API_URL,
-      {
-        model: 'qwen-max',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an educational resource expert with internet access. Your entire response must consist solely of a valid URL or the word "NONE" if no suitable resource is found. No explanations, no comments, just the URL or "NONE".'
-          },
-          {
-            role: 'user',
-            content: `Find a specific working ${type} resource about "${title}" for ${topic}, ${subtopic}. The original source was ${source}.
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
 
-Choose from these sources: ${AUTHORIZED_WEBSITES.join(', ')}
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
 
-DO NOT provide generic index pages or collections (like '5-a-day' pages) unless you cannot find anything specific about "${title}".
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
 
-For YouTube videos, you MUST use the embed format like this: https://www.youtube.com/embed/VIDEO_ID (NOT the standard watch URL format).
+IMPORTANT:
+1. Keep same domain if possible.
+2. For corbettmaths.com, PDFs might be at different years or months.
+3. Return ONLY the URL, nothing else.
+`;
 
-IMPORTANT: Your ENTIRE response must be ONLY the URL. If you cannot find a suitable resource, respond with only the word "NONE".`
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        DEEPSEEK_API_URL,
+        {
+          model: MODELS.DEEPSEEK,
+          max_tokens: 100,
+          temperature: 0.1,
+          messages: [{ role: 'user', content: prompt }]
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+            'Content-Type': 'application/json'
           }
-        ],
-        temperature: 0.2,
-        max_tokens: 100
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${QWEN_API_KEY}`,
-          'Content-Type': 'application/json'
         }
-      }
+      )
     );
 
-    console.log('Qwen API response received');
-    const suggestedUrl = response.data.choices[0].message.content.trim();
-    
-    // Skip if response is "NONE" or doesn't appear to be a URL
-    if (suggestedUrl === "NONE" || !suggestedUrl.startsWith('http')) {
-      console.log('Invalid URL or "NONE" response received from Qwen');
-      return null;
-    }
-    
-    console.log(`Qwen suggested URL: ${suggestedUrl}`);
-    
-    const formattedUrl = formatYouTubeUrl(suggestedUrl);
-    
-    // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
-    if (!isAuthorized) {
-      console.log(`Qwen suggested URL ${formattedUrl} is not from an authorized domain`);
-      return null;
-    }
-    
-    // Check if the URL is valid with content type validation
-    const isValid = await isValidUrl(formattedUrl, type);
-    if (!isValid) {
-      console.log(`Qwen suggested URL ${formattedUrl} is not valid`);
-      return null;
-    }
-    
-    return formattedUrl;
-  } catch (error) {
-    console.error(`Error finding replacement with Qwen: ${error.message}`);
-    if (error.response) {
-      console.error(`Response status: ${error.response.status}`);
-      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
-    }
+    const content = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!content || content.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(content);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[DeepSeek] Error: ${err.message}`);
     return null;
   }
 }
 
-// Function to find replacement using OpenAI API
-async function findOpenAIReplacement(title, type, source, topic, subtopic) {
-  if (!OPENAI_API_KEY) {
-    console.log('No OpenAI API key available, skipping OpenAI API call');
-    return null;
-  }
-  
+async function findClaudeSuggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!CLAUDE_API) return null;
   try {
-    console.log(`Searching for replacement using OpenAI for: ${title} (${type}) from ${source}`);
-    
-    const response = await axios.post(
-      OPENAI_API_URL,
-      {
-        model: 'gpt-4o-mini-2024-07-18',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an educational resource expert. Your entire response must consist solely of a valid URL or the word "NONE" if no suitable resource is found. No explanations, no comments, just the URL or "NONE".'
-          },
-          {
-            role: 'user',
-            content: `Find a specific working ${type} resource about "${title}" for ${topic}, ${subtopic}. The original source was ${source}.
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
 
-Choose from these sources: ${AUTHORIZED_WEBSITES.join(', ')}
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
 
-DO NOT provide generic index pages or collections (like '5-a-day' pages) unless you cannot find anything specific about "${title}".
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
 
-For YouTube videos, you MUST use the embed format like this: https://www.youtube.com/embed/VIDEO_ID (NOT the standard watch URL format).
+IMPORTANT:
+1. Keep same domain if possible.
+2. Return ONLY the replacement URL, no extra text.
+`;
 
-IMPORTANT: Your ENTIRE response must be ONLY the URL. If you cannot find a suitable resource, respond with only the word "NONE".`
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        CLAUDE_API_URL,
+        {
+          model: MODELS.CLAUDE,
+          max_tokens: 100,
+          temperature: 0.1,
+          messages: [{ role: 'user', content: prompt }]
+        },
+        {
+          headers: {
+            'x-api-key': CLAUDE_API,
+            'Content-Type': 'application/json',
+            'anthropic-version': '2023-06-01'
           }
-        ],
-        temperature: 0.1,
-        max_tokens: 100
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
         }
-      }
+      )
     );
 
-    console.log('OpenAI API response received');
-    const suggestedUrl = response.data.choices[0].message.content.trim();
-    
-    // Skip if response is "NONE" or doesn't appear to be a URL
-    if (suggestedUrl === "NONE" || !suggestedUrl.startsWith('http')) {
-      console.log('Invalid URL or "NONE" response received from OpenAI');
-      return null;
-    }
-    
-    console.log(`OpenAI suggested URL: ${suggestedUrl}`);
-    
-    const formattedUrl = formatYouTubeUrl(suggestedUrl);
-    
-    // Validate the suggested URL is from an authorized website
-    const isAuthorized = AUTHORIZED_WEBSITES.some(domain => formattedUrl.includes(domain));
-    if (!isAuthorized) {
-      console.log(`OpenAI suggested URL ${formattedUrl} is not from an authorized domain`);
-      return null;
-    }
-    
-    // Check if the URL is valid with content type validation
-    const isValid = await isValidUrl(formattedUrl, type);
-    if (!isValid) {
-      console.log(`OpenAI suggested URL ${formattedUrl} is not valid`);
-      return null;
-    }
-    
-    return formattedUrl;
-  } catch (error) {
-    console.error(`Error finding replacement with OpenAI: ${error.message}`);
-    if (error.response) {
-      console.error(`Response status: ${error.response.status}`);
-      console.error(`Response data: ${JSON.stringify(error.response.data)}`);
-    }
+    const content = resp.data?.content?.[0]?.text?.trim() || '';
+    if (!content || content.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(content);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[Claude] Error: ${err.message}`);
     return null;
   }
 }
 
-// Main function to find a replacement using multiple APIs in cascade
-async function findReplacement(title, type, source, topic, subtopic) {
-  // Track which API succeeded for analytics
-  let successfulProvider = null;
-  
-  // 1. First try Google Gemini (per user's request)
-  let replacement = await findGeminiReplacement(title, type, source, topic, subtopic);
-  if (replacement) {
-    console.log(`Using Google Gemini replacement: ${replacement}`);
-    successfulProvider = 'Google Gemini';
-    return { url: replacement, provider: successfulProvider };
+async function findQwenSuggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!QWEN_API) return null;
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Analyze the format and structure of the broken URL. Find a replacement that works now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+1. Keep same domain if possible.
+2. Return ONLY the full URL, no extra text.
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        QWEN_API_URL,
+        {
+          model: MODELS.QWEN,
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 100,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${QWEN_API}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    );
+
+    const suggestion = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!suggestion || suggestion.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(suggestion);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[QWEN] Error: ${err.message}`);
+    return null;
+  }
+}
+
+async function findQwen2Suggestion(title, type, topic, subtopic, source, originalUrl) {
+  if (!QWEN_API_2) return null;
+  // Similar approach with QWEN API 2
+  try {
+    const prompt = `
+You are a math educational resource specialist.
+This specific URL is broken: ${originalUrl}
+
+Resource data:
+- Title: "${title}"
+- Type: "${type}"
+- Topic: ${topic}
+- Subtopic: ${subtopic}
+- Original source: ${source}
+
+Find a replacement URL that is valid now.
+Use ONLY these authorized domains: ${AUTHORIZED_WEBSITES.join(', ')}
+
+IMPORTANT:
+Return ONLY the full URL, nothing else.
+`;
+
+    const resp = await makeRequestWithRetry(() =>
+      axios.post(
+        QWEN_API_2_URL,
+        {
+          model: 'qwen-max',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 100,
+          temperature: 0.1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${QWEN_API_2}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+    );
+
+    const suggestion = resp.data?.choices?.[0]?.message?.content?.trim() || '';
+    if (!suggestion || suggestion.toLowerCase().includes('none')) return null;
+
+    const extractedUrl = extractUrlFromResponse(suggestion);
+    if (!extractedUrl) return null;
+
+    return await validateSuggestion(extractedUrl, originalUrl);
+  } catch (err) {
+    console.log(`[QWEN2] Error: ${err.message}`);
+    return null;
+  }
+}
+
+/**
+ * Main function to find alternative URLs — pattern-based, then AI
+ */
+async function findAlternativeUrl(url, title, type, topic, subtopic, source) {
+  console.log(`[INFO] Looking for an alternative to: ${url}`);
+  // 1) Known patterns
+  const patternBasedUrl = await findWorkingAlternativeUrl(url);
+  if (patternBasedUrl) {
+    return { provider: 'PatternMatching', url: patternBasedUrl };
+  }
+
+  // 2) AI cascade
+  return cascadeSuggester(title, type, topic, subtopic, source, url);
+}
+
+/**
+ * Cascade approach to use multiple models
+ */
+async function cascadeSuggester(title, type, topic, subtopic, source, originalUrl) {
+  // Em modo de teste, retornar resultados simulados
+  if (TEST_MODE) {
+    if (originalUrl === 'https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf') {
+      return { provider: 'OpenAI', url: 'https://corbettmaths.com/wp-content/uploads/2021/09/Irrational-and-Rational-Numbers.pdf' };
+    }
+    return null;
+  }
+
+  const domain = extractDomain(originalUrl);
+
+  // Try OpenAI first for corbettmaths
+  if (domain.includes('corbettmaths.com') && OPENAI_API_KEY) {
+    console.log('[INFO] Trying OpenAI first for CorbettMaths...');
+    try {
+      const o = await findOpenAISuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (o) return { provider: 'OpenAI', url: o };
+    } catch (err) {
+      console.log('[INFO] OpenAI failed for CorbettMaths. Trying next.');
+    }
+  }
+
+  // Then try Gemini
+  if (GOOGLE_GEMINI_API) {
+    console.log('[INFO] Trying Gemini...');
+    try {
+      const g = await findGeminiSuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (g) return { provider: 'Gemini', url: g };
+    } catch (err) {
+      console.log('[INFO] Gemini failed. Trying next.');
+    }
+  }
+
+  // OpenAI (if not tried)
+  if (OPENAI_API_KEY && !domain.includes('corbettmaths.com')) {
+    console.log('[INFO] Trying OpenAI...');
+    try {
+      const o = await findOpenAISuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (o) return { provider: 'OpenAI', url: o };
+    } catch (err) {
+      console.log('[INFO] OpenAI failed. Trying next.');
+    }
+  }
+
+  // DeepSeek
+  if (DEEPSEEK_API_KEY) {
+    console.log('[INFO] Trying DeepSeek...');
+    try {
+      const a = await findDeepSeekSuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (a) return { provider: 'DeepSeek', url: a };
+    } catch (err) {
+      console.log('[INFO] DeepSeek failed. Trying next.');
+    }
   }
   
-  // 2. If Google Gemini fails, try DeepSeek
-  console.log('Google Gemini failed, trying DeepSeek API');
-  replacement = await findDeepSeekReplacement(title, type, source, topic, subtopic);
-  if (replacement) {
-    console.log(`Using DeepSeek replacement: ${replacement}`);
-    successfulProvider = 'DeepSeek';
-    return { url: replacement, provider: successfulProvider };
+  // Claude
+  if (CLAUDE_API) {
+    console.log('[INFO] Trying Claude...');
+    try {
+      const c = await findClaudeSuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (c) return { provider: 'Claude', url: c };
+    } catch (err) {
+      console.log('[INFO] Claude failed. Trying next.');
+    }
   }
-  
-  // 3. If DeepSeek fails, try Qwen
-  console.log('DeepSeek failed, trying Qwen API');
-  replacement = await findQwenReplacement(title, type, source, topic, subtopic);
-  if (replacement) {
-    console.log(`Using Qwen replacement: ${replacement}`);
-    successfulProvider = 'Qwen';
-    return { url: replacement, provider: successfulProvider };
+
+  // QWEN
+  if (QWEN_API) {
+    console.log('[INFO] Trying QWEN...');
+    try {
+      const q = await findQwenSuggestion(title, type, topic, subtopic, source, originalUrl);
+      if (q) return { provider: 'QWEN', url: q };
+    } catch (err) {
+      console.log('[INFO] QWEN failed. Trying QWEN API 2.');
+    }
   }
-  
-  // 4. If Qwen fails, try OpenAI as last resort
-  console.log('Qwen failed, trying OpenAI API');
-  replacement = await findOpenAIReplacement(title, type, source, topic, subtopic);
-  if (replacement) {
-    console.log(`Using OpenAI replacement: ${replacement}`);
-    successfulProvider = 'OpenAI';
-    return { url: replacement, provider: successfulProvider };
+
+  // QWEN API 2
+  if (QWEN_API_2) {
+    console.log('[INFO] Trying QWEN API 2...');
+    try {
+      const q2 = await findQwen2Suggestion(title, type, topic, subtopic, source, originalUrl);
+      if (q2) return { provider: 'QWEN_API_2', url: q2 };
+    } catch (err) {
+      console.log('[INFO] QWEN API 2 failed.');
+    }
   }
-  
-  // 5. If all APIs fail, use mock replacement
-  console.log('All APIs failed, using mock replacement');
-  replacement = getMockReplacement(title, type, source);
-  if (replacement) {
-    console.log(`Using mock replacement: ${replacement}`);
-    successfulProvider = 'Mock';
-    return { url: replacement, provider: successfulProvider };
-  }
-  
-  console.log('No replacement found for this resource');
+
+  console.log('[INFO] All options failed. No suggestion.');
   return null;
 }
 
-async function main() {
-  try {
-    console.log('Starting enhanced link checker with Google Gemini, DeepSeek, Qwen and OpenAI APIs...');
-    
-    // Statistics tracking
-    const stats = {
-      totalLinks: 0,
-      brokenLinks: 0,
-      fixedLinks: 0,
-      providerSuccess: {
-        'Google Gemini': 0,
-        'DeepSeek': 0,
-        'Qwen': 0,
-        'OpenAI': 0,
-        'Mock': 0,
-        'Failed': 0
-      },
-      resourceTypes: {
-        'video': { checked: 0, broken: 0, fixed: 0 },
-        'pdf': { checked: 0, broken: 0, fixed: 0 },
-        'other': { checked: 0, broken: 0, fixed: 0 }
-      }
-    };
-    
-    // Read the resources file
-    const code = fs.readFileSync(resourcesFilePath, 'utf8');
-    
-    // Parse the TypeScript code
-    const ast = parse(code, {
-      sourceType: 'module',
-      plugins: ['typescript', 'jsx']
-    });
-    
-    // Track if any changes were made
-    let changesMade = false;
-    let linksChecked = 0;
-    let brokenLinksFixed = 0;
-    
-    // Store links to be checked to avoid the AST traversal issue
-    const linksToCheck = [];
-    
-    // Find all URL properties in the file
-    traverse(ast, {
-      ObjectProperty(path) {
-        if (
-          path.node.key.type === 'Identifier' && 
-          path.node.key.name === 'url' &&
-          path.node.value.type === 'StringLiteral'
-        ) {
-          const urlNode = path.node.value;
-          const url = urlNode.value;
-          
-          // Get the parent object to extract title, type, source
-          const parentObject = path.parentPath;
-          let title = '', type = '', source = '';
-          let topic = '', subtopic = '';
-          
-          // Extract information from the parent object
-          if (parentObject && parentObject.node && parentObject.node.properties) {
-            parentObject.node.properties.forEach(prop => {
-              if (prop.key && prop.key.name === 'title' && prop.value && prop.value.type === 'StringLiteral') {
-                title = prop.value.value;
-              } else if (prop.key && prop.key.name === 'type' && prop.value && prop.value.type === 'StringLiteral') {
-                type = prop.value.value;
-              } else if (prop.key && prop.key.name === 'source' && prop.value && prop.value.type === 'StringLiteral') {
-                source = prop.value.value;
-              }
-            });
-          }
-          
-          // Try to get topic and subtopic by examining the context in the AST
-          try {
-            // Go up the parent chain to find potential topic/subtopic containers
-            let currentNode = path.parentPath;
-            let depth = 0;
-            const maxDepth = 5; // Prevent infinite loop
-            
-            while (currentNode && depth < maxDepth) {
-              // Check if this is a property with a key that might be subtopic or topic
-              if (currentNode.parentPath && 
-                  currentNode.parentPath.node.type === 'ObjectProperty' && 
-                  currentNode.parentPath.node.key && 
-                  currentNode.parentPath.node.key.name) {
-                
-                const keyName = currentNode.parentPath.node.key.name;
-                if (!subtopic && keyName.includes('subtopic')) {
-                  subtopic = keyName;
-                } else if (!topic && keyName.includes('topic')) {
-                  topic = keyName;
-                }
-              }
-              
-              currentNode = currentNode.parentPath;
-              depth++;
-            }
-          } catch (e) {
-            // If we fail to extract topic/subtopic, just continue with defaults
-            console.log(`Error extracting topic/subtopic: ${e.message}`);
-          }
-          
-          // Store the link info for later processing
-          linksToCheck.push({
-            urlNode,
-            url,
-            title,
-            type: type || 'other', // Default to 'other' if type is not specified
-            source,
-            topic: topic || title.split(' ')[0] || 'mathematics', // Use first word of title as fallback topic
-            subtopic: subtopic || title || 'general' // Use title as fallback subtopic
-          });
-          
-          // Track total links
-          stats.totalLinks++;
-          
-          // Track by resource type
-          const resourceType = type || 'other';
-          if (!stats.resourceTypes[resourceType]) {
-            stats.resourceTypes[resourceType] = { checked: 0, broken: 0, fixed: 0 };
-          }
-          stats.resourceTypes[resourceType].checked++;
-        }
-      }
-    });
-    
-    console.log(`Found ${linksToCheck.length} links to check`);
-    
-    // Process all links in batches to avoid overwhelming the system
-    const BATCH_SIZE = 8; // Reduced batch size for more stability
-    for (let i = 0; i < linksToCheck.length; i += BATCH_SIZE) {
-      if (!shouldContinue) break; // Stop if global timeout reached
-      
-      const batch = linksToCheck.slice(i, i + BATCH_SIZE);
-      const batchPromises = batch.map(async (linkInfo) => {
-        if (!shouldContinue) return; // Skip if global timeout reached
-        
-        await delay(700); // Increased delay to avoid rate limiting
-        linksChecked++;
-        
-        const { urlNode, url, title, type, source, topic, subtopic } = linkInfo;
-        
-        // Check if URL is valid
-        const valid = await isValidUrl(url, type);
-        if (!valid) {
-          stats.brokenLinks++;
-          
-          // Track by resource type
-          if (stats.resourceTypes[type]) {
-            stats.resourceTypes[type].broken++;
-          }
-          
-          console.log(`\nFound broken link #${brokenLinksFixed + 1}: ${url}`);
-          console.log(`Resource: ${title}, Type: ${type}, Source: ${source}`);
-          console.log(`Topic: ${topic}, Subtopic: ${subtopic}`);
-          
-          // Find replacement
-          const replacementResult = await findReplacement(title, type, source, topic, subtopic);
-          if (replacementResult && replacementResult.url) {
-            console.log(`Replacing with: ${replacementResult.url} (provided by ${replacementResult.provider})`);
-            urlNode.value = replacementResult.url;
-            changesMade = true;
-            brokenLinksFixed++;
-            stats.fixedLinks++;
-            
-            // Track by resource type
-            if (stats.resourceTypes[type]) {
-              stats.resourceTypes[type].fixed++;
-            }
-            
-            // Track which provider succeeded
-            if (replacementResult.provider) {
-              stats.providerSuccess[replacementResult.provider]++;
-            }
-          } else {
-            stats.providerSuccess['Failed']++;
+async function updateResourcesFile(brokenLinks) {
+  let fileContent = fs.readFileSync(resourcesFilePath, 'utf8');
+  let fixedCount = 0;
+
+  for (const link of brokenLinks) {
+    if (link.suggestion) {
+      try {
+        const searchIndex = fileContent.indexOf(link.url);
+        if (searchIndex !== -1) {
+          const before = fileContent.substring(Math.max(0, searchIndex - 50), searchIndex);
+
+          if (before.includes('url:') || before.includes('url =') || before.includes('url=')) {
+            fileContent = fileContent.replace(link.url, link.suggestion);
+            fixedCount++;
+            console.log(
+              `[SUCCESS] Link fixed: ${link.url} -> ${link.suggestion} (via ${link.suggestionProvider})`
+            );
           }
         }
-      });
-      
-      await Promise.all(batchPromises);
-      console.log(`Processed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(linksToCheck.length / BATCH_SIZE)}`);
-      
-      // Save intermediate results every few batches
-      if (changesMade && i % (BATCH_SIZE * 2) === 0 && i > 0) {
-        const intermediateOutput = generator(ast, {}, code).code;
-        fs.writeFileSync(resourcesFilePath, intermediateOutput);
-        console.log(`\nSaved intermediate results after processing ${i} links\n`);
-        
-        // Also save stats
-        fs.writeFileSync(
-          path.resolve(__dirname, 'link-check-stats.json'), 
-          JSON.stringify(stats, null, 2)
-        );
+      } catch (err) {
+        console.log(`[ERROR] Failed to replace link: ${err.message}`);
       }
     }
-    
-    // If changes were made, write the updated file
-    if (changesMade) {
-      const output = generator(ast, {}, code).code;
-      fs.writeFileSync(resourcesFilePath, output);
-      console.log(`\nCompleted link checker. Checked ${linksChecked} links, fixed ${brokenLinksFixed} broken links.`);
-      
-      // Generate success rate statistics
-      console.log('\nSuccess rate by provider:');
-      for (const [provider, count] of Object.entries(stats.providerSuccess)) {
-        if (count > 0) {
-          console.log(`${provider}: ${count} links (${Math.round(count / stats.brokenLinks * 100)}%)`);
-        }
-      }
-      
-      // Generate resource type statistics
-      console.log('\nResource type statistics:');
-      for (const [type, counts] of Object.entries(stats.resourceTypes)) {
-        console.log(`${type}: Checked ${counts.checked}, Broken ${counts.broken}, Fixed ${counts.fixed} (${Math.round(counts.fixed / counts.broken * 100 || 0)}%)`);
-      }
-      
-      // Save detailed statistics
-      fs.writeFileSync(
-        path.resolve(__dirname, 'link-check-stats.json'), 
-        JSON.stringify(stats, null, 2)
-      );
-    } else {
-      console.log('\nNo broken links found or fixed');
-    }
-    
-  } catch (error) {
-    console.error(`Error in main function: ${error.message}`);
-    if (error.stack) {
-      console.error(`Stack trace: ${error.stack}`);
-    }
-    process.exit(1);
   }
+
+  if (fixedCount > 0) {
+    fs.writeFileSync(resourcesFilePath, fileContent, 'utf8');
+    console.log(`[INFO] Updated resources file with ${fixedCount} fixes`);
+  }
+  return fixedCount;
 }
 
-main();
+// ========== MAIN SCRIPT ==========
+async function main() {
+  console.log('=== Broken Link Diagnosis ===');
+  console.log(`Resources file: ${resourcesFilePath}`);
+  console.log(`Report will be saved in: ${reportFilePath}`);
+  
+  // Create a backup before making any changes
+  if (!TEST_MODE) {
+    backupResourcesFile();
+  }
+
+  let pLimit;
+  try {
+    const pLimitModule = await import('p-limit');
+    pLimit = pLimitModule.default;
+  } catch (error) {
+    console.error('[ERROR] Failed to import p-limit:', error.message);
+    // Basic fallback if p-limit not available
+    pLimit = concurrency => {
+      const queue = [];
+      let activeCount = 0;
+      const next = () => {
+        activeCount--;
+        if (queue.length > 0) {
+          queue.shift()();
+        }
+      };
+
+      return fn => {
+        return new Promise((resolve, reject) => {
+          const run = async () => {
+            activeCount++;
+            try {
+              resolve(await fn());
+            } catch (err) {
+              reject(err);
+            }
+            next();
+          };
+
+          if (activeCount < concurrency) {
+            run();
+          } else {
+            queue.push(run);
+          }
+        });
+      };
+    };
+  }
+
+  const code = fs.readFileSync(resourcesFilePath, 'utf8');
+  const ast = parse(code, {
+    sourceType: 'module',
+    plugins: ['typescript', 'jsx']
+  });
+
+  const brokenLinksData = [];
+  let totalLinks = 0;
+
+  // Collect all url: "..." properties
+  traverse(ast, {
+    ObjectProperty(path) {
+      if (
+        path.node.key.type === 'Identifier' &&
+        path.node.key.name === 'url' &&
+        path.node.value.type === 'StringLiteral'
+      ) {
+        totalLinks++;
+        const url = path.node.value.value;
+
+        // Skip URLs that are already checked in this run
+        if (brokenLinksData.some(item => item.url === url)) {
+          return;
+        }
+
+        const parentProps = path.parentPath.node.properties;
+        let title = '',
+          rtype = '',
+          source = '',
+          topic = 'mathematics',
+          subtopic = 'general';
+
+        for (const prop of parentProps) {
+          if (prop.key?.name === 'title' && prop.value?.type === 'StringLiteral') {
+            title = prop.value.value;
+          } else if (prop.key?.name === 'type' && prop.value?.type === 'StringLiteral') {
+            rtype = prop.value.value;
+          } else if (prop.key?.name === 'source' && prop.value?.type === 'StringLiteral') {
+            source = prop.value.value;
+          } else if (prop.key?.name === 'topic' && prop.value?.type === 'StringLiteral') {
+            topic = prop.value.value;
+          } else if (prop.key?.name === 'subtopic' && prop.value?.type === 'StringLiteral') {
+            subtopic = prop.value.value;
+          }
+        }
+
+        const { line, column } = path.node.loc.start;
+
+        brokenLinksData.push({
+          url,
+          line,
+          column,
+          title,
+          type: rtype,
+          source,
+          topic,
+          subtopic,
+          isBroken: false,
+          suggestion: null,
+          suggestionProvider: null,
+          brokenReason: null
+        });
+      }
+    }
+  });
+
+  console.log(`[INFO] Total links found: ${totalLinks}`);
+
+  // Limitar links se necessário
+  if (LINKS_LIMIT) {
+    const limit = parseInt(LINKS_LIMIT, 10);
+    if (!isNaN(limit) && limit > 0 && limit < brokenLinksData.length) {
+      console.log(`[INFO] Limiting check to first ${limit} links due to --limit parameter`);
+      brokenLinksData.splice(limit);
+    }
+  }
+
+  const limit = pLimit(2); // reduce concurrency to 2 to avoid rate limits
+  const tasks = brokenLinksData.map(item =>
+    limit(async () => {
+      const { valid, brokenReason } = await isValidUrl(item.url, item.type);
+      if (!valid) {
+        item.isBroken = true;
+        item.brokenReason = brokenReason;
+        console.log(`\n[WARN] Broken link: ${item.url} (Line: ${item.line}, Title: ${item.title})`);
+        if (brokenReason) console.log(`[REASON] ${brokenReason}`);
+      }
+    })
+  );
+
+  await Promise.all(tasks);
+
+  // Filter truly broken
+  const onlyBroken = brokenLinksData.filter(x => x.isBroken);
+
+  // Novo relatório no formato solicitado
+  const brokenLinksReport = onlyBroken.map(link => ({
+    topic: link.topic,
+    subtopic: link.subtopic,
+    type: link.type,
+    description: link.title,
+    url: link.url
+  }));
+
+  fs.writeFileSync(brokenLinksReportPath, JSON.stringify(brokenLinksReport, null, 2), 'utf8');
+
+  console.log('\n=== FINISHED ===');
+  console.log(`- Total links: ${totalLinks}`);
+  console.log(`- Broken links: ${onlyBroken.length}`);
+  console.log(`Broken links report saved in: ${brokenLinksReportPath}`);
+}
+
+main().catch(err => {
+  console.error(`[ERROR] Main script failure: ${err.message}`);
+  process.exit(1);
+});

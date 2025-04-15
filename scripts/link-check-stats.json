@@ -1,0 +1,39 @@
+{
+  "totalLinksChecked": 259,
+  "brokenLinkCount": 4,
+  "linksFixedInFile": 3,
+  "brokenLinksDetails": [
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf1.pdf",
+      "title": "Square Numbers and Square Roots",
+      "type": "pdf",
+      "line": 36,
+      "suggestedReplacement": "https://corbettmaths.com/wp-content/uploads/2013/02/square-numbers-pdf.pdf",
+      "suggestionSource": "PatternMatching"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2013/02/types-of-numbers-pdf1.pdf",
+      "title": "Types of Numbers Worksheet",
+      "type": "pdf",
+      "line": 34,
+      "suggestedReplacement": "https://corbettmaths.com/wp-content/uploads/2018/11/types-of-numbers-pdf.pdf",
+      "suggestionSource": "PatternMatching"
+    },
+    {
+      "originalUrl": "https://corbettmaths.com/wp-content/uploads/2019/09/Irrational-and-Rational-Numbers.pdf",
+      "title": "Rational and Irrational Numbers",
+      "type": "pdf",
+      "line": 39,
+      "suggestedReplacement": "https://corbettmaths.com/wp-content/uploads/2021/09/Irrational-and-Rational-Numbers.pdf",
+      "suggestionSource": "OpenAI"
+    },
+    {
+      "originalUrl": "https://www.draustinmaths.com/_files/ugd/7ac124_1548f69d09d94b80824a05fcaba64a2e.pdf",
+      "title": "Standard Form Revision Grid",
+      "type": "pdf",
+      "line": 50,
+      "suggestedReplacement": null,
+      "suggestionSource": null
+    }
+  ]
+}

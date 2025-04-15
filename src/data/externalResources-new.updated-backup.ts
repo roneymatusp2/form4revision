@@ -113,10 +113,8 @@ export const curriculumResources: CurriculumResourcesType = {
         { title: "Gradient and Y-Intercept", url: "https://www.youtube.com/embed/HdlnBX82jxI", source: "Corbettmaths", type: "video" },
         // Removed broken videos
         { title: "Understanding Function Notation", url: "https://www.youtube.com/embed/kvGsIo1TmsM", source: "Khan Academy", type: "video" },
-        { title: "Graphing Linear Equations", url: "https://www.youtube.com/embed/2UrcUfBizyw", source: "Khan Academy", type: "video" },
-        // New videos from provided list
-        { title: "Slope-Intercept Form", url: "https://www.youtube.com/embed/IqrY3BcuQsA", source: "Khan Academy", type: "video" },
-        { title: "Gradient of a Line", url: "https://www.youtube.com/embed/YtHJP1rZ3pI", source: "Corbettmaths", type: "video" }
+        { title: "Graphing Linear Equations", url: "https://www.youtube.com/embed/2UrcUfBizyw", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         { title: "Straight Line Graphs", url: "https://www.mathsgenie.co.uk/resources/16-graphs.pdf", source: "Maths Genie", type: "pdf" }
@@ -129,46 +127,10 @@ export const curriculumResources: CurriculumResourcesType = {
         // Removed broken links
       ]
     },
-    'parallel-perpendicular-lines': {
-      videos: [
-        // New videos from provided list
-        { title: "Slopes of Parallel and Perpendicular Lines", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Khan Academy", type: "video" }
-      ],
-      exercises: [
-        { title: "Parallel and Perpendicular Lines", url: "https://www.mathsgenie.co.uk/resources/6-parallel-and-perpendicular-lines.pdf", source: "Maths Genie", type: "pdf" }
-      ],
-      solutions: [],
-      otherResources: []
-    },
-    'perpendicular-bisector': {
-      videos: [
-        // New videos from provided list
-        { title: "Equation of a Perpendicular Bisector", url: "https://www.youtube.com/embed/qc9gcY-24bk", source: "Mario's Math Tutoring", type: "video" }
-      ],
-      exercises: [],
-      solutions: [],
-      otherResources: []
-    },
-    'distance-formula': {
-      videos: [
-        { title: "Distance Between Two Points", url: "https://www.youtube.com/embed/q8Qm0Xbqre4", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Distance Formula and Midpoint Formula", url: "https://www.youtube.com/embed/VnBPATOtXJc", source: "Algebra 1", type: "video" },
-        { title: "Length of a Line Segment", url: "https://www.youtube.com/embed/bs6ODTGktDg", source: "Maths Genie", type: "video" }
-      ],
-      exercises: [
-        { title: "Distance Between Two Points", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Distance-between-2-points-pdf.pdf", source: "Corbettmaths", type: "pdf" }
-      ],
-      solutions: [],
-      otherResources: [
-        { title: "Distance Formula", url: "https://pmt.physicsandmathstutor.com/download/Maths/A-level/Pure/Coordinate-Geometry-1/Cheat-Sheets/Straight%20Line%20Graphs.pdf", source: "Physics & Maths Tutor", type: "pdf" }
-      ]
-    },
     'simultaneous-equations': {
       videos: [
-        { title: "Solving Systems of Equations", url: "https://www.youtube.com/embed/nok99JOhcjo", source: "Khan Academy", type: "video" },
-        // New videos from provided list
-        { title: "Solving Simultaneous Equations by Elimination", url: "https://www.youtube.com/embed/phlus4x0UqM", source: "HackingMaths", type: "video" }
+        { title: "Solving Systems of Equations", url: "https://www.youtube.com/embed/nok99JOhcjo", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         { title: "Simultaneous Equations", url: "https://www.mathsgenie.co.uk/resources/5-simultaneous-equations.pdf", source: "Maths Genie", type: "pdf" }
@@ -180,6 +142,38 @@ export const curriculumResources: CurriculumResourcesType = {
       ],
       otherResources: [
         // Removed broken links
+      ]
+    },
+    'parallel-perpendicular-lines': {
+      videos: [
+        // Removed broken videos
+      ],
+      exercises: [
+        { title: "Parallel and Perpendicular Lines", url: "https://www.mathsgenie.co.uk/resources/6-parallel-and-perpendicular-lines.pdf", source: "Maths Genie", type: "pdf" }
+      ],
+      solutions: [],
+      otherResources: []
+    },
+    'perpendicular-bisector': {
+      videos: [
+        // Removed broken videos
+      ],
+      exercises: [],
+      solutions: [],
+      otherResources: [
+        // Removed broken links
+      ]
+    },
+    'distance-formula': {
+      videos: [
+        { title: "Distance Between Two Points", url: "https://www.youtube.com/embed/q8Qm0Xbqre4", source: "Corbettmaths", type: "video" }
+      ],
+      exercises: [
+        { title: "Distance Between Two Points", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Distance-between-2-points-pdf.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [],
+      otherResources: [
+        { title: "Distance Formula", url: "https://pmt.physicsandmathstutor.com/download/Maths/A-level/Pure/Coordinate-Geometry-1/Cheat-Sheets/Straight%20Line%20Graphs.pdf", source: "Physics & Maths Tutor", type: "pdf" }
       ]
     }
   },
@@ -226,10 +220,8 @@ export const curriculumResources: CurriculumResourcesType = {
         // Removed broken videos
         { title: "Angles on Parallel Lines", url: "https://www.youtube.com/embed/6oJ3QqbL7Yc", source: "Math Antics", type: "video" },
         { title: "Angles In Parallel Lines", url: "https://www.youtube.com/embed/WI_U1X-jPHg", source: "FuseSchool", type: "video" },
-        { title: "Alternate, Corresponding and Allied Angles", url: "https://www.youtube.com/embed/I5auyoXYoX0", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Angles on a Point and Straight Line (Basics)", url: "https://www.youtube.com/embed/ENgIMmLbk8k", source: "GCSE Maths", type: "video" },
-        { title: "Angle Basics (acute, obtuse, etc.)", url: "https://www.youtube.com/embed/DGKwdHMiqCg", source: "Math Antics", type: "video" }
+        { title: "Alternate, Corresponding and Allied Angles", url: "https://www.youtube.com/embed/I5auyoXYoX0", source: "Corbettmaths", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -242,37 +234,25 @@ export const curriculumResources: CurriculumResourcesType = {
       ]
     },
     'parallel-line-angles': {
-      videos: [
-        // New videos from provided list
-        { title: "Alternate, Corresponding and Allied Angles", url: "https://www.youtube.com/embed/I5auyoXYoX0", source: "Cognito", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
     },
     'angle-sums': {
-      videos: [
-        // New videos from provided list
-        { title: "Angles in Polygons (Interior Angle Sum)", url: "https://www.youtube.com/embed/gVo8ZrtlSp0", source: "Corbettmaths", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
     },
     'polygon-angles': {
-      videos: [
-        // New videos from provided list
-        { title: "Angles in Polygons (Interior & Exterior)", url: "https://www.youtube.com/embed/UUedd_gHnh8", source: "SaveMyExams", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
     },
     'angle-vocabulary': {
-      videos: [
-        // New videos from provided list
-        { title: "Angle Basics (acute, obtuse, etc.)", url: "https://www.youtube.com/embed/DGKwdHMiqCg", source: "Math Antics", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
@@ -328,9 +308,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'bearings': {
       videos: [
-        // New videos from provided list
-        { title: "What are Bearings?", url: "https://www.youtube.com/embed/GdKgyXYlNO8", source: "GCSE Maths", type: "video" },
-        { title: "Bearings Introduction", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "HEGARTYMATHS", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         { title: "Bearings Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/bearings-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
@@ -342,10 +320,7 @@ export const curriculumResources: CurriculumResourcesType = {
       otherResources: []
     },
     'pythagoras-theorem': {
-      videos: [
-        // New videos from provided list
-        { title: "Pythagoras' Theorem and How to Use It", url: "https://www.youtube.com/embed/CnHgqfBSgco", source: "GCSE Maths", type: "video" }
-      ],
+      videos: [],
       exercises: [
         { title: "Pythagoras Theorem Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/pythagoras-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
         // Removed broken links
@@ -356,19 +331,13 @@ export const curriculumResources: CurriculumResourcesType = {
       otherResources: []
     },
     'chord-properties': {
-      videos: [
-        // New videos from provided list
-        { title: "Finding a Chord's Length from Radius and Distance to Center", url: "https://www.youtube.com/embed/YftaFVn7kK4", source: "Wyzant", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
     },
     'circle-distances': {
-      videos: [
-        // New videos from provided list
-        { title: "Distance Between Two Points in Circle Geometry", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "HEGARTYMATHS", type: "video" }
-      ],
+      videos: [],
       exercises: [],
       solutions: [],
       otherResources: []
@@ -403,8 +372,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'algebraic-fractions-simplification': {
       videos: [
-        // New videos from provided list
-        { title: "Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/tlKN8NNNxdI", source: "Corbettmaths", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -416,8 +384,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'algebraic-fractions-addition': {
       videos: [
-        // New videos from provided list
-        { title: "Adding & Subtracting Algebraic Fractions", url: "https://www.youtube.com/embed/w3JewxYjiNs", source: "Corbettmaths", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -427,8 +394,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'algebraic-fractions-multiplication': {
       videos: [
-        // New videos from provided list
-        { title: "Multiplying & Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/YL-13QneHrY", source: "GCSE Tutorial", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -460,8 +426,7 @@ export const curriculumResources: CurriculumResourcesType = {
   'unit-5': {
     'quadratic-fundamentals': {
       videos: [
-        // New videos from provided list
-        { title: "Introduction to Quadratic Equations", url: "https://www.youtube.com/embed/IWigvJcCAJ0", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -473,8 +438,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'factorisation-method': {
       videos: [
-        // New videos from provided list
-        { title: "Solving Quadratics by Factorising", url: "https://www.youtube.com/embed/m-qyV6C56ec", source: "Maths Genie", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -488,9 +452,7 @@ export const curriculumResources: CurriculumResourcesType = {
       videos: [
         { title: "The Quadratic Formula", url: "https://www.youtube.com/embed/i7idZfS8t8w", source: "Khan Academy", type: "video" },
         // Removed broken videos
-        { title: "Quadratic Formula Explained", url: "https://www.youtube.com/embed/3J0ccr74LcU", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Sum and Product of Roots", url: "https://www.youtube.com/embed/2v7PKsWdQ3o", source: "Mathematics Class", type: "video" }
+        { title: "Quadratic Formula Explained", url: "https://www.youtube.com/embed/3J0ccr74LcU", source: "Corbettmaths", type: "video" }
       ],
       exercises: [],
       solutions: [],
@@ -501,9 +463,7 @@ export const curriculumResources: CurriculumResourcesType = {
     'gdc-quadratics': {
       videos: [
         // Removed broken videos
-        { title: "Solving Quadratic Equations Using GDC", url: "https://www.youtube.com/embed/zp2GNFhOzgo", source: "Mark Willis", type: "video" },
-        // New videos from provided list
-        { title: "Solving Quadratics with a GDC", url: "https://www.youtube.com/embed/Xw1YDdBWFOE", source: "IB Maths", type: "video" }
+        { title: "Solving Quadratic Equations Using GDC", url: "https://www.youtube.com/embed/zp2GNFhOzgo", source: "Mark Willis", type: "video" }
       ],
       exercises: [],
       solutions: [],
@@ -514,9 +474,7 @@ export const curriculumResources: CurriculumResourcesType = {
     'parabola-properties': {
       videos: [
         // Removed broken videos
-        { title: "Line of Symmetry", url: "https://www.youtube.com/embed/k6Men7ELOxQ", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Graphing Quadratic Functions (Vertex & Intercepts)", url: "https://www.youtube.com/embed/rM_A8t0CV7A", source: "Maths Genie", type: "video" }
+        { title: "Line of Symmetry", url: "https://www.youtube.com/embed/k6Men7ELOxQ", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
         { title: "Quadratic Graphs", url: "https://www.mathsgenie.co.uk/resources/5-quadratic-graphs.pdf", source: "Maths Genie", type: "pdf" },
@@ -529,8 +487,7 @@ export const curriculumResources: CurriculumResourcesType = {
   'unit-6': {
     'linear-sequences': {
       videos: [
-        // New videos from provided list
-        { title: "nth Term of a Linear Sequence", url: "https://www.youtube.com/embed/qnVVTBAfNu4", source: "Corbettmaths", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -545,9 +502,7 @@ export const curriculumResources: CurriculumResourcesType = {
     'quadratic-sequences': {
       videos: [
         // Removed broken videos
-        { title: "Quadratic Nth Term", url: "https://www.youtube.com/embed/AL-joUBnEIw", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "nth Term of a Quadratic Sequence", url: "https://www.youtube.com/embed/AL-joUBnEIw", source: "Corbettmaths", type: "video" }
+        { title: "Quadratic Nth Term", url: "https://www.youtube.com/embed/AL-joUBnEIw", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
         // Removed broken links
@@ -560,8 +515,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'cubic-sequences': {
       videos: [
-        // New videos from provided list
-        { title: "Cubic Sequences (nth term)", url: "https://www.youtube.com/embed/5hacfQYS6Ds", source: "GCSE Maths Tutor", type: "video" }
+        // Removed broken videos
       ],
       exercises: [],
       solutions: [],
@@ -571,8 +525,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'geometric-sequences': {
       videos: [
-        // New videos from provided list
-        { title: "Geometric Progressions", url: "https://www.youtube.com/embed/SWlqZsKKi04", source: "GCSE Maths Tutor", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         { title: "Geometric Progressions", url: "https://corbettmaths.com/wp-content/uploads/2024/11/Geometric-Progressions.pdf", source: "Corbettmaths", type: "pdf" }
@@ -586,11 +539,11 @@ export const curriculumResources: CurriculumResourcesType = {
   'unit-7': {
     'function-notation': {
       videos: [
-        // New videos from provided list
-        { title: "Function Notation Introduction", url: "https://www.youtube.com/embed/ZRQJGecu1fs", source: "GCSE Higher Maths", type: "video" },
+        // Removed broken videos
         { title: "Understanding Function Notation", url: "https://www.youtube.com/embed/kvGsIo1TmsM", source: "Khan Academy", type: "video" },
         { title: "Functions", url: "https://www.youtube.com/embed/uha8WJ5J-WA", source: "Corbettmaths", type: "video" },
         { title: "Domain and Range", url: "https://www.youtube.com/embed/O0uUVH8dRiU", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -605,9 +558,9 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'composite-functions': {
       videos: [
-        // New videos from provided list
-        { title: "Composite Functions", url: "https://www.youtube.com/embed/lSRehCwoxs8", source: "GCSE Higher Maths", type: "video" },
+        // Removed broken videos
         { title: "Composite Functions", url: "https://www.youtube.com/embed/z_rNIy_bWCU", source: "Maths Genie", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -622,8 +575,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'inverse-functions': {
       videos: [
-        // New videos from provided list
-        { title: "Inverse Functions", url: "https://www.youtube.com/embed/zpF9nbjResY", source: "Corbettmaths", type: "video" },
+        // Removed broken videos
         { title: "Inverse Functions", url: "https://www.youtube.com/embed/xOfN_VeTDcE", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
@@ -636,8 +588,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'variation': {
       videos: [
-        // New videos from provided list
-        { title: "Direct & Inverse Proportion Explained", url: "https://www.youtube.com/embed/rtLKCv5buLw", source: "SaveMyExams", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links
@@ -649,11 +600,8 @@ export const curriculumResources: CurriculumResourcesType = {
   'unit-8': {
     'right-angled-trigonometry': {
       videos: [
-        { title: "Introduction to Trigonometry", url: "https://www.youtube.com/embed/F21S9Wpi0y8", source: "Khan Academy", type: "video" },
-        // New videos from provided list
-        { title: "SOHCAHTOA Explained", url: "https://www.youtube.com/embed/wXMO_jYBKPE", source: "Corbettmaths", type: "video" },
-        { title: "Trigonometry - Finding Missing Sides", url: "https://www.youtube.com/embed/bALUluXOuTc", source: "Corbettmaths", type: "video" },
-        { title: "Trigonometry - Finding Missing Angles", url: "https://www.youtube.com/embed/fP6zFupOxqM", source: "Corbettmaths", type: "video" }
+        { title: "Introduction to Trigonometry", url: "https://www.youtube.com/embed/F21S9Wpi0y8", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         { title: "Trigonometry Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/trigonometry-pdf1.pdf", source: "Corbettmaths", type: "pdf" }
@@ -668,8 +616,7 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'angles-elevation-depression': {
       videos: [
-        // New videos from provided list
-        { title: "Angles of Elevation and Depression", url: "https://www.youtube.com/embed/_WllQRr_n7I", source: "Khan Academy", type: "video" }
+        // Removed broken videos
       ],
       exercises: [
         // Removed broken links

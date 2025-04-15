@@ -154,8 +154,8 @@ const TopicSection: React.FC<{ unitId: string }> = ({ unitId }) => {
   topic.subtopics?.forEach((subtopic: any) => {
     subtopicNameMap[subtopic.slug] = subtopic.name;
   });
-
-  return (
+      
+      return (
     <motion.div 
       className={`mb-8 border rounded-xl overflow-hidden ${colors.border}`}
       initial={{ opacity: 0, y: 20 }}
@@ -175,7 +175,7 @@ const TopicSection: React.FC<{ unitId: string }> = ({ unitId }) => {
           stroke="currentColor"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+          </svg>
       </button>
       
       {isOpen && (
@@ -188,7 +188,7 @@ const TopicSection: React.FC<{ unitId: string }> = ({ unitId }) => {
               resources={subtopicResources}
             />
           ))}
-        </div>
+            </div>
       )}
     </motion.div>
   );
@@ -197,9 +197,9 @@ const TopicSection: React.FC<{ unitId: string }> = ({ unitId }) => {
 // Componente para recursos oficiais Cambridge
 const OfficialResourcesSection: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
-    <motion.div 
+    <motion.div
       className="mb-8 border border-blue-200 dark:border-blue-800 rounded-xl overflow-hidden"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -225,8 +225,8 @@ const OfficialResourcesSection: React.FC = () => {
         <div className="p-4">
           {officialResources.map((resource, idx) => (
             <ResourceItem key={`official-${idx}`} resource={resource} />
-          ))}
-        </div>
+        ))}
+      </div>
       )}
     </motion.div>
   );
@@ -251,7 +251,7 @@ const ResourcesPage: React.FC = () => {
           Click on any topic to expand and discover videos, worksheets, and practice materials.
         </p>
       </motion.div>
-      
+
       {/* Recursos por tópico */}
       <div>
         {availableUnitIds.map(unitId => (
