@@ -1,39 +1,39 @@
 @echo off
-echo Aplicando correção simples e direta para vulnerabilidades...
-echo.
+setlocal EnableDelayedExpansion
 
-REM Backup dos arquivos de package
-echo Criando backup de arquivos...
-copy package.json package.json.simple.backup
-copy package-lock.json package-lock.json.simple.backup
+REM Script para corrigir problemas de build no Netlify
 
-REM Atualizar react-scripts para versão mais recente estável
-echo Atualizando react-scripts para versão segura...
-call npm install react-scripts@5.0.1 --save
+echo Iniciando correcao de build...
 
-REM Atualizar pacotes Firebase
-echo Atualizando pacotes Firebase...
-call npm update firebase --save
+REM Instalar dependencias com flags de forca
+echo Instalando dependencias com --legacy-peer-deps e --force...
+call npm install --legacy-peer-deps --force
 
-REM Pacotes específicos com problemas de segurança conhecidos
-echo Atualizando pacotes com vulnerabilidades conhecidas...
-call npm update nth-check tough-cookie node-forge semver --save
-call npm update @firebase/auth @firebase/firestore @firebase/storage --save
+REM Limpar cache do npm
+echo Limpando cache do npm...
+call npm cache clean --force
 
-REM Aplicar audit fix sem force primeiro
-echo Aplicando correções de segurança...
-call npm audit fix
+REM Tentar build
 
-REM Verificar se ainda existem vulnerabilidades sérias
-echo Verificando vulnerabilidades restantes...
-call npm audit
+echo Tentando build do projeto...
+call npm run build
 
-echo.
-echo Processo concluído!
-echo.
-echo Para resolver vulnerabilidades restantes, execute:
-echo npm audit fix --force
-echo.
-echo Verifique se o aplicativo ainda funciona corretamente após as atualizações.
-echo Pressione qualquer tecla para sair...
-pause >nul
+if errorlevel 1 (
+    echo Build falhou. Tentando solucoes adicionais...
+    
+    REM Remover node_modules e package-lock.json
+    echo Removendo node_modules e package-lock.json...
+    if exist node_modules rmdir /S /Q node_modules
+    if exist package-lock.json del package-lock.json
+    
+    REM Reinstalar todas as dependencias
+    echo Reinstalando dependencias...
+    call npm install --legacy-peer-deps --force
+    
+    REM Tentar build novamente
+    echo Tentando build novamente...
+    call npm run build
+)
+
+echo Correcao de build concluida.
+endlocal

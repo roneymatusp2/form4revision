@@ -158,7 +158,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
                 <div>
                   <div className="flex justify-between items-center">
-                    <p className="font-medium text-gray-800">Firebase Integration Complete</p>
+                    <p className="font-medium text-gray-800">Admin Access Granted</p>
                     <span className="text-xs text-gray-500">Yesterday, 3:20 PM</span>
                   </div>
                   <p className="text-sm text-gray-600 mt-1">
