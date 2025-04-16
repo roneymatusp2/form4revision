@@ -2,23 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import topics, { Subtopic, Topic } from '../data/topics';
 import { motion } from 'framer-motion';
+import { getTopicColorScheme, TopicColorScheme } from '../utils/topicColors';
 import { 
   curriculumResources, 
   officialResources, 
   ExternalResource as ExternalResourceType,
   SubtopicResourceSet
 } from '../data/externalResources-new';
-
-// Define color scheme interface for better type safety
-interface ColorScheme {
-  primary: string;
-  light: string;
-  hover: string;
-  text: string;
-  border: string;
-  activeTab: string;
-  inactiveTab: string;
-}
 
 const SubtopicPage: React.FC = () => {
   const { subtopicId } = useParams<{ subtopicId: string }>();
@@ -63,88 +53,11 @@ const SubtopicPage: React.FC = () => {
     }
   }, [subtopicId]);
 
-  // Get color scheme based on parent topic ID
-  const getColorScheme = (): ColorScheme => {
-    if (!parentTopic) {
-      return {
-        primary: 'bg-gray-500',
-        light: 'bg-gray-100',
-        hover: 'hover:bg-gray-600',
-        text: 'text-gray-700',
-        border: 'border-gray-500',
-        activeTab: 'bg-gray-500 text-white',
-        inactiveTab: 'text-gray-700 hover:bg-gray-100'
-      };
-    }
-
-    switch(parentTopic.$id) {
-      case 'unit-1': return {
-        primary: 'bg-blue-500',
-        light: 'bg-blue-100',
-        hover: 'hover:bg-blue-600',
-        text: 'text-blue-700',
-        border: 'border-blue-500',
-        activeTab: 'bg-blue-500 text-white',
-        inactiveTab: 'text-blue-700 hover:bg-blue-100'
-      };
-      case 'unit-2': return {
-        primary: 'bg-green-500',
-        light: 'bg-green-100',
-        hover: 'hover:bg-green-600',
-        text: 'text-green-700',
-        border: 'border-green-500',
-        activeTab: 'bg-green-500 text-white',
-        inactiveTab: 'text-green-700 hover:bg-green-100'
-      };
-      case 'unit-3': return {
-        primary: 'bg-green-500',
-        light: 'bg-green-100',
-        hover: 'hover:bg-green-600',
-        text: 'text-green-700',
-        border: 'border-green-500',
-        activeTab: 'bg-green-500 text-white',
-        inactiveTab: 'text-green-700 hover:bg-green-100'
-      };
-      case 'unit-4': return {
-        primary: 'bg-blue-500',
-        light: 'bg-blue-100',
-        hover: 'hover:bg-blue-600',
-        text: 'text-blue-700',
-        border: 'border-blue-500',
-        activeTab: 'bg-blue-500 text-white',
-        inactiveTab: 'text-blue-700 hover:bg-blue-100'
-      };
-      case 'unit-5': return {
-        primary: 'bg-orange-500',
-        light: 'bg-orange-100',
-        hover: 'hover:bg-orange-600',
-        text: 'text-orange-700',
-        border: 'border-orange-500',
-        activeTab: 'bg-orange-500 text-white',
-        inactiveTab: 'text-orange-700 hover:bg-orange-100'
-      };
-      case 'unit-8': return {
-        primary: 'bg-purple-500',
-        light: 'bg-purple-100',
-        hover: 'hover:bg-purple-600',
-        text: 'text-purple-700',
-        border: 'border-purple-500',
-        activeTab: 'bg-purple-500 text-white',
-        inactiveTab: 'text-purple-700 hover:bg-purple-100'
-      };
-      default: return {
-        primary: 'bg-gray-500',
-        light: 'bg-gray-100',
-        hover: 'hover:bg-gray-600',
-        text: 'text-gray-700',
-        border: 'border-gray-500',
-        activeTab: 'bg-gray-500 text-white',
-        inactiveTab: 'text-gray-700 hover:bg-gray-100'
-      };
-    }
-  };
-
-  const colors = getColorScheme();
+  // Get color scheme from the centralized utility
+  const colors = parentTopic ? getTopicColorScheme(parentTopic.$id) : getTopicColorScheme('default');
+  
+  // Use the gradient directly from the colors scheme
+  const gradient = colors.gradient || colors.header; // Fallback to header if gradient not defined
 
   if (!subtopic || !parentTopic || !loadedResources) {
     return (
@@ -173,7 +86,7 @@ const SubtopicPage: React.FC = () => {
       </div>
 
       {/* Header with unit color */}
-      <div className={`${colors.primary} rounded-t-lg p-6 text-white mb-6`}>
+      <div className={`${gradient} rounded-t-lg p-6 text-white mb-6`}>
         <h1 className="text-3xl font-bold">{subtopic.name}</h1>
         <p className="mt-2 text-white text-opacity-90">
           From {parentTopic.name}
@@ -238,11 +151,11 @@ const SubtopicPage: React.FC = () => {
       >
         {activeTab === 'videos' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold mb-4">Video Tutorials</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>Video Tutorials</h2>
             {loadedResources.videos.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {loadedResources.videos.map((video: ExternalResourceType, index: number) => (
-                  <div key={`video-${index}`} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                  <div key={`video-${index}`} className={`rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ${colors.bg}`}>
                     <div className="aspect-w-16 aspect-h-9">
                       <iframe
                         src={video.url}
@@ -253,7 +166,7 @@ const SubtopicPage: React.FC = () => {
                       ></iframe>
                     </div>
                     <div className={`p-4 border-t ${colors.border} border-opacity-30`}>
-                      <h3 className={`text-lg font-semibold ${colors.text}`}>{video.title}</h3>
+                      <h3 className={`text-lg font-semibold ${colors.title}`}>{video.title}</h3>
                     </div>
                   </div>
                 ))}
@@ -279,7 +192,7 @@ const SubtopicPage: React.FC = () => {
 
         {activeTab === 'exercises' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold mb-4">Exercises & References</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>Exercises & References</h2>
             {loadedResources.exercises.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {loadedResources.exercises.map((pdf: ExternalResourceType, index: number) => (
@@ -288,7 +201,7 @@ const SubtopicPage: React.FC = () => {
                     href={pdf.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={`flex items-start p-4 rounded-lg border ${colors.border} transition-all hover:shadow-md hover:bg-gray-50`}
+                    className={`flex items-start p-4 rounded-lg ${colors.bg} transition-all hover:shadow-md border ${colors.border} border-opacity-30`}
                   >
                     <div className={`p-3 rounded-lg ${colors.light} mr-4`}>
                       <svg xmlns="http://www.w3.org/2000/svg" className={`h-8 w-8 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -296,7 +209,7 @@ const SubtopicPage: React.FC = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className={`text-lg font-semibold ${colors.text}`}>{pdf.title}</h3>
+                      <h3 className={`text-lg font-semibold ${colors.title}`}>{pdf.title}</h3>
                       <p className="text-gray-600 text-sm mt-1">Source: {pdf.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
                         PDF Exercise
@@ -326,7 +239,7 @@ const SubtopicPage: React.FC = () => {
 
         {activeTab === 'answers' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold mb-4">Answers & Solutions</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>Answers & Solutions</h2>
             {loadedResources.solutions.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {loadedResources.solutions.map((pdf: ExternalResourceType, index: number) => (
@@ -335,7 +248,7 @@ const SubtopicPage: React.FC = () => {
                     href={pdf.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={`flex items-start p-4 rounded-lg border ${colors.border} transition-all hover:shadow-md hover:bg-gray-50`}
+                    className={`flex items-start p-4 rounded-lg ${colors.bg} transition-all hover:shadow-md border ${colors.border} border-opacity-30`}
                   >
                     <div className={`p-3 rounded-lg ${colors.light} mr-4`}>
                       <svg xmlns="http://www.w3.org/2000/svg" className={`h-8 w-8 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -343,7 +256,7 @@ const SubtopicPage: React.FC = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className={`text-lg font-semibold ${colors.text}`}>{pdf.title}</h3>
+                      <h3 className={`text-lg font-semibold ${colors.title}`}>{pdf.title}</h3>
                       <p className="text-gray-600 text-sm mt-1">Source: {pdf.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
                         PDF Solution/Answers
@@ -373,7 +286,7 @@ const SubtopicPage: React.FC = () => {
 
         {activeTab === 'external' && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold mb-4">External Resources</h2>
+            <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>External Resources</h2>
             
             {loadedResources.otherResources.length > 0 ? (
               <div className="space-y-4">
@@ -383,7 +296,7 @@ const SubtopicPage: React.FC = () => {
                     href={resource.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={`flex items-start p-4 rounded-lg border ${colors.border} transition-all hover:shadow-md hover:bg-gray-50 block`}
+                    className={`flex items-start p-4 rounded-lg ${colors.bg} transition-all hover:shadow-md border ${colors.border} border-opacity-30 block`}
                   >
                     <div className={`p-3 rounded-lg ${colors.light} mr-4`}>
                       <svg xmlns="http://www.w3.org/2000/svg" className={`h-8 w-8 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -391,7 +304,7 @@ const SubtopicPage: React.FC = () => {
                       </svg>
                     </div>
                     <div>
-                      <h3 className={`text-lg font-semibold ${colors.text}`}>{resource.title}</h3>
+                      <h3 className={`text-lg font-semibold ${colors.title}`}>{resource.title}</h3>
                       <p className="text-gray-600 text-sm mt-1">Source: {resource.source}</p>
                       <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
                         {resource.type === 'pdf' ? 'Reference PDF' : 'External Link'}
@@ -401,7 +314,7 @@ const SubtopicPage: React.FC = () => {
                 ))}
                 
                 {/* Display Cambridge official resources for every subtopic */}
-                <h3 className="text-xl font-semibold mt-8 mb-4">Cambridge Official Resources</h3>
+                <h3 className={`text-xl font-semibold mt-8 mb-4 ${colors.title}`}>Cambridge Official Resources</h3>
                 <div className="space-y-4">
                   {officialResources.map((resource, index) => (
                     <a 
@@ -409,7 +322,7 @@ const SubtopicPage: React.FC = () => {
                       href={resource.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`flex items-start p-4 rounded-lg border ${colors.border} transition-all hover:shadow-md hover:bg-gray-50 block`}
+                      className={`flex items-start p-4 rounded-lg ${colors.bg} transition-all hover:shadow-md border ${colors.border} border-opacity-30 block`}
                     >
                       <div className={`p-3 rounded-lg ${colors.light} mr-4`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className={`h-8 w-8 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -417,7 +330,7 @@ const SubtopicPage: React.FC = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className={`text-lg font-semibold ${colors.text}`}>{resource.title}</h3>
+                        <h3 className={`text-lg font-semibold ${colors.title}`}>{resource.title}</h3>
                         <p className="text-gray-600 text-sm mt-1">Source: {resource.source}</p>
                         <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
                           Official Cambridge Resource
@@ -445,7 +358,7 @@ const SubtopicPage: React.FC = () => {
                 </div>
                 
                 {/* Display Cambridge official resources for every subtopic */}
-                <h3 className="text-xl font-semibold mt-8 mb-4">Cambridge Official Resources</h3>
+                <h3 className={`text-xl font-semibold mt-8 mb-4 ${colors.title}`}>Cambridge Official Resources</h3>
                 <div className="space-y-4">
                   {officialResources.map((resource, index) => (
                     <a 
@@ -453,7 +366,7 @@ const SubtopicPage: React.FC = () => {
                       href={resource.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`flex items-start p-4 rounded-lg border ${colors.border} transition-all hover:shadow-md hover:bg-gray-50 block`}
+                      className={`flex items-start p-4 rounded-lg ${colors.bg} transition-all hover:shadow-md border ${colors.border} border-opacity-30 block`}
                     >
                       <div className={`p-3 rounded-lg ${colors.light} mr-4`}>
                         <svg xmlns="http://www.w3.org/2000/svg" className={`h-8 w-8 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -461,7 +374,7 @@ const SubtopicPage: React.FC = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className={`text-lg font-semibold ${colors.text}`}>{resource.title}</h3>
+                        <h3 className={`text-lg font-semibold ${colors.title}`}>{resource.title}</h3>
                         <p className="text-gray-600 text-sm mt-1">Source: {resource.source}</p>
                         <div className={`mt-2 inline-flex items-center text-xs px-2 py-1 rounded-full ${colors.light} ${colors.text}`}>
                           Official Cambridge Resource
@@ -475,6 +388,19 @@ const SubtopicPage: React.FC = () => {
           </div>
         )}
       </motion.div>
+
+      {/* Add at the bottom of the page */}
+      <div className="mt-8">
+        <Link 
+          to={`/topic/${parentTopic.$id}`} 
+          className={`inline-flex items-center px-4 py-2 rounded-lg text-white ${colors.button}`}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
+          </svg>
+          Back to {parentTopic.name}
+        </Link>
+      </div>
     </div>
   );
 };

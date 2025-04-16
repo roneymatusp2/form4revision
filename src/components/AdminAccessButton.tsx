@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const AdminAccessButton: React.FC = () => {
@@ -14,18 +12,13 @@ const AdminAccessButton: React.FC = () => {
     setError(null);
     
     try {
-      const provider = new GoogleAuthProvider();
-      // Optional: You can add login hint to specify an account
-      // provider.setCustomParameters({
-      //   login_hint: 'user@example.com'
-      // });
+      // Simulando um processo de autenticação (removido Firebase)
+      console.log("Simulando login...");
       
-      const result = await signInWithPopup(auth, provider);
+      // Pequeno delay para simular o processo de login
+      await new Promise(resolve => setTimeout(resolve, 800));
       
-      console.log("Login successful:", result.user);
-      
-      // Here you would verify if the user is an authorized admin/teacher
-      // For now, we'll just redirect to the admin dashboard
+      // Redirecionando para a dashboard de admin
       navigate('/admin');
       
     } catch (error: any) {

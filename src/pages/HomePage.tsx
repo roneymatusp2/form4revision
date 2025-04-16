@@ -795,13 +795,11 @@ const HomePage: React.FC = () => {
         >
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              {searchTerm ? `Search Results for "${searchTerm}"` : "Explore Mathematics Topics"}
+              Explore Mathematics Topics
             </h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              {searchTerm 
-                ? `Showing ${filteredTopics.length} topics matching your search.`
-                : "Our curriculum covers all essential areas of the Cambridge IGCSE™ International Mathematics Extended syllabus, with comprehensive resources to help you excel."
-              }
+              Our curriculum covers all essential areas of the Cambridge IGCSE™ International Mathematics Extended
+              syllabus, with comprehensive resources to help you excel.
             </p>
           </div>
           

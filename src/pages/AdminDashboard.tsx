@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+// Firebase auth removed
 import { motion } from 'framer-motion';
 
 const AdminDashboard: React.FC = () => {
@@ -10,26 +9,14 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        // Redirect to home if not logged in
-        navigate('/');
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    // Mock authentication - user is always logged in
+    setUser({ displayName: 'Admin User', email: 'admin@example.com' });
+    setLoading(false);
   }, [navigate]);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/');
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+  const handleLogout = () => {
+    // Simple navigation without auth
+    navigate('/');
   };
 
   if (loading) {

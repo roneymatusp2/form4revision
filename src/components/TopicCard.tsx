@@ -74,13 +74,19 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
     visible: { opacity: 1, y: 0 }
   };
   
-  // Get topic-specific background pattern
+  // Get topic-specific background pattern with enhanced designs
   const getBackgroundPattern = (id: string) => {
     switch(id) {
-      case 'unit-5': return 'bg-[radial-gradient(#FFA50033_1px,transparent_1px)] bg-[size:20px_20px]';
-      case 'unit-6': return 'bg-[linear-gradient(45deg,#80008022_25%,transparent_25%,transparent_50%,#80008022_50%,#80008022_75%,transparent_75%,transparent)] bg-[size:20px_20px]';
-      case 'unit-9': return 'bg-[repeating-linear-gradient(45deg,#00800022,#00800022_5px,transparent_5px,transparent_25px)]';
-      default: return '';
+      case 'unit-1': return 'bg-[linear-gradient(0deg,rgba(59,130,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:20px_20px]';
+      case 'unit-2': return 'bg-[radial-gradient(rgba(16,185,129,0.08)_1px,transparent_1px)] bg-[size:15px_15px]';
+      case 'unit-3': return 'bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.07)_0,rgba(14,165,233,0)_70%)]';
+      case 'unit-4': return 'bg-[linear-gradient(45deg,rgba(139,92,246,0.05)_25%,transparent_25%,transparent_50%,rgba(139,92,246,0.05)_50%,rgba(139,92,246,0.05)_75%,transparent_75%,transparent)] bg-[size:16px_16px]';
+      case 'unit-5': return 'bg-[radial-gradient(rgba(239,68,68,0.07)_1px,transparent_1px)] bg-[size:20px_20px]';
+      case 'unit-6': return 'bg-[linear-gradient(45deg,rgba(217,70,239,0.05)_25%,transparent_25%,transparent_50%,rgba(217,70,239,0.05)_50%,rgba(217,70,239,0.05)_75%,transparent_75%,transparent)] bg-[size:20px_20px]';
+      case 'unit-7': return 'bg-[repeating-linear-gradient(90deg,rgba(79,70,229,0.06)_0px,rgba(79,70,229,0.06)_1px,transparent_1px,transparent_20px),repeating-linear-gradient(0deg,rgba(79,70,229,0.06)_0px,rgba(79,70,229,0.06)_1px,transparent_1px,transparent_20px)]';
+      case 'unit-8': return 'bg-[radial-gradient(rgba(20,184,166,0.07)_1px,transparent_1px)] bg-[size:14px_14px] bg-[position:7px_7px]';
+      case 'unit-9': return 'bg-[repeating-linear-gradient(45deg,rgba(245,158,11,0.05),rgba(245,158,11,0.05)_5px,transparent_5px,transparent_20px)]';
+      default: return 'bg-[linear-gradient(rgba(107,114,128,0.05)_1px,transparent_1px)] bg-[size:20px_20px]';
     }
   };
   
@@ -103,93 +109,99 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
   const getTopicColor = (id: string) => {
     switch(id) {
       case 'unit-1': return {
-        header: 'bg-indigo-500',
-        title: 'text-indigo-800',
-        bg: 'bg-indigo-50',
-        hover: 'hover:bg-indigo-100',
-        text: 'text-indigo-800',
-        dot: 'bg-indigo-400',
-        button: 'bg-indigo-600 hover:bg-indigo-700'
+        // Vibrant blue for Coordinate Geometry and Linear Patterns
+        header: 'bg-gradient-to-r from-blue-600 to-indigo-600',
+        title: 'text-blue-800',
+        bg: 'bg-gradient-to-br from-blue-50 to-indigo-100',
+        hover: 'hover:bg-blue-100',
+        text: 'text-blue-800',
+        dot: 'bg-blue-400',
+        button: 'bg-blue-600 hover:bg-blue-700'
       };
       case 'unit-2': return {
-        header: 'bg-emerald-500',
+        // Rich emerald green for Plane Geometry and Angle Properties
+        header: 'bg-gradient-to-r from-emerald-500 to-green-600',
         title: 'text-emerald-800',
-        bg: 'bg-emerald-50',
+        bg: 'bg-gradient-to-br from-emerald-50 to-green-100',
         hover: 'hover:bg-emerald-100',
         text: 'text-emerald-800',
         dot: 'bg-emerald-400',
         button: 'bg-emerald-600 hover:bg-emerald-700'
       };
       case 'unit-3': return {
-        header: 'bg-teal-500',
-        title: 'text-teal-800',
-        bg: 'bg-teal-50',
-        hover: 'hover:bg-teal-100',
-        text: 'text-teal-800',
-        dot: 'bg-teal-400',
-        button: 'bg-teal-600 hover:bg-teal-700'
+        // Ocean blue for Trigonometry, Pythagoras and Circle Geometry
+        header: 'bg-gradient-to-r from-sky-500 to-cyan-600',
+        title: 'text-sky-800',
+        bg: 'bg-gradient-to-br from-sky-50 to-cyan-100',
+        hover: 'hover:bg-sky-100',
+        text: 'text-sky-800',
+        dot: 'bg-sky-400',
+        button: 'bg-sky-600 hover:bg-sky-700'
       };
       case 'unit-4': return {
-        header: 'bg-blue-500',
-        title: 'text-blue-800',
-        bg: 'bg-blue-50',
-        hover: 'hover:bg-blue-100',
-        text: 'text-blue-800',
-        dot: 'bg-blue-400',
-        button: 'bg-blue-600 hover:bg-blue-700'
-      };
-      case 'unit-5': return {
-        // Changed from amber to deep orange for Quadratic Patterns
-        header: 'bg-orange-600',
-        title: 'text-orange-900',
-        bg: 'bg-gradient-to-br from-orange-50 to-amber-100',
-        hover: 'hover:bg-orange-100',
-        text: 'text-orange-800',
-        dot: 'bg-orange-500',
-        button: 'bg-orange-700 hover:bg-orange-800'
-      };
-      case 'unit-6': return {
-        // Changed from rose to purple for Sequences
-        header: 'bg-purple-600',
-        title: 'text-purple-900',
-        bg: 'bg-gradient-to-br from-purple-50 to-fuchsia-100',
-        hover: 'hover:bg-purple-100',
-        text: 'text-purple-800',
-        dot: 'bg-purple-500',
-        button: 'bg-purple-700 hover:bg-purple-800'
-      };
-      case 'unit-7': return {
-        header: 'bg-violet-500',
-        title: 'text-violet-800',
-        bg: 'bg-violet-50',
-        hover: 'hover:bg-violet-100',
-        text: 'text-violet-800',
-        dot: 'bg-violet-400',
-        button: 'bg-violet-600 hover:bg-violet-700'
-      };
-      case 'unit-8': return {
-        header: 'bg-purple-500',
+        // Deep purple for Algebraic Fractions and Manipulation
+        header: 'bg-gradient-to-r from-purple-500 to-violet-600',
         title: 'text-purple-800',
-        bg: 'bg-purple-50',
+        bg: 'bg-gradient-to-br from-purple-50 to-violet-100',
         hover: 'hover:bg-purple-100',
         text: 'text-purple-800',
         dot: 'bg-purple-400',
         button: 'bg-purple-600 hover:bg-purple-700'
       };
+      case 'unit-5': return {
+        // Warm red-orange for Quadratic Equations and Functions
+        header: 'bg-gradient-to-r from-red-600 to-orange-500',
+        title: 'text-red-800',
+        bg: 'bg-gradient-to-br from-red-50 to-orange-100',
+        hover: 'hover:bg-red-100',
+        text: 'text-red-800',
+        dot: 'bg-red-400',
+        button: 'bg-red-600 hover:bg-red-700'
+      };
+      case 'unit-6': return {
+        // Vibrant pink-fuchsia for Sequences
+        header: 'bg-gradient-to-r from-fuchsia-600 to-pink-600',
+        title: 'text-fuchsia-800',
+        bg: 'bg-gradient-to-br from-fuchsia-50 to-pink-100',
+        hover: 'hover:bg-fuchsia-100',
+        text: 'text-fuchsia-800',
+        dot: 'bg-fuchsia-400',
+        button: 'bg-fuchsia-600 hover:bg-fuchsia-700'
+      };
+      case 'unit-7': return {
+        // Deep indigo-violet for Functions and Variation
+        header: 'bg-gradient-to-r from-indigo-600 to-violet-600',
+        title: 'text-indigo-800',
+        bg: 'bg-gradient-to-br from-indigo-50 to-violet-100',
+        hover: 'hover:bg-indigo-100',
+        text: 'text-indigo-800',
+        dot: 'bg-indigo-400',
+        button: 'bg-indigo-600 hover:bg-indigo-700'
+      };
+      case 'unit-8': return {
+        // Teal-cyan for Simultaneous Equations
+        header: 'bg-gradient-to-r from-teal-500 to-cyan-600',
+        title: 'text-teal-800',
+        bg: 'bg-gradient-to-br from-teal-50 to-cyan-100',
+        hover: 'hover:bg-teal-100',
+        text: 'text-teal-800',
+        dot: 'bg-teal-400',
+        button: 'bg-teal-600 hover:bg-teal-700'
+      };
       case 'unit-9': return {
-        // Changed from cyan to teal-green for Further Patterns
-        header: 'bg-green-600', 
-        title: 'text-green-900',
-        bg: 'bg-gradient-to-br from-green-50 to-emerald-100',
-        hover: 'hover:bg-green-100',
-        text: 'text-green-800',
-        dot: 'bg-green-500',
-        button: 'bg-green-700 hover:bg-green-800'
+        // Rich amber-yellow for Further Patterns
+        header: 'bg-gradient-to-r from-amber-500 to-yellow-500',
+        title: 'text-amber-800',
+        bg: 'bg-gradient-to-br from-amber-50 to-yellow-100',
+        hover: 'hover:bg-amber-100',
+        text: 'text-amber-800',
+        dot: 'bg-amber-400',
+        button: 'bg-amber-600 hover:bg-amber-700'
       };
       default: return {
-        header: 'bg-gray-500',
+        header: 'bg-gradient-to-r from-gray-500 to-slate-600',
         title: 'text-gray-800',
-        bg: 'bg-gray-50',
+        bg: 'bg-gradient-to-br from-gray-50 to-slate-100',
         hover: 'hover:bg-gray-100',
         text: 'text-gray-800',
         dot: 'bg-gray-400',
@@ -209,31 +221,42 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic, index }) => {
       initial="hidden"
       animate={controls}
       transition={{ duration: 0.5, delay: 0.1 * index }}
-      className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 relative h-auto border-t-4 ${colors.header}`}
+      className={`relative overflow-hidden shadow-md rounded-lg ${colors.bg} border border-gray-200`}
       whileHover={{
-        scale: 1.05,
+        y: -5,
         transition: { duration: 0.3 },
         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
       }}
     >
-      {/* Decorative icon */}
-      {topicIcon}
+      {/* Colored header bar */}
+      <div className={`h-2 ${colors.header} w-full`}></div>
       
-      {/* Topic card content */}
-      <div className={`p-6 relative z-10 ${colors.bg} ${backgroundPattern}`}>
-        <h2 className={`text-2xl font-bold mb-4 ${colors.title}`}>
+      <div className="p-6">
+        <h2 className={`text-xl font-semibold ${colors.title} mb-2`}>
           {topic.name}
         </h2>
-        
-        <p className="text-gray-700 mb-4">Explore all subtopics and resources.</p>
+        <p className="text-gray-600">
+          Explore all subtopics and resources.
+        </p>
         
         <Link
           to={`/topic/${topic.$id}`}
-          className={`inline-flex items-center px-6 py-2 rounded-lg text-white font-medium transition-colors ${colors.button}`}
+          className={`mt-4 inline-flex items-center px-4 py-2 ${colors.button} text-white text-sm rounded-lg transition-colors`}
         >
           Explore Topic
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+          <svg
+            className="w-4 h-4 ml-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
           </svg>
         </Link>
       </div>

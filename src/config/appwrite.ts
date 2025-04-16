@@ -3,7 +3,7 @@ import { Client, Databases, Storage, ID } from 'appwrite';
 // Environment validation
 const REQUIRED_ENV_VARS = {
     ENDPOINT: 'https://cloud.appwrite.io/v1',
-    PROJECT_ID: '67eff58c0026f452ff3d'
+    PROJECT_ID: '67fdd2a3002121dd60cd'
 } as const;
 
 // Type definitions

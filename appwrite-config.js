@@ -5,7 +5,7 @@ const client = new Client();
 
 client
     .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject('67eff58c0026f452ff3d'); // Você pode manter o mesmo projeto ou criar um novo
+    .setProject('67fdd2a3002121dd60cd'); // Você pode manter o mesmo projeto ou criar um novo
 
 // Initialize Appwrite storage
 const storage = new Storage(client);
