@@ -1,9 +1,13 @@
-[build]
-  command = "npm run build:netlify"
-  publish = "build"
-
-# Handle SPA routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+[build] 
+  command = "npm run build:netlify" 
+  publish = "dist" 
+ 
+# Define a versão do Node.js
+[build.environment]
+  NODE_VERSION = "18.17.1"
+ 
+# Handle SPA routing 
+[[redirects]] 
+  from = "/*" 
+  to = "/index.html" 
+  status = 200 
