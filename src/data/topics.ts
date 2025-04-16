@@ -30,12 +30,12 @@ const topics: Topic[] = [
         $updatedAt: new Date().toISOString(),
         $permissions: [],
         subtopics: [
-            { $id: 'cg-1', name: 'Distance between two points', slug: 'distance-between-points', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
+            { $id: 'cg-1', name: 'Distance between two points', slug: 'distance-formula', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
             { $id: 'cg-2', name: 'Midpoints', slug: 'midpoints', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
-            { $id: 'cg-3', name: 'Gradient', slug: 'gradient', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
+            { $id: 'cg-3', name: 'Gradient', slug: 'gradient-slope', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
             { $id: 'cg-4', name: 'Parallel and perpendicular lines', slug: 'parallel-perpendicular-lines', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
             { $id: 'cg-5', name: 'Perpendicular bisector', slug: 'perpendicular-bisector', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
-            { $id: 'cg-6', name: 'Length of a line', slug: 'length-of-a-line', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
+            { $id: 'cg-6', name: 'Length of a line', slug: 'length-of-line', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
             { $id: 'cg-7', name: 'Linear functions y = mx + c', slug: 'linear-functions', topicId: 'unit-1', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] }
         ]
     },
@@ -87,7 +87,7 @@ const topics: Topic[] = [
         subtopics: [
             { $id: 'af-1', name: 'Simplification of algebraic fractions using factorisation', slug: 'algebraic-fractions-simplification', topicId: 'unit-4', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
             { $id: 'af-2', name: 'Addition or subtraction of fractions with linear denominators or single term', slug: 'algebraic-fractions-addition', topicId: 'unit-4', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
-            { $id: 'af-3', name: 'Multiplication or division and simplification of algebraic fractions', slug: 'algebraic-fractions-multiplication', topicId: 'unit-4', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] }
+            { $id: 'af-3', name: 'Multiplication or division and simplification of algebraic fractions', slug: 'algebraic-fractions-multiplication', topicId: 'unit-4', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },{ $id: 'af-4', name: 'Equations involving algebraic fractions', slug: 'algebraic-fractions-equations', topicId: 'unit-4', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] }
             // Optional subtopic can be added if needed
         ]
     },
@@ -154,9 +154,9 @@ const topics: Topic[] = [
         $updatedAt: new Date().toISOString(),
         $permissions: [],
         subtopics: [
-            { $id: 'se-1', name: 'Graphical method', slug: 'graphical-method', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
-            { $id: 'se-2', name: 'Substitution method', slug: 'substitution-method', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
-            { $id: 'se-3', name: 'Elimination method', slug: 'elimination-method', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] }
+            { $id: 'se-1', name: 'Graphical method', slug: 'simultaneous-equations-graphical', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
+            { $id: 'se-2', name: 'Substitution method', slug: 'simultaneous-equations-substitution', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] },
+            { $id: 'se-3', name: 'Elimination method', slug: 'simultaneous-equations-elimination', topicId: 'unit-8', $collectionId: 'subtopics', $databaseId: 'database', $createdAt: new Date().toISOString(), $updatedAt: new Date().toISOString(), $permissions: [] }
         ]
     }
 ];

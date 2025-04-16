@@ -25,6 +25,21 @@ export interface CurriculumResourcesType {
 
 export const curriculumResources: CurriculumResourcesType = {
   'unit-1': {
+    'midpoints': {
+      videos: [
+        { title: "Midpoint of a Line", url: "https://www.youtube.com/embed/LqEYBytlhek", source: "Corbettmaths", type: "video" }
+      ],
+      exercises: [
+        { title: "Midpoints Worksheet", url: "https://www.maths4everyone.com/resources/downloads/midpoints-40029.pdf", source: "Maths4Everyone", type: "pdf" },
+        { title: "Midpoint Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2019/04/Midpoint-of-a-Line.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Midpoint of a Line Practice & Answers", url: "https://corbettmaths.com/wp-content/uploads/2019/04/Midpoint-of-a-Line.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Khan Academy – Midpoint Formula Interactive", url: "https://www.khanacademy.org/math/geometry/hs-geo-analytic-geometry/hs-geo-distance-and-midpoints/e/midpoint_formula", source: "Khan Academy", type: "external" }
+      ]
+    },
     'natural-numbers': {
       videos: [
         // Removed broken videos
@@ -149,6 +164,47 @@ export const curriculumResources: CurriculumResourcesType = {
       solutions: [],
       otherResources: []
     },
+    'gradient-slope': {
+      videos: [
+        { title: "Gradient of a Line", url: "https://www.youtube.com/embed/YtHJP1rZ3pI", source: "Corbettmaths", type: "video" }
+      ],
+      exercises: [
+        { title: "Gradient Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2019/09/Gradient-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Gradient Answers", url: "https://corbettmaths.com/wp-content/uploads/2019/09/Gradient-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "GeoGebra Graphing Calculator", url: "https://www.geogebra.org/graphing", source: "GeoGebra", type: "external" }
+      ]
+    },
+    'length-of-line': {
+      videos: [
+        { title: "Distance Formula", url: "https://www.youtube.com/embed/nyZuite17Pc", source: "Khan Academy", type: "video" }
+      ],
+      exercises: [
+        { title: "Midpoints and Lengths of Lines Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_cea2b0712ca24097a035a428f4d93233.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
+      solutions: [],
+      otherResources: []
+    },
+    'linear-functions': {
+      videos: [
+        { title: "Intro to Linear Functions", url: "https://www.youtube.com/embed/MXV65i9g1Xg", source: "Khan Academy", type: "video" },
+        { title: "Gradient and Y-Intercept", url: "https://www.youtube.com/embed/HdlnBX82jxI", source: "Corbettmaths", type: "video" },
+        { title: "Graphing Linear Equations", url: "https://www.youtube.com/embed/2UrcUfBizyw", source: "Khan Academy", type: "video" }
+      ],
+      exercises: [
+        { title: "Straight Line Graphs", url: "https://www.mathsgenie.co.uk/resources/16-graphs.pdf", source: "Maths Genie", type: "pdf" },
+        { title: "Equation of a Line Practice", url: "https://corbettmaths.com/wp-content/uploads/2019/08/Equation-of-a-Line.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Equation of a Line Answers", url: "https://corbettmaths.com/wp-content/uploads/2025/02/Equation-of-a-Line-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Desmos – Line Visualizer", url: "https://www.desmos.com/calculator", source: "Desmos", type: "external" }
+      ]
+    },
     'distance-formula': {
       videos: [
         { title: "Distance Between Two Points", url: "https://www.youtube.com/embed/q8Qm0Xbqre4", source: "Corbettmaths", type: "video" },
@@ -189,66 +245,31 @@ export const curriculumResources: CurriculumResourcesType = {
     }
   },
   'unit-2': {
-    'exponents-indices': {
-      videos: [],
-      exercises: [
-        { title: "Indices Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/indices-pdf.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Indices Questions", url: "https://www.mathsgenie.co.uk/resources/4-indices.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Fractional and Negative Indices", url: "https://www.mathsgenie.co.uk/resources/6-fractional-and-negative-indices.pdf", source: "Maths Genie", type: "pdf" }
-      ],
-      solutions: [],
-      otherResources: []
-    },
-    'expansion-brackets': {
-      videos: [],
-      exercises: [
-        { title: "Expanding Single Brackets", url: "https://corbettmaths.com/wp-content/uploads/2013/02/expanding-brackets-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Expanding and Factorising", url: "https://www.mathsgenie.co.uk/resources/4-expanding-and-factorising.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Expanding Triple Brackets", url: "https://www.mathsgenie.co.uk/resources/6-expanding-triple-brackets.pdf", source: "Maths Genie", type: "pdf" }
-      ],
-      solutions: [],
-      otherResources: []
-    },
-    'factorisation': {
-      videos: [],
-      exercises: [
-        { title: "Factorising Quadratics", url: "https://corbettmaths.com/wp-content/uploads/2013/02/factorising-quadratics-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Difference of Two Squares", url: "https://corbettmaths.com/wp-content/uploads/2013/02/difference-between-two-squares-pdf.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Expanding and Factorising Quadratics", url: "https://www.mathsgenie.co.uk/resources/5-expanding-and-factorising-quadratics.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Factorising Harder Quadratics", url: "https://www.mathsgenie.co.uk/resources/7-factorising-harder-quadratics.pdf", source: "Maths Genie", type: "pdf" }
-      ],
-      solutions: [],
-      otherResources: []
-    },
     'basic-angle-relationships': {
       videos: [
-        { title: "Angles at a Point & Straight Line", url: "https://www.youtube.com/watch?v=mdAwUsf0k1s", source: "Corbettmaths", type: "video" },
-        { title: "Vertical Angles", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-geometry/cc-7th-angles/v/complementary-and-supplementary-angles", source: "Khan Academy", type: "video" }
+        { title: "Angles at a Point & Straight Line", url: "https://www.youtube.com/embed/mdAwUsf0k1s", source: "Corbettmaths", type: "video" },
+        { title: "Vertical Angles", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Khan Academy", type: "video" }
       ],
       exercises: [
         { title: "Angles Around a Point / Straight Line Worksheets", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles Around a Point Worksheet Pack", url: "https://www.tes.com/teaching-resources/shop/Maths4Everyone?sortBy=newest&p=4", source: "Maths4Everyone", type: "pdf" },
-        { title: "Missing Angles Practice Questions", url: "https://corbettmaths.com/2019/08/22/missing-angles-practice-questions/", source: "Corbettmaths", type: "pdf" }
+        { title: "Missing Angles Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2019/09/Missing-Angles.pdf", source: "Corbettmaths", type: "pdf" }
       ],
       solutions: [
-        { title: "Angles Around a Point / Straight Line Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles Around a Point Worksheet Answers", url: "https://www.tes.com/teaching-resources/shop/Maths4Everyone?sortBy=newest&p=4", source: "Maths4Everyone", type: "pdf" }
+        { title: "Angles Around a Point / Straight Line Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" }
       ],
       otherResources: []
     },
     'parallel-line-angles': {
       videos: [
-        { title: "Angles Formed by Parallel Lines & Transversals", url: "https://www.khanacademy.org/math/9th-grade-matatag/x6b946bfca15ae3f5:unit-1/x6b946bfca15ae3f5:parallel-and-perpendicular-lines/v/angles-formed-by-parallel-lines-and-transversals", source: "Khan Academy", type: "video" },
-        { title: "Angles (Everything You Need to Know)", url: "https://www.youtube.com/watch?v=VXDn5rwS7-0", source: "OnMaths", type: "video" }
+        { title: "Angles Formed by Parallel Lines & Transversals", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Khan Academy", type: "video" },
+        { title: "Angles (Everything You Need to Know)", url: "https://www.youtube.com/embed/VXDn5rwS7-0", source: "OnMaths", type: "video" }
       ],
       exercises: [
         { title: "Angles in Parallel Lines Worksheet", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles in Parallel Lines Exam Questions", url: "https://www.mathsgenie.co.uk/resources/33_angles-parallel-linesans.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Angles in Parallel Lines Revision Notes", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/geometry/angles-in-polygons-and-parallel-lines/angles-in-parallel-lines/", source: "Save My Exams", type: "pdf" }
+        { title: "Angles in Parallel Lines Exam Questions", url: "https://www.mathsgenie.co.uk/resources/33_angles-parallel-linesans.pdf", source: "Maths Genie", type: "pdf" }
       ],
       solutions: [
-        { title: "Angles in Parallel Lines Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles in Parallel Lines Mark Scheme", url: "https://www.mathsgenie.co.uk/angles-parallel.html", source: "Maths Genie", type: "pdf" }
+        { title: "Angles in Parallel Lines Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" }
       ],
       otherResources: [
         { title: "Transum Angles in Parallel Lines Interactive Exercise", url: "https://www.transum.org/software/SW/Starter_of_the_day/Students/Angles_Parallel.asp", source: "Transum", type: "external" }
@@ -256,18 +277,16 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'angle-sums': {
       videos: [
-        { title: "Angles in Polygons", url: "https://www.youtube.com/watch?v=aDjalmyUXTc", source: "Maths Genie", type: "video" }
+        { title: "Angles in Polygons", url: "https://www.youtube.com/embed/aDjalmyUXTc", source: "Maths Genie", type: "video" }
       ],
       exercises: [
         { title: "Angles in Triangles & Quadrilaterals Worksheets", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
         { title: "Angles in Irregular Polygons Worksheet", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles in Polygons Practice Questions", url: "https://corbettmaths.com/2018/04/04/angles-in-polygons-2/", source: "Corbettmaths", type: "pdf" },
-        { title: "Angles in Polygons Revision Notes", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/geometry/angles-in-polygons-and-parallel-lines/angles-in-polygons/", source: "Save My Exams", type: "pdf" }
+        { title: "Angles in Polygons Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2019/09/Angles-in-Polygons.pdf", source: "Corbettmaths", type: "pdf" }
       ],
       solutions: [
         { title: "Angles in Triangles & Quadrilaterals Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles in Irregular Polygons Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Angles in Polygons Answers", url: "https://corbettmaths.com/2018/04/04/angles-in-polygons-2/", source: "Corbettmaths", type: "pdf" }
+        { title: "Angles in Irregular Polygons Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" }
       ],
       otherResources: [
         { title: "GeoGebra Polygon Angle Sum Explorer", url: "https://www.geogebra.org/m/qMdj8Std", source: "GeoGebra", type: "external" }
@@ -275,16 +294,14 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'polygon-angles': {
       videos: [
-        { title: "Interior and Exterior Angles", url: "https://corbettmaths.com/2012/08/10/angles-in-polygons/", source: "Corbettmaths", type: "video" }
+        { title: "Interior and Exterior Angles", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
         { title: "Interior & Exterior Angles Activity", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Regular Polygons Exam Questions", url: "https://www.mathsgenie.co.uk/resources/33_angles-parallel-linesans.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Regular Polygons Revision Notes", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/geometry/angles-in-polygons-and-parallel-lines/angles-in-polygons/", source: "Save My Exams", type: "pdf" }
+        { title: "Regular Polygons Exam Questions", url: "https://www.mathsgenie.co.uk/resources/33_angles-parallel-linesans.pdf", source: "Maths Genie", type: "pdf" }
       ],
       solutions: [
-        { title: "Interior & Exterior Angles Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" },
-        { title: "Regular Polygons Mark Scheme", url: "https://www.mathsgenie.co.uk/angles-parallel.html", source: "Maths Genie", type: "pdf" }
+        { title: "Interior & Exterior Angles Answers", url: "https://www.draustinmaths.com/angles-and-polygons", source: "Dr Austin Maths", type: "pdf" }
       ],
       otherResources: [
         { title: "Visnos Polygon Explorer", url: "https://www.visnos.com/demos/polygon-explorer", source: "Visnos", type: "external" },
@@ -293,8 +310,8 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'angle-vocabulary': {
       videos: [
-        { title: "Types of Angles", url: "https://corbettmaths.com/contents/#Angles:%20types%20of%C2%A0%C2%A0%20Video%2038%C2%A0", source: "Corbettmaths", type: "video" },
-        { title: "Complementary & Supplementary Angles", url: "https://www.khanacademy.org/math/cc-seventh-grade-math/cc-7th-geometry/cc-7th-angles/v/complementary-and-supplementary-angles", source: "Khan Academy", type: "video" }
+        { title: "Types of Angles", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Corbettmaths", type: "video" },
+        { title: "Complementary & Supplementary Angles", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Khan Academy", type: "video" }
       ],
       exercises: [
         { title: "Angle Vocabulary Study Guide", url: "https://www.bbc.co.uk/bitesize/topics/zb6tyrd", source: "BBC Bitesize", type: "external" },
@@ -308,57 +325,27 @@ export const curriculumResources: CurriculumResourcesType = {
     }
   },
   'unit-3': {
-    'units-measurement': {
-      videos: [],
-      exercises: [
-        { title: "Metric Units Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/metric-units-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        // Removed broken links
-        { title: "Conversions and Units", url: "https://www.mathsgenie.co.uk/resources/3-conversions-and-units.pdf", source: "Maths Genie", type: "pdf" },
-        // Removed broken links
-        { title: "Metric Units", url: "https://corbettmaths.com/wp-content/uploads/2020/05/Metric-Units.pdf", source: "Corbettmaths", type: "pdf" }
+    'pythagoras-theorem': {
+      videos: [
+        { title: "Pythagoras' Theorem", url: "https://www.youtube.com/embed/-BGkrzwbjLI", source: "Maths Genie", type: "video" },
+        { title: "Introduction to the Pythagorean Theorem", url: "https://www.youtube.com/embed/AA6RfgP-AHU", source: "Khan Academy", type: "video" }
       ],
-      solutions: [],
-      otherResources: []
-    },
-    'perimeter-area': {
-      videos: [],
       exercises: [
-        { title: "Perimeter Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/perimeter-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Area of Rectangle", url: "https://corbettmaths.com/wp-content/uploads/2013/02/area-of-a-rectangle-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        // Removed broken links
-        { title: "Area of Parallelogram", url: "https://corbettmaths.com/wp-content/uploads/2013/02/area-of-a-parallelogram-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        // Removed broken links
-        { title: "Area of Compound Shapes", url: "https://corbettmaths.com/wp-content/uploads/2013/02/area-of-compound-shapes-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        { title: "Area and Perimeter", url: "https://www.mathsgenie.co.uk/resources/2-area-and-perimeter.pdf", source: "Maths Genie", type: "pdf" },
-        { title: "Area of Compound Shapes", url: "https://www.mathsgenie.co.uk/resources/37_area-of-compound-shapes.pdf", source: "Maths Genie", type: "pdf" },
-        // Removed broken links
-        { title: "Area and Perimeter Practice", url: "https://www.maths4everyone.com/resources/downloads/area-and-perimeter-gcse-9-1-practice-questions-30272.pdf", source: "Maths4Everyone", type: "pdf" }
+        { title: "Pythagoras Worksheet", url: "https://www.mathsgenie.co.uk/resources/5-pythagoras.pdf", source: "Maths Genie", type: "pdf" },
+        { title: "Pythagoras' Theorem Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/pythagoras-pdf1.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      solutions: [],
-      otherResources: []
-    },
-    'circle-vocabulary': {
-      videos: [],
-      exercises: [],
-      solutions: [],
-      otherResources: []
-    },
-    'circle-calculations': {
-      videos: [],
-      exercises: [],
-      solutions: [],
-      otherResources: []
-    },
-    'arc-sector': {
-      videos: [],
-      exercises: [],
-      solutions: [],
-      otherResources: []
+      solutions: [
+        { title: "Pythagoras Answers", url: "https://www.mathsgenie.co.uk/resources/5-pythagorasans.pdf", source: "Maths Genie", type: "pdf" },
+        { title: "Pythagoras' Theorem Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2019/02/Answer-Pythagoras.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Pythagorean Theorem Practice", url: "https://www.khanacademy.org/math/cc-eighth-grade-math/cc-8th-geometry/cc-8th-pythagorean-theorem/e/pythagorean_theorem_1", source: "Khan Academy", type: "external" }
+      ]
     },
     'bearings': {
       videos: [
-        { title: "Bearings (GCSE Maths)", url: "https://www.youtube.com/watch?v=rsFBdL3gRBU", source: "Maths Genie", type: "video" },
-        { title: "Bearings Explained", url: "https://www.youtube.com/watch?v=O_vt9yctoZY", source: "Corbettmaths", type: "video" }
+        { title: "Bearings (GCSE Maths)", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "Maths Genie", type: "video" },
+        { title: "Bearings Explained", url: "https://www.youtube.com/embed/O_vt9yctoZY", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
         { title: "Bearings Worksheet", url: "https://www.mathsgenie.co.uk/resources/5-bearings.pdf", source: "Maths Genie", type: "pdf" },
@@ -371,6 +358,40 @@ export const curriculumResources: CurriculumResourcesType = {
       otherResources: [
         { title: "Bearings Exam", url: "https://www.onmaths.com/resource/bearings/", source: "OnMaths", type: "external" },
         { title: "Bearings Interactive Guide", url: "https://www.bbc.co.uk/bitesize/guides/zshqfcw/revision/1", source: "BBC Bitesize", type: "external" }
+      ]
+    },
+    'chord-properties': {
+      videos: [
+        { title: "Circle Theorem – Perpendicular from Centre", url: "https://www.youtube.com/embed/YftaFVn7kK4", source: "Wyzant", type: "video" },
+        { title: "Circle Chord Theorems", url: "https://www.youtube.com/embed/xdK2CyXGlBg", source: "Third Space Learning", type: "video" }
+      ],
+      exercises: [
+        { title: "Perpendicular from Centre to a Chord", url: "https://www.draustinmaths.com/_files/ugd/7ac124_649cf513c0e5405683f709c3b013e49e.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Circle Theorems Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/circle-theorems-1-pdf.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Perpendicular from Centre Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_649cf513c0e5405683f709c3b013e49e.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Circle Theorems Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2018/09/Circle-Theorems-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Chords & Centre Distance Revision", url: "https://www.savemyexams.com/igcse/maths/cambridge-cie/international-maths-extended/revision-notes/geometry/circle-theorems/theorems-with-chords--tangents/", source: "Save My Exams", type: "pdf" },
+        { title: "Circle Geometry Interactive", url: "https://www.geogebra.org/m/umMnKPjq", source: "GeoGebra", type: "external" }
+      ]
+    },
+    'circle-distances': {
+      videos: [
+        { title: "Distance Between Two Points", url: "https://www.youtube.com/embed/q8Qm0Xbqre4", source: "Corbettmaths", type: "video" },
+        { title: "Distance Formula", url: "https://www.youtube.com/embed/nyZuite17Pc", source: "Khan Academy", type: "video" }
+      ],
+      exercises: [
+        { title: "Distance Between 2 Points Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Distance-between-2-points-pdf.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Circle Geometry Problems", url: "https://www.savemyexams.com/igcse/maths/cambridge-cie/international-maths-extended/revision-notes/geometry/circle-theorems/circle-properties/", source: "Save My Exams", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Distance Worksheet Answers", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Answer-Distance-between-two-points.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Distance Between Points Exercise", url: "https://www.khanacademy.org/math/geometry/hs-geo-analytic-geometry/hs-geo-distance-and-midpoints/e/distance_formula", source: "Khan Academy", type: "external" }
       ]
     },
     'pythagoras-theorem': {
@@ -955,6 +976,49 @@ export const curriculumResources: CurriculumResourcesType = {
       videos: [],
       exercises: [],
       solutions: [],
+      otherResources: []
+    }
+  },
+  'unit-8': {
+    'simultaneous-equations-graphical': {
+      videos: [
+        { title: "Solving Simultaneous Equations Graphically", url: "https://www.youtube.com/embed/9hryH94KFJA", source: "Corbettmaths", type: "video" },
+        { title: "Systems of Equations with Graphing", url: "https://www.youtube.com/embed/nok99JOhcjo", source: "Khan Academy", type: "video" }
+      ],
+      exercises: [
+        { title: "Solving Simultaneous Equations Graphically Worksheet", url: "https://www.mathsgenie.co.uk/resources/5-simultaneous-equations.pdf", source: "Maths Genie", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Graphical Simultaneous Equations Model Solutions", url: "https://www.mathsgenie.co.uk/resources/5-simultaneous-equationsans.pdf", source: "Maths Genie", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Interactive Graphing Tool for Simultaneous Equations", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:systems-of-equations/x2f8bb11595b61c86:solving-systems-with-graphing/e/graphing_systems_of_equations", source: "Khan Academy", type: "external" }
+      ]
+    },
+    'simultaneous-equations-substitution': {
+      videos: [
+        { title: "Simultaneous Equations using Substitution", url: "https://www.youtube.com/embed/phlus4x0UqM", source: "Corbettmaths", type: "video" },
+        { title: "Simultaneous Equations by Substitution", url: "https://www.youtube.com/embed/0waEImwwz7A", source: "FuseSchool", type: "video" }
+      ],
+      exercises: [
+        { title: "Solving Simultaneous Equations by Substitution Practice Strips", url: "https://www.draustinmaths.com/_files/ugd/7ac124_cea2b0712ca24097a035a428f4d93233.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Substitution Method Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_279f05f5f79c45059658b741c52f30d7.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
+      otherResources: []
+    },
+    'simultaneous-equations-elimination': {
+      videos: [
+        { title: "Simultaneous Equations (Elimination Method)", url: "https://www.youtube.com/embed/z_rNIy_bWCU", source: "Corbettmaths", type: "video" },
+        { title: "Solving Systems of Equations by Elimination", url: "https://www.youtube.com/embed/i7idZfS8t8w", source: "Khan Academy", type: "video" }
+      ],
+      exercises: [
+        { title: "Simultaneous Equations (Elimination Practice)", url: "https://www.draustinmaths.com/_files/ugd/7ac124_1e4f9811d2b3468abfe7b4375336b4e9.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Elimination Practice Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_ff7487c8484c45fb9c9bbb7f7c837be1.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
       otherResources: []
     }
   }
