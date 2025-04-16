@@ -54,9 +54,6 @@
     "typescript": "4.9.5",
     "vite": "4.4.9"
   },
-  "overrides": {
-    "postcss": "8.4.31"
-  },
   "engines": {
     "node": "18.17.1",
     "npm": "9.6.7"
