@@ -222,59 +222,64 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'basic-angle-relationships': {
       videos: [
-        { title: "Angles at a point, on straight lines", url: "https://www.youtube.com/embed/DGKwdHMiqCg", source: "Khan Academy", type: "video" },
-        // Removed broken videos
-        { title: "Angles on Parallel Lines", url: "https://www.youtube.com/embed/6oJ3QqbL7Yc", source: "Math Antics", type: "video" },
-        { title: "Angles In Parallel Lines", url: "https://www.youtube.com/embed/WI_U1X-jPHg", source: "FuseSchool", type: "video" },
-        { title: "Alternate, Corresponding and Allied Angles", url: "https://www.youtube.com/embed/I5auyoXYoX0", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Angles on a Point and Straight Line (Basics)", url: "https://www.youtube.com/embed/ENgIMmLbk8k", source: "GCSE Maths", type: "video" },
-        { title: "Angle Basics (acute, obtuse, etc.)", url: "https://www.youtube.com/embed/DGKwdHMiqCg", source: "Math Antics", type: "video" }
+        { title: "Angles at the Intersection of Two Lines", url: "https://www.youtube.com/embed/nuPgmrpGdXQ", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Missing Angles Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2024/01/Missing-Angles.pdf", source: "Corbettmaths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Missing Angles Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2024/01/missing-angles-answers.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      otherResources: [
-        // Removed broken links
-      ]
+      otherResources: []
     },
     'parallel-line-angles': {
       videos: [
-        // New videos from provided list
-        { title: "Alternate, Corresponding and Allied Angles", url: "https://www.youtube.com/embed/I5auyoXYoX0", source: "Cognito", type: "video" }
+        { title: "Angles, Parallel Lines & Transversals", url: "https://www.youtube.com/embed/fuBUbiDJuuY", source: "Khan Academy", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
-      otherResources: []
+      exercises: [
+        { title: "Angles in Parallel Lines Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2024/02/Angles-Parallel-Lines.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Angles in Parallel Lines Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2024/02/Angles-Parallel-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Interactive Parallel Lines Diagram", url: "https://www.geogebra.org/m/BAymZ5AG", source: "GeoGebra", type: "external" }
+      ]
     },
     'angle-sums': {
       videos: [
-        // New videos from provided list
-        { title: "Angles in Polygons (Interior Angle Sum)", url: "https://www.youtube.com/embed/gVo8ZrtlSp0", source: "Corbettmaths", type: "video" }
+        { title: "Sum of Interior Angles of a Polygon", url: "https://www.youtube.com/embed/u8aQG2xIZgM", source: "Khan Academy", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
+      exercises: [
+        { title: "Angles in Polygons Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2023/09/Angles-Polygons.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Angles in Polygons Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2023/09/Angles-Polygons-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
       otherResources: []
     },
     'polygon-angles': {
       videos: [
-        // New videos from provided list
-        { title: "Angles in Polygons (Interior & Exterior)", url: "https://www.youtube.com/embed/UUedd_gHnh8", source: "SaveMyExams", type: "video" }
+        { title: "Angles in Polygons (Interior & Exterior)", url: "https://www.youtube.com/embed/gVo8ZrtlSp0", source: "Corbettmaths", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
+      exercises: [
+        { title: "Angles in Polygons Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2023/09/Angles-Polygons.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Angles in Polygons Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2023/09/Angles-Polygons-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
       otherResources: []
     },
     'angle-vocabulary': {
       videos: [
-        // New videos from provided list
-        { title: "Angle Basics (acute, obtuse, etc.)", url: "https://www.youtube.com/embed/DGKwdHMiqCg", source: "Math Antics", type: "video" }
+        { title: "Types of Angles", url: "https://www.youtube.com/embed/PHA3BC9o2q0", source: "Corbettmaths", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
+      exercises: [
+        { title: "Types of Angle Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2018/09/Types-of-Angle-pdf.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Types of Angle Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2018/09/Types-of-Angle-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
       otherResources: []
     }
   },
@@ -328,50 +333,67 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'bearings': {
       videos: [
-        // New videos from provided list
-        { title: "What are Bearings?", url: "https://www.youtube.com/embed/GdKgyXYlNO8", source: "GCSE Maths", type: "video" },
-        { title: "Bearings Introduction", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "HEGARTYMATHS", type: "video" }
+        { title: "Introduction to Bearings", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "HEGARTYMATHS", type: "video" },
+        { title: "Bearings Tutorial", url: "https://www.youtube.com/embed/O_vt9yctoZY", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
         { title: "Bearings Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/bearings-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        // Removed broken links
+        { title: "Bearings Practice Grid", url: "https://www.draustinmaths.com/_files/ugd/7ac124_6b36747ebfb743e0a8f51cdc8d35da44.docx", source: "Dr Austin Maths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Bearings Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2018/11/Bearings-Answers.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      otherResources: []
+      otherResources: [
+        { title: "Bearings Interactive Guide", url: "https://www.bbc.co.uk/bitesize/guides/zshqfcw/revision/1", source: "BBC Bitesize", type: "external" }
+      ]
     },
     'pythagoras-theorem': {
       videos: [
-        // New videos from provided list
-        { title: "Pythagoras' Theorem and How to Use It", url: "https://www.youtube.com/embed/CnHgqfBSgco", source: "GCSE Maths", type: "video" }
+        { title: "Pythagoras' Theorem", url: "https://www.youtube.com/embed/CnHgqfBSgco", source: "GCSE Maths", type: "video" },
+        { title: "Pythagorean Theorem Introduction", url: "https://www.youtube.com/embed/AA6RfgP-AHU", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        { title: "Pythagoras Theorem Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/pythagoras-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
-        // Removed broken links
+        { title: "Pythagoras' Theorem Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/pythagoras-pdf1.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Pythagoras' Theorem Practice", url: "https://www.onmaths.com/assets/pythagorean.pdf", source: "Onmaths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Pythagoras' Theorem Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2019/02/Answer-Pythagoras.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      otherResources: []
+      otherResources: [
+        { title: "Pythagorean Theorem Interactive Practice", url: "https://www.khanacademy.org/math/cc-eighth-grade-math/cc-8th-geometry/cc-8th-pythagorean-theorem/e/pythagorean_theorem_1", source: "Khan Academy", type: "external" }
+      ]
     },
     'chord-properties': {
       videos: [
-        // New videos from provided list
-        { title: "Finding a Chord's Length from Radius and Distance to Center", url: "https://www.youtube.com/embed/YftaFVn7kK4", source: "Wyzant", type: "video" }
+        { title: "Chord Length and Distance to Centre", url: "https://www.youtube.com/embed/YftaFVn7kK4", source: "Wyzant", type: "video" },
+        { title: "Circle Theorems - Chords", url: "https://www.youtube.com/embed/xdK2CyXGlBg", source: "Corbettmaths", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
-      otherResources: []
+      exercises: [
+        { title: "Circle Theorems Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/circle-theorems-1-pdf.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Chords & Tangents Problems", url: "https://www.savemyexams.com/igcse/maths/cambridge-cie/international-maths-extended/revision-notes/geometry/circle-theorems/theorems-with-chords--tangents/", source: "Save My Exams", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Circle Theorems Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2018/09/Circle-Theorems-Answers.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Circle Geometry Interactive", url: "https://www.geogebra.org/m/umMnKPjq", source: "GeoGebra", type: "external" }
+      ]
     },
     'circle-distances': {
       videos: [
-        // New videos from provided list
-        { title: "Distance Between Two Points in Circle Geometry", url: "https://www.youtube.com/embed/rsFBdL3gRBU", source: "HEGARTYMATHS", type: "video" }
+        { title: "Distance Between Points in Circle Geometry", url: "https://www.youtube.com/embed/q8Qm0Xbqre4", source: "Corbettmaths", type: "video" },
+        { title: "Distance Formula in Coordinate Geometry", url: "https://www.youtube.com/embed/z9cQBZ8Kpz4", source: "Khan Academy", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
-      otherResources: []
+      exercises: [
+        { title: "Distance Between Two Points", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Distance-between-2-points-pdf.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Circle Geometry Problems", url: "https://www.savemyexams.com/igcse/maths/cambridge-cie/international-maths-extended/revision-notes/geometry/circle-theorems/circle-properties/", source: "Save My Exams", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Distance Between Two Points Mark Scheme", url: "https://corbettmaths.com/wp-content/uploads/2019/01/Answer-Distance-between-two-points.pdf", source: "Corbettmaths", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Distance Formula Interactive Practice", url: "https://www.khanacademy.org/math/geometry/hs-geo-analytic-geometry/hs-geo-distance-and-midpoints/e/distance_formula", source: "Khan Academy", type: "external" }
+      ]
     }
   },
   'unit-4': {
@@ -403,39 +425,67 @@ export const curriculumResources: CurriculumResourcesType = {
     },
     'algebraic-fractions-simplification': {
       videos: [
-        // New videos from provided list
-        { title: "Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/tlKN8NNNxdI", source: "Corbettmaths", type: "video" }
+        { title: "Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/tlKN8NNNxdI", source: "Corbettmaths", type: "video" },
+        { title: "Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/gMojR-U4NDQ", source: "Maths Genie", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Simplifying Algebraic Fractions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_c6ab4dd8b40747e2b1307a44ad3f7f03.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Algebraic Fractions Practice Questions", url: "https://justmaths.co.uk/wp-content/uploads/2015/12/Algebra-H-Algebraic-Fractions-v2.pdf", source: "JustMaths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Algebraic Fractions Solutions", url: "https://justmaths.co.uk/wp-content/uploads/2015/12/Algebra-H-Algebraic-Fractions-v2-SOLUTIONS-1-1.pdf", source: "JustMaths", type: "pdf" },
+        { title: "Simplifying Algebraic Fractions Guide", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/algebraic-fractions/simplifying/", source: "SaveMyExams", type: "pdf" }
       ],
-      otherResources: []
+      otherResources: [
+        { title: "Interactive Algebraic Fractions", url: "https://www.westiesworkshop.com/course-support/algebra/algebraic-fractions/", source: "Westie's Workshop", type: "external" }
+      ]
     },
     'algebraic-fractions-addition': {
       videos: [
-        // New videos from provided list
-        { title: "Adding & Subtracting Algebraic Fractions", url: "https://www.youtube.com/embed/w3JewxYjiNs", source: "Corbettmaths", type: "video" }
+        { title: "Adding & Subtracting Algebraic Fractions", url: "https://www.youtube.com/embed/w3JewxYjiNs", source: "Corbettmaths", type: "video" },
+        { title: "Algebraic Fractions - Addition and Subtraction", url: "https://www.youtube.com/embed/khZnlxI6MSw", source: "Maths Genie", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Adding & Subtracting Algebraic Fractions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_eace8abe85a14cb78c24e97df3a9e36e.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Practice Strips - Adding & Subtracting", url: "https://www.draustinmaths.com/_files/ugd/7ac124_33fa4edcfbe14a3ca5c0a95ed54a25b5.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
-      solutions: [],
-      otherResources: []
+      solutions: [
+        { title: "Algebraic Fractions Practice Solutions", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/algebraic-fractions/solving-algebraic-fractions/", source: "SaveMyExams", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "MME Interactive Learning", url: "https://mmerevise.co.uk/a-level-maths-revision/algebraic-fractions/", source: "MME Revise", type: "external" }
+      ]
     },
     'algebraic-fractions-multiplication': {
       videos: [
-        // New videos from provided list
-        { title: "Multiplying & Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/YL-13QneHrY", source: "GCSE Tutorial", type: "video" }
+        { title: "Multiplying & Simplifying Algebraic Fractions", url: "https://www.youtube.com/embed/YL-13QneHrY", source: "GCSE Tutorial", type: "video" },
+        { title: "Multiplying & Dividing Algebraic Fractions", url: "https://www.youtube.com/embed/0waEImwwz7A", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Multiplying Algebraic Fractions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_e0b3be394a7146d68a7e0f9a1cd8ac30.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Dividing Algebraic Fractions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_bac69254bb7d465eb65eb93d99e7d6d1.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
-      solutions: [],
+      solutions: [
+        { title: "Multiplying & Dividing Solutions", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/algebraic-fractions/solving-algebraic-fractions/", source: "SaveMyExams", type: "pdf" }
+      ],
       otherResources: [
-        // Removed broken links
+        { title: "Complete Algebraic Fractions Resources", url: "https://sites.google.com/online.island.edu.hk/maths/igcse/unit-5-algebra-2-quadratics/algebraic-fractions", source: "IS Mathematics", type: "external" }
+      ]
+    },
+    'algebraic-fractions-equations': {
+      videos: [
+        { title: "Solving Equations with Algebraic Fractions", url: "https://www.youtube.com/embed/waEkFiYSOhU", source: "Maths Genie", type: "video" },
+        { title: "Fractional Equations", url: "https://www.youtube.com/embed/UsR4rcCRBgE", source: "Corbettmaths", type: "video" }
+      ],
+      exercises: [
+        { title: "Equations with Algebraic Fractions", url: "https://www.draustinmaths.com/_files/ugd/7ac124_9a4a5a6e94de4b85b44a3a6d6cd03f34.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Solving Algebraic Fraction Equations", url: "https://pmt.physicsandmathstutor.com/download/Maths/GCSE/Topic-Qs/Edexcel/Set-2/Algebra/Higher/Solving-Equations-and-Inequalities/Solving%20Algebraic%20Fraction%20Equations%20(H).pdf", source: "Physics & Maths Tutor", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Algebraic Equations Guide", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/algebraic-fractions/solving-algebraic-fractions/", source: "SaveMyExams", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Khan Academy Fractional Equations", url: "https://www.khanacademy.org/math/cc-sixth-grade-math/cc-6th-equations-and-inequalities/cc-6th-one-step-mult-div-equations/v/one-step-multiplication-fractional-coefficients", source: "Khan Academy", type: "external" }
       ]
     },
     'exponents-indices': {
@@ -460,190 +510,215 @@ export const curriculumResources: CurriculumResourcesType = {
   'unit-5': {
     'quadratic-fundamentals': {
       videos: [
-        // New videos from provided list
-        { title: "Introduction to Quadratic Equations", url: "https://www.youtube.com/embed/IWigvJcCAJ0", source: "Khan Academy", type: "video" }
+        { title: "Introduction to Quadratic Equations", url: "https://www.youtube.com/embed/IWigvJcCAJ0", source: "Khan Academy", type: "video" },
+        { title: "Quadratic Expressions Introduction", url: "https://www.youtube.com/embed/f5B3PzPZkZ4", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Quadratic Expressions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_e8a0f6138cd849aebaed7619d9c1cffa.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Quadratic Equations Practice", url: "https://www.maths4everyone.com/resources/downloads/quadratic-equations-gcse-9-1-practice-questions-30242.pdf", source: "Maths4Everyone", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Quadratic Equations Solutions", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/quadratic-equations/", source: "SaveMyExams", type: "pdf" }
       ],
-      otherResources: []
+      otherResources: [
+        { title: "Khan Academy Quadratics Course", url: "https://www.khanacademy.org/math/algebra-basics/alg-basics-quadratics-and-polynomials", source: "Khan Academy", type: "external" }
+      ]
     },
     'factorisation-method': {
       videos: [
-        // New videos from provided list
-        { title: "Solving Quadratics by Factorising", url: "https://www.youtube.com/embed/m-qyV6C56ec", source: "Maths Genie", type: "video" }
+        { title: "Solving Quadratics by Factorising", url: "https://www.youtube.com/embed/m-qyV6C56ec", source: "Maths Genie", type: "video" },
+        { title: "Factoring Simple Quadratic Expressions", url: "https://www.youtube.com/embed/eF6zYNzlZKQ", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Solving Quadratics by Factorising Worksheet", url: "https://corbettmaths.com/wp-content/uploads/2013/02/solving-quadratics-by-factorising-1-pdf.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Factorising Practice Questions", url: "https://www.mathsgenie.co.uk/resources/86_solving-quadratics-by-factorising.pdf", source: "Maths Genie", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Solving Quadratics Solutions", url: "https://corbettmaths.com/wp-content/uploads/2013/02/solving-quadratics-factorising-ans.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      otherResources: []
+      otherResources: [
+        { title: "Maths Genie Quadratics Resources", url: "https://www.mathsgenie.co.uk/solving-quadratics.html", source: "Maths Genie", type: "external" }
+      ]
     },
     'quadratic-formula': {
       videos: [
         { title: "The Quadratic Formula", url: "https://www.youtube.com/embed/i7idZfS8t8w", source: "Khan Academy", type: "video" },
-        // Removed broken videos
-        { title: "Quadratic Formula Explained", url: "https://www.youtube.com/embed/3J0ccr74LcU", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Sum and Product of Roots", url: "https://www.youtube.com/embed/2v7PKsWdQ3o", source: "Mathematics Class", type: "video" }
+        { title: "Quadratic Formula Explained", url: "https://www.youtube.com/embed/3J0ccr74LcU", source: "Corbettmaths", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
+      exercises: [
+        { title: "Quadratic Formula Worksheet", url: "https://www.maths4everyone.com/resources/downloads/the-quadratic-formulae-20272.pdf", source: "Maths4Everyone", type: "pdf" },
+        { title: "Mixed Quadratic Equations Practice", url: "https://justmaths.co.uk/wp-content/uploads/2015/11/Algebra-F-Factorising-Expanding-Factorising-Solving-Quadratics-v3.pdf", source: "JustMaths", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Quadratic Formula Guide", url: "https://www.savemyexams.com/igcse/maths/cie/25/extended/revision-notes/algebra-and-sequences/quadratic-equations/quadratic-formula/", source: "SaveMyExams", type: "pdf" }
+      ],
       otherResources: [
-        // Removed broken links
+        { title: "Quadratic Formula Applications", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:standard-form-quadratic/v/application-problem-with-quadratic-formula", source: "Khan Academy", type: "external" }
       ]
     },
     'gdc-quadratics': {
       videos: [
-        // Removed broken videos
-        { title: "Solving Quadratic Equations Using GDC", url: "https://www.youtube.com/embed/zp2GNFhOzgo", source: "Mark Willis", type: "video" },
-        // New videos from provided list
-        { title: "Solving Quadratics with a GDC", url: "https://www.youtube.com/embed/Xw1YDdBWFOE", source: "IB Maths", type: "video" }
+        { title: "Solving Quadratics with a GDC", url: "https://www.youtube.com/embed/Xw1YDdBWFOE", source: "IB Maths", type: "video" },
+        { title: "Using a Calculator for Quadratics", url: "https://www.youtube.com/embed/zp2GNFhOzgo", source: "Mark Willis", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
+      exercises: [
+        { title: "GDC-Based Quadratic Problems", url: "https://www.onmaths.com/resource/solve-quadratic-equations/", source: "OnMaths", type: "external" }
+      ],
+      solutions: [
+        { title: "Solving Quadratics with Technology", url: "https://www.savemyexams.com/a-level/maths/cie/20/pure-1/revision-notes/algebra-and-functions/quadratics/solving-quadratic-equations/", source: "SaveMyExams", type: "pdf" }
+      ],
       otherResources: [
-        // Removed broken links
+        { title: "Interactive Quadratic Solver", url: "https://www.onmaths.com/resource/solving-quadratic-equations/", source: "OnMaths", type: "external" }
       ]
     },
     'parabola-properties': {
       videos: [
-        // Removed broken videos
-        { title: "Line of Symmetry", url: "https://www.youtube.com/embed/k6Men7ELOxQ", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
-        { title: "Graphing Quadratic Functions (Vertex & Intercepts)", url: "https://www.youtube.com/embed/rM_A8t0CV7A", source: "Maths Genie", type: "video" }
+        { title: "Graphing Quadratic Functions (Vertex & Intercepts)", url: "https://www.youtube.com/embed/rM_A8t0CV7A", source: "Maths Genie", type: "video" },
+        { title: "Graphing Quadratics in Factored Form", url: "https://www.youtube.com/embed/0y-7xP-zRCQ", source: "Khan Academy", type: "video" }
       ],
       exercises: [
         { title: "Quadratic Graphs", url: "https://www.mathsgenie.co.uk/resources/5-quadratic-graphs.pdf", source: "Maths Genie", type: "pdf" },
         { title: "Sketching Quadratics", url: "https://corbettmaths.com/wp-content/uploads/2019/04/Sketching-Quadratics.pdf", source: "Corbettmaths", type: "pdf" }
       ],
-      solutions: [],
-      otherResources: []
+      solutions: [
+        { title: "Quadratic Graphs Solutions", url: "https://www.mathsgenie.co.uk/resources/5-quadratic-graphsans.pdf", source: "Maths Genie", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Graphing Parabolas Using Roots and Vertex", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:quadratic-functions-equations/x2f8bb11595b61c86:standard-form-quadratic/v/graphing-a-parabola-using-roots-and-vertex", source: "Khan Academy", type: "external" }
+      ]
     }
   },
   'unit-6': {
     'linear-sequences': {
       videos: [
-        // New videos from provided list
         { title: "nth Term of a Linear Sequence", url: "https://www.youtube.com/embed/qnVVTBAfNu4", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Linear Sequences Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_dce56bf2a95b4c9eacf7693a3c0ec80f.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Linear Sequences Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_ef69186a26ee4e4884c0a6b0ac093674.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
       otherResources: [
-        // Removed broken links
+        { title: "Arithmetic Sequence Interactive Practice", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:sequences/x2f8bb11595b61c86:introduction-to-arithmetic-sequences/e/arithmetic_sequences_2", source: "Khan Academy", type: "external" }
       ]
     },
     'quadratic-sequences': {
       videos: [
-        // Removed broken videos
-        { title: "Quadratic Nth Term", url: "https://www.youtube.com/embed/AL-joUBnEIw", source: "Corbettmaths", type: "video" },
-        // New videos from provided list
         { title: "nth Term of a Quadratic Sequence", url: "https://www.youtube.com/embed/AL-joUBnEIw", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Quadratic Sequences Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_82e5dd114ad7464d83873f86ca7d3e6b.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
-      solutions: [],
+      solutions: [
+        { title: "Quadratic Sequences Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_92bbff4670e04d5ba3bca2f783e47eeb.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
       otherResources: [
-        { title: "Quadratic Sequences", url: "https://www.mathsgenie.co.uk/questions-quadratic-sequences.html", source: "Maths Genie", type: "external" }
-        // Removed broken links
+        { title: "Quadratic Sequences Interactive Game", url: "https://www.geogebra.org/m/qMdj8Std", source: "GeoGebra", type: "external" }
       ]
     },
     'cubic-sequences': {
       videos: [
-        // New videos from provided list
-        { title: "Cubic Sequences (nth term)", url: "https://www.youtube.com/embed/5hacfQYS6Ds", source: "GCSE Maths Tutor", type: "video" }
+        { title: "Cubic Sequences (nth term)", url: "https://www.youtube.com/embed/5hacfQYS6Ds", source: "GCSE Maths Tutor", type: "video" },
+        { title: "Sequences Made Easy (IGCSE 0607)", url: "https://www.youtube.com/embed/LQcUHHaJwJs", source: "Vision IGCSE Math", type: "video" }
       ],
-      exercises: [],
-      solutions: [],
-      otherResources: [
-        // Removed broken links
-      ]
+      exercises: [
+        { title: "Cubic Sequences Worksheet", url: "https://www.radfordmathematics.com/algebra/sequences-series/difference-method-sequences/cubic-sequences-worksheet-1.pdf", source: "Radford Mathematics", type: "pdf" }
+      ],
+      solutions: [
+        { title: "Cubic Sequences Solution Tutorial", url: "https://www.radfordmathematics.com/algebra/sequences-series/difference-method-sequences/cubic-sequences.html", source: "Radford Mathematics", type: "external" }
+      ],
+      otherResources: []
     },
     'geometric-sequences': {
       videos: [
-        // New videos from provided list
-        { title: "Geometric Progressions", url: "https://www.youtube.com/embed/SWlqZsKKi04", source: "GCSE Maths Tutor", type: "video" }
+        { title: "Geometric Progressions", url: "https://www.youtube.com/embed/Jlo6EVJiq9g", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
-        { title: "Geometric Progressions", url: "https://corbettmaths.com/wp-content/uploads/2024/11/Geometric-Progressions.pdf", source: "Corbettmaths", type: "pdf" }
+        { title: "Geometric Progressions", url: "https://corbettmaths.com/wp-content/uploads/2024/11/Geometric-Progressions.pdf", source: "Corbettmaths", type: "pdf" },
+        { title: "Geometric Sequences Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_062a407016ff471aa9d0977f7092ada9.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
-      solutions: [],
+      solutions: [
+        { title: "Geometric Sequences Answers", url: "https://www.draustinmaths.com/_files/ugd/7ac124_4ae4bad5691a45e1b274d4c0bcbc7bba.pdf", source: "Dr Austin Maths", type: "pdf" }
+      ],
       otherResources: [
-        // Removed broken links
+        { title: "Geometric Sequence Simulator", url: "https://www.geogebra.org/m/Yfj7yAt8", source: "GeoGebra", type: "external" }
       ]
     }
   },
   'unit-7': {
     'function-notation': {
       videos: [
-        // New videos from provided list
         { title: "Function Notation Introduction", url: "https://www.youtube.com/embed/ZRQJGecu1fs", source: "GCSE Higher Maths", type: "video" },
-        { title: "Understanding Function Notation", url: "https://www.youtube.com/embed/kvGsIo1TmsM", source: "Khan Academy", type: "video" },
-        { title: "Functions", url: "https://www.youtube.com/embed/uha8WJ5J-WA", source: "Corbettmaths", type: "video" },
-        { title: "Domain and Range", url: "https://www.youtube.com/embed/O0uUVH8dRiU", source: "Khan Academy", type: "video" }
+        { title: "What is a Function?", url: "https://www.youtube.com/embed/kvGsIo1TmsM", source: "Khan Academy", type: "video" },
+        { title: "Functions", url: "https://www.youtube.com/embed/uha8WJ5J-WA", source: "Corbettmaths", type: "video" }
       ],
       exercises: [
-        // Removed broken links
-        { title: "Domain and Range Questions", url: "https://www.mathsgenie.co.uk/resources/6-domain-and-range.pdf", source: "Maths Genie", type: "pdf" }
+        { title: "Function Notation Strips", url: "https://www.draustinmaths.com/_files/ugd/7ac124_a2ceb2d9edfa42b3bebdaf902f95a6bb.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Functions Practice Questions", url: "https://corbettmaths.com/wp-content/uploads/2020/03/Functions.pdf", source: "Corbettmaths", type: "pdf" }
       ],
       solutions: [
+        { title: "Functions Textbook Solutions", url: "https://corbettmaths.com/wp-content/uploads/2019/10/Functions-Answers.pdf", source: "Corbettmaths", type: "pdf" },
         { title: "Domain and Range Solutions", url: "https://www.mathsgenie.co.uk/resources/6-domain-and-rangeans.pdf", source: "Maths Genie", type: "pdf" }
       ],
       otherResources: [
-        // Removed broken links
+        { title: "Interactive Function Notation", url: "https://learn.desmos.com/functions", source: "Desmos", type: "external" },
+        { title: "Khan Academy Function Exercises", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:intro-to-functions/e/evaluating-functions", source: "Khan Academy", type: "external" }
       ]
     },
     'composite-functions': {
       videos: [
-        // New videos from provided list
         { title: "Composite Functions", url: "https://www.youtube.com/embed/lSRehCwoxs8", source: "GCSE Higher Maths", type: "video" },
-        { title: "Composite Functions", url: "https://www.youtube.com/embed/z_rNIy_bWCU", source: "Maths Genie", type: "video" }
+        { title: "Composite Functions", url: "https://www.youtube.com/embed/z_rNIy_bWCU", source: "Maths Genie", type: "video" },
+        { title: "Composite Functions Introduction", url: "https://www.youtube.com/embed/iy1lmMREZB0", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
-        { title: "Composite and Inverse Functions", url: "https://www.mathsgenie.co.uk/resources/7-composite-and-inverse-functions.pdf", source: "Maths Genie", type: "pdf" }
+        { title: "Composite and Inverse Functions", url: "https://www.mathsgenie.co.uk/resources/7-composite-and-inverse-functions.pdf", source: "Maths Genie", type: "pdf" },
+        { title: "Composite Functions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_b23c7ddbcd244b0ea84df5fe6b977de1.pdf", source: "Dr Austin Maths", type: "pdf" }
       ],
       solutions: [
-        // Removed broken links
+        { title: "Composite Functions Solutions", url: "https://www.mathsgenie.co.uk/resources/7-composite-and-inverse-functionsans.pdf", source: "Maths Genie", type: "pdf" }
       ],
       otherResources: [
-        // Removed broken links
+        { title: "Composite Functions Explorer", url: "https://www.desmos.com/calculator/composite-functions", source: "Desmos", type: "external" },
+        { title: "Khan Academy Composite Practice", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:composite-functions/e/composite-functions", source: "Khan Academy", type: "external" }
       ]
     },
     'inverse-functions': {
       videos: [
-        // New videos from provided list
         { title: "Inverse Functions", url: "https://www.youtube.com/embed/zpF9nbjResY", source: "Corbettmaths", type: "video" },
-        { title: "Inverse Functions", url: "https://www.youtube.com/embed/xOfN_VeTDcE", source: "Corbettmaths", type: "video" }
+        { title: "Inverse Functions", url: "https://www.youtube.com/embed/xOfN_VeTDcE", source: "Corbettmaths", type: "video" },
+        { title: "Inverse Functions Introduction", url: "https://www.youtube.com/embed/-9SMitx3QFY", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Inverse Functions Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_1e9e7f82c2ca405fa3fc1a7a3984d9c0.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Composite and Inverse Functions", url: "https://www.mathsgenie.co.uk/resources/7-composite-and-inverse-functions.pdf", source: "Maths Genie", type: "pdf" }
       ],
-      solutions: [],
+      solutions: [
+        { title: "Inverse Functions Solutions", url: "https://www.physicsandmathstutor.com/pdf-pages/?pdf=https%3A%2F%2Fpmt.physicsandmathstutor.com%2Fdownload%2FMaths%2FA-level%2FFunctions%2FSolutions%2FInverse-Functions-Solutions.pdf", source: "Physics & Maths Tutor", type: "pdf" }
+      ],
       otherResources: [
-        // Removed broken links
+        { title: "Inverse Functions Visualizer", url: "https://www.desmos.com/calculator/inverse-functions", source: "Desmos", type: "external" },
+        { title: "Khan Academy Inverse Practice", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:functions/x2f8bb11595b61c86:inverse-functions/e/inverse-functions", source: "Khan Academy", type: "external" }
       ]
     },
     'variation': {
       videos: [
-        // New videos from provided list
-        { title: "Direct & Inverse Proportion Explained", url: "https://www.youtube.com/embed/rtLKCv5buLw", source: "SaveMyExams", type: "video" }
+        { title: "Direct & Inverse Proportion Explained", url: "https://www.youtube.com/embed/rtLKCv5buLw", source: "SaveMyExams", type: "video" },
+        { title: "Direct Proportion", url: "https://www.youtube.com/embed/KFXK7-ClVxA", source: "Corbettmaths", type: "video" },
+        { title: "Direct & Inverse Variation", url: "https://www.youtube.com/embed/q0DVOFwef5k", source: "Khan Academy", type: "video" }
       ],
       exercises: [
-        // Removed broken links
+        { title: "Variation Worksheet", url: "https://www.draustinmaths.com/_files/ugd/7ac124_ef9fc6401e424f6c8adfa9c1a9c92da4.pdf", source: "Dr Austin Maths", type: "pdf" },
+        { title: "Direct & Inverse Proportion Practice", url: "https://www.maths4everyone.com/resources/downloads/direct-proportion-gcse-9-1-practice-questions-30244.pdf", source: "Maths4Everyone", type: "pdf" }
       ],
-      solutions: [],
-      otherResources: []
+      solutions: [
+        { title: "Variation Solutions", url: "https://www.physicsandmathstutor.com/pdf-pages/?pdf=https%3A%2F%2Fpmt.physicsandmathstutor.com%2Fdownload%2FMaths%2FGCSE%2FTopic-Qs%2FEdexcel%2FSet-1%2FRatio-and-Proportion%2FHigher%2FDirect-and-Inverse-Proportion%2520(H)-Answers.pdf", source: "Physics & Maths Tutor", type: "pdf" }
+      ],
+      otherResources: [
+        { title: "Variation Models Interactive", url: "https://www.desmos.com/calculator/variation", source: "Desmos", type: "external" },
+        { title: "Khan Academy Variation Practice", url: "https://www.khanacademy.org/math/algebra/x2f8bb11595b61c86:direct-inverse-variation/e/direct_and_inverse_variation", source: "Khan Academy", type: "external" }
+      ]
     }
   },
   'unit-8': {
