@@ -1,10 +1,11 @@
 [build] 
-  command = "npm run build:netlify" 
+  command = "chmod +x netlify-force-install.sh && ./netlify-force-install.sh" 
   publish = "dist" 
  
 # Define a versão do Node.js
 [build.environment]
   NODE_VERSION = "18.17.1"
+  NPM_FLAGS = "--legacy-peer-deps --force"
  
 # Handle SPA routing 
 [[redirects]] 
