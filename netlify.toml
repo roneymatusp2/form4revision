@@ -1,14 +1,15 @@
-[build] 
-  command = "chmod +x netlify-force-install.sh && ./netlify-force-install.sh" 
-  publish = "dist" 
- 
-# Define a versão do Node.js
+# === Netlify Build Settings ===
+[build]
+command = "chmod +x netlify-force-install.sh && ./netlify-force-install.sh"  # Runs your custom install + build script
+publish = "dist"                         # The folder to deploy (must match your build output)
+
+# === Environment Variables ===
 [build.environment]
-  NODE_VERSION = "18.17.1"
-  NPM_FLAGS = "--legacy-peer-deps --force"
- 
-# Handle SPA routing 
-[[redirects]] 
-  from = "/*" 
-  to = "/index.html" 
-  status = 200 
+NODE_VERSION = "18.17.1"
+NPM_FLAGS = "--legacy-peer-deps --force"  # Useful for tricky dependency graphs
+
+# === Redirects for SPA Routing ===
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
